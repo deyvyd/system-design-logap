@@ -1,0 +1,2587 @@
+1
+00:00:00,199 --> 00:00:02,280
+Esse daqui é, sem sombra de dúvidas, um
+
+2
+00:00:02,280 --> 00:00:04,600
+dos melhores e mais completos livros
+
+3
+00:00:04,600 --> 00:00:06,680
+para você aprender sobre arquitetura de
+
+4
+00:00:06,680 --> 00:00:08,559
+software, sistemas distribuídos,
+
+5
+00:00:08,559 --> 00:00:10,639
+aprender a projetar grandes aplicações
+
+6
+00:00:10,639 --> 00:00:12,799
+para milhões de usuários e tudo isso com
+
+7
+00:00:12,799 --> 00:00:15,160
+uma didática extremamente simples e
+
+8
+00:00:15,160 --> 00:00:17,279
+objetiva e com exemplos do mundo real
+
+9
+00:00:17,279 --> 00:00:19,279
+que vão te fazer sair do mundo do crude
+
+10
+00:00:19,279 --> 00:00:21,279
+e do framework e começar a entrar no
+
+11
+00:00:21,279 --> 00:00:23,039
+mundo de quem realmente projeta
+
+12
+00:00:23,039 --> 00:00:24,960
+aplicações de grande porte. Esse livro
+
+13
+00:00:24,960 --> 00:00:26,880
+se chama Designing Day Intensive
+
+14
+00:00:26,880 --> 00:00:29,199
+Applications ou projetando aplicações
+
+15
+00:00:29,199 --> 00:00:31,080
+com uso intensivo de dados. E no vídeo
+
+16
+00:00:31,080 --> 00:00:32,759
+de hoje, eu vou te mostrar tudo que você
+
+17
+00:00:32,759 --> 00:00:34,680
+vai aprender dentro desse livro aqui,
+
+18
+00:00:34,680 --> 00:00:36,840
+como que ele vai mudar a sua forma de
+
+19
+00:00:36,840 --> 00:00:39,040
+enxergar e projetar sistemas na vida
+
+20
+00:00:39,040 --> 00:00:40,160
+real, independente [limpando a garganta]
+
+21
+00:00:40,160 --> 00:00:41,879
+do teu nível de senioridade. E de
+
+22
+00:00:41,879 --> 00:00:43,559
+quebra, eu ainda vou te mostrar onde que
+
+23
+00:00:43,559 --> 00:00:44,960
+você vai ler esse livro aqui em
+
+24
+00:00:44,960 --> 00:00:47,440
+português, de maneira totalmente oficial
+
+25
+00:00:47,440 --> 00:00:49,840
+e gratuita, caso você não consiga ler
+
+26
+00:00:49,840 --> 00:00:51,239
+inglês, tendo em vista que a versão
+
+27
+00:00:51,239 --> 00:00:53,399
+impressa desse livro só tem em inglês.
+
+28
+00:00:53,399 --> 00:00:55,719
+Beleza? Entendido isso, vamos direto ao
+
+29
+00:00:55,719 --> 00:00:57,399
+que interessa. E a primeira coisa que a
+
+30
+00:00:57,399 --> 00:00:59,600
+gente vai começar entendendo aqui antes
+
+31
+00:00:59,600 --> 00:01:02,320
+de pular no conteúdo é para quem é esse
+
+32
+00:01:02,320 --> 00:01:04,119
+livro aqui. Isso porque quando a gente
+
+33
+00:01:04,119 --> 00:01:06,600
+fala de livros na área de tecnologia, a
+
+34
+00:01:06,600 --> 00:01:08,280
+gente tem aquela escadinha onde
+
+35
+00:01:08,280 --> 00:01:10,280
+dependendo do teu nível de senioridade,
+
+36
+00:01:10,280 --> 00:01:12,159
+você começa lendo os livros mais de
+
+37
+00:01:12,159 --> 00:01:14,200
+entrada, os livros ali mais iniciantes.
+
+38
+00:01:14,200 --> 00:01:16,280
+Daí você avança um pouco mais e pega os
+
+39
+00:01:16,280 --> 00:01:18,159
+livros mais intermediários. E quando
+
+40
+00:01:18,159 --> 00:01:20,000
+você já tá bem estabelecido e com a
+
+41
+00:01:20,000 --> 00:01:21,920
+senioridade, com a maturidade melhor,
+
+42
+00:01:21,920 --> 00:01:23,520
+você começa a ler os livros mais
+
+43
+00:01:23,520 --> 00:01:26,439
+avançados. No caso desse livro aqui em
+
+44
+00:01:26,439 --> 00:01:28,159
+específico, ele vai te atender
+
+45
+00:01:28,159 --> 00:01:30,439
+perfeitamente, independente se você é um
+
+46
+00:01:30,439 --> 00:01:31,759
+programador júnior, se você é um
+
+47
+00:01:31,759 --> 00:01:33,479
+programador pleno ou se você é um sênor,
+
+48
+00:01:33,479 --> 00:01:35,439
+ou até mesmo se você já é um cara que tá
+
+49
+00:01:35,439 --> 00:01:37,240
+buscando ali, tá estudando para se
+
+50
+00:01:37,240 --> 00:01:39,040
+tornar um arquiteto de software. Então
+
+51
+00:01:39,040 --> 00:01:40,720
+esse livro aqui ele vai ser perfeito
+
+52
+00:01:40,720 --> 00:01:42,720
+para você, independente do teu momento
+
+53
+00:01:42,720 --> 00:01:45,000
+profissional. E o próprio autor destaca
+
+54
+00:01:45,000 --> 00:01:46,920
+isso no livro dizendo o seguinte: você
+
+55
+00:01:46,920 --> 00:01:48,960
+deve ter apenas alguma experiência no
+
+56
+00:01:48,960 --> 00:01:50,920
+desenvolvimento de aplicações web e
+
+57
+00:01:50,920 --> 00:01:53,079
+estar familiarizado com bancos de dados
+
+58
+00:01:53,079 --> 00:01:55,439
+relacionais e SQL. E conhecimento de
+
+59
+00:01:55,439 --> 00:01:57,640
+banco de dados não relacionais e outras
+
+60
+00:01:57,640 --> 00:01:59,719
+ferramentas relacionadas a dados é um
+
+61
+00:01:59,719 --> 00:02:02,320
+diferencial, mas não é obrigatório. Uma
+
+62
+00:02:02,320 --> 00:02:04,479
+compreensão geral de protocolos de rede
+
+63
+00:02:04,479 --> 00:02:07,520
+comuns, como TCP e HTTP, é útil e que a
+
+64
+00:02:07,520 --> 00:02:09,560
+sua escolha de linguagem de programação
+
+65
+00:02:09,560 --> 00:02:12,400
+ou framework não faz a menor diferença
+
+66
+00:02:12,400 --> 00:02:14,200
+para esse livro. Ou seja, com
+
+67
+00:02:14,200 --> 00:02:16,640
+conhecimentos básicos, você já é capaz
+
+68
+00:02:16,640 --> 00:02:18,599
+de mergulhar nesse oceano vasto da
+
+69
+00:02:18,599 --> 00:02:20,400
+arquitetura de software. E isso só é
+
+70
+00:02:20,400 --> 00:02:22,400
+possível porque o autor desse livro é o
+
+71
+00:02:22,400 --> 00:02:24,480
+Martin Clman, um cara que além de ser
+
+72
+00:02:24,480 --> 00:02:26,760
+extremamente bom tecnicamente, isso
+
+73
+00:02:26,760 --> 00:02:28,319
+porque ele é um ex-arquiteto de software
+
+74
+00:02:28,319 --> 00:02:30,040
+do LinkedIn e também foi um dos
+
+75
+00:02:30,040 --> 00:02:32,319
+criadores do Apache Sansa, ele também é
+
+76
+00:02:32,319 --> 00:02:34,519
+professor em nada mais nada menos que a
+
+77
+00:02:34,519 --> 00:02:36,800
+Universidade de Cambridge. Então esse
+
+78
+00:02:36,800 --> 00:02:38,280
+livro aqui não é um livro que foi
+
+79
+00:02:38,280 --> 00:02:39,879
+escrito por um amador. Esse livro aqui é
+
+80
+00:02:39,879 --> 00:02:41,280
+um livro que foi escrito por um cara que
+
+81
+00:02:41,280 --> 00:02:43,480
+além de ter vivido na prática o que é
+
+82
+00:02:43,480 --> 00:02:45,480
+ser um arquiteto de grandes aplicações,
+
+83
+00:02:45,480 --> 00:02:47,920
+ele também tem o lado acadêmico unindo
+
+84
+00:02:47,920 --> 00:02:50,720
+tanto a teoria quanto a prática em um só
+
+85
+00:02:50,720 --> 00:02:53,280
+lugar. E agora que você já entendeu que
+
+86
+00:02:53,280 --> 00:02:55,159
+esse livro aqui é para você e que com
+
+87
+00:02:55,159 --> 00:02:57,519
+conhecimentos básicos você já tá apto a
+
+88
+00:02:57,519 --> 00:02:59,200
+embarcar nessa jornada, tá na hora da
+
+89
+00:02:59,200 --> 00:03:01,200
+gente entender o que é que você vai
+
+90
+00:03:01,200 --> 00:03:03,120
+aprender lendo esse livro aqui, como que
+
+91
+00:03:03,120 --> 00:03:05,519
+ele tá organizado internamente e como
+
+92
+00:03:05,519 --> 00:03:07,879
+que ele vai mudar a tua visão sobre
+
+93
+00:03:07,879 --> 00:03:09,840
+arquitetura de sistemas. E para isso
+
+94
+00:03:09,840 --> 00:03:11,560
+começar a ficar mais claro, a gente vai
+
+95
+00:03:11,560 --> 00:03:13,360
+começar com a proposta central desse
+
+96
+00:03:13,360 --> 00:03:15,280
+livro, que divide ele em três partes
+
+97
+00:03:15,280 --> 00:03:17,239
+principais, que são a parte um,
+
+98
+00:03:17,239 --> 00:03:19,200
+fundamento dos sistemas de dados, a
+
+99
+00:03:19,200 --> 00:03:21,640
+parte dois, dados distribuídos e a parte
+
+100
+00:03:21,640 --> 00:03:24,200
+três, dados derivados. Começando pela
+
+101
+00:03:24,200 --> 00:03:25,959
+primeira parte, que são os fundamentos
+
+102
+00:03:25,959 --> 00:03:27,760
+dos sistemas de dados, essa parte do
+
+103
+00:03:27,760 --> 00:03:29,360
+livro, ela vai ser dividida em quatro
+
+104
+00:03:29,360 --> 00:03:31,720
+capítulos iniciais, que são aplicações
+
+105
+00:03:31,720 --> 00:03:33,840
+confiáveis, escaláveis e manuteníveis,
+
+106
+00:03:33,840 --> 00:03:35,439
+modelos de dados e linguagens de
+
+107
+00:03:35,439 --> 00:03:38,439
+consulta, armazenamento e recuperação e
+
+108
+00:03:38,439 --> 00:03:40,959
+codificação e evolução. E nessa primeira
+
+109
+00:03:40,959 --> 00:03:42,840
+etapa é onde o Martin Clman vai te dar
+
+110
+00:03:42,840 --> 00:03:45,000
+toda a base, os fundamentos e te
+
+111
+00:03:45,000 --> 00:03:47,319
+preparar para tudo que vem depois. Isso
+
+112
+00:03:47,319 --> 00:03:48,760
+porque antes dele te ensinar sobre
+
+113
+00:03:48,760 --> 00:03:50,560
+arquitetura de sistemas distribuídos,
+
+114
+00:03:50,560 --> 00:03:52,879
+replicação, particionamento, charging,
+
+115
+00:03:52,879 --> 00:03:55,159
+streaming de dados, cfkaa e todas essas
+
+116
+00:03:55,159 --> 00:03:56,599
+coisas que parecem extremamente
+
+117
+00:03:56,599 --> 00:03:59,120
+avançadas, ele faz uma coisa muito mais
+
+118
+00:03:59,120 --> 00:04:01,319
+inteligente, que é começar primeiro te
+
+119
+00:04:01,319 --> 00:04:03,159
+ensinando a olhar para uma aplicação
+
+120
+00:04:03,159 --> 00:04:05,280
+como um sistema de dados. E isso por si
+
+121
+00:04:05,280 --> 00:04:08,000
+só muda completamente a forma como você
+
+122
+00:04:08,000 --> 00:04:09,840
+enxerga a arquitetura de software. Isso
+
+123
+00:04:09,840 --> 00:04:11,760
+porque quando você tá começando ou até
+
+124
+00:04:11,760 --> 00:04:13,959
+mesmo quando você já há alguns anos, é
+
+125
+00:04:13,959 --> 00:04:15,879
+muito comum você olhar para um sistema e
+
+126
+00:04:15,879 --> 00:04:18,359
+enxergar apenas telas, end points,
+
+127
+00:04:18,359 --> 00:04:20,479
+controllers, service, repository e
+
+128
+00:04:20,479 --> 00:04:22,120
+tabela no banco. Só que quando você
+
+129
+00:04:22,120 --> 00:04:24,280
+começa a pensar como um arquiteto de
+
+130
+00:04:24,280 --> 00:04:26,479
+software, você percebe que a aplicação
+
+131
+00:04:26,479 --> 00:04:28,479
+inteira gira em torno de apenas uma
+
+132
+00:04:28,479 --> 00:04:31,120
+única coisa que são dados. São dados
+
+133
+00:04:31,120 --> 00:04:33,479
+entrando, dados sendo processados, dados
+
+134
+00:04:33,479 --> 00:04:35,479
+sendo armazenados, dados sendo
+
+135
+00:04:35,479 --> 00:04:38,000
+consultados, dados sendo transformados e
+
+136
+00:04:38,000 --> 00:04:39,960
+dados sendo enviados para outros
+
+137
+00:04:39,960 --> 00:04:42,440
+sistemas para gerar mais dados. Então
+
+138
+00:04:42,440 --> 00:04:44,039
+essa primeira parte do livro, ela vai
+
+139
+00:04:44,039 --> 00:04:46,000
+servir quase que como uma mudança de
+
+140
+00:04:46,000 --> 00:04:47,880
+mentalidade, onde o autor começa te
+
+141
+00:04:47,880 --> 00:04:50,400
+tirando da visão de um programador comum
+
+142
+00:04:50,400 --> 00:04:52,120
+e começa a te colocar na visão de um
+
+143
+00:04:52,120 --> 00:04:54,440
+arquiteto de software que precisa não só
+
+144
+00:04:54,440 --> 00:04:56,639
+enxergar a aplicação como um sistema de
+
+145
+00:04:56,639 --> 00:04:58,440
+dados, mas também entender que
+
+146
+00:04:58,440 --> 00:05:00,680
+arquitetura de software se trata
+
+147
+00:05:00,680 --> 00:05:03,440
+principalmente de comportamento. é você
+
+148
+00:05:03,440 --> 00:05:05,160
+entender como que o sistema se comporta
+
+149
+00:05:05,160 --> 00:05:06,520
+quando ele cresce, como que ele se
+
+150
+00:05:06,520 --> 00:05:08,080
+comporta quando ele falha, como que ele
+
+151
+00:05:08,080 --> 00:05:10,000
+se comporta quando as coisas começam a
+
+152
+00:05:10,000 --> 00:05:11,600
+dar errado, como que ele se comporta
+
+153
+00:05:11,600 --> 00:05:13,800
+quando ele começa a sofrer pressão e
+
+154
+00:05:13,800 --> 00:05:15,960
+como que ele evolui ao longo do tempo
+
+155
+00:05:15,960 --> 00:05:17,960
+sem virar uma bomba relógio impossível
+
+156
+00:05:17,960 --> 00:05:19,960
+de manter. Além disso, ele também vai
+
+157
+00:05:19,960 --> 00:05:21,759
+tratar de um ponto extremamente
+
+158
+00:05:21,759 --> 00:05:23,759
+importante nessa primeira parte aqui,
+
+159
+00:05:23,759 --> 00:05:25,759
+que é a banalização da palavra
+
+160
+00:05:25,759 --> 00:05:27,880
+escalabilidade. Isso porque tem muita
+
+161
+00:05:27,880 --> 00:05:30,080
+gente aí aa que não faz a menor ideia do
+
+162
+00:05:30,080 --> 00:05:31,639
+que tá fazendo e falando sobre
+
+163
+00:05:31,639 --> 00:05:33,080
+escalabilidade, como se isso
+
+164
+00:05:33,080 --> 00:05:34,680
+significasse simplesmente colocar um
+
+165
+00:05:34,680 --> 00:05:36,560
+load balancer na ponta da aplicação e
+
+166
+00:05:36,560 --> 00:05:38,560
+criar réplicas do servidor e pronto, o
+
+167
+00:05:38,560 --> 00:05:40,520
+sistema tá escalado. Isso não é
+
+168
+00:05:40,520 --> 00:05:42,720
+escalabilidade nem de longe. E o livro
+
+169
+00:05:42,720 --> 00:05:45,160
+entra com pé na porta justamente nesse
+
+170
+00:05:45,160 --> 00:05:47,199
+ponto para quebrar essa falácia e te
+
+171
+00:05:47,199 --> 00:05:49,000
+mostrar que escalabilidade não é uma
+
+172
+00:05:49,000 --> 00:05:50,759
+ferramenta. Escalabilidade é uma
+
+173
+00:05:50,759 --> 00:05:53,160
+propriedade do sistema diante de uma
+
+174
+00:05:53,160 --> 00:05:55,720
+carga específica. Ou seja, antes de você
+
+175
+00:05:55,720 --> 00:05:58,160
+perguntar como eu escalo, você precisa
+
+176
+00:05:58,160 --> 00:06:00,440
+aprender a perguntar: Escalar o quê?
+
+177
+00:06:00,440 --> 00:06:01,720
+Escalar o número de usuários
+
+178
+00:06:01,720 --> 00:06:03,400
+simultâneos? Escalar a quantidade de
+
+179
+00:06:03,400 --> 00:06:05,120
+requisições por segundo? Escalar o
+
+180
+00:06:05,120 --> 00:06:07,400
+volume de dados armazenados? Escalar o
+
+181
+00:06:07,400 --> 00:06:09,560
+número de conexões abertas com banco de
+
+182
+00:06:09,560 --> 00:06:11,199
+dados. Cada tópico desse exige
+
+183
+00:06:11,199 --> 00:06:13,160
+conhecimentos diferentes, técnicas
+
+184
+00:06:13,160 --> 00:06:15,479
+diferentes e ferramentas diferentes que
+
+185
+00:06:15,479 --> 00:06:17,440
+ele vai te ensinando ao longo dessa
+
+186
+00:06:17,440 --> 00:06:18,919
+primeira etapa do livro. Então é
+
+187
+00:06:18,919 --> 00:06:20,560
+literalmente aqui que você vai aprender
+
+188
+00:06:20,560 --> 00:06:21,880
+o que que é fruput, o que que é
+
+189
+00:06:21,880 --> 00:06:23,560
+latência, o que que é latência média, o
+
+190
+00:06:23,560 --> 00:06:24,919
+que que são os percentis, o que que é
+
+191
+00:06:24,919 --> 00:06:27,840
+P95, P99. Você vai aprender a calcular a
+
+192
+00:06:27,840 --> 00:06:29,680
+estimativa, você vai aprender quais os
+
+193
+00:06:29,680 --> 00:06:31,759
+gargalos começam a se formar no teu
+
+194
+00:06:31,759 --> 00:06:33,440
+sistema conforme ele vai tendo a
+
+195
+00:06:33,440 --> 00:06:35,240
+necessidade de escala. Você vai aprender
+
+196
+00:06:35,240 --> 00:06:37,520
+a medir o desempenho das aplicações. E
+
+197
+00:06:37,520 --> 00:06:39,840
+tudo isso ele vai fazer com exemplos
+
+198
+00:06:39,840 --> 00:06:41,560
+práticos, onde ele usa arquiteturas do
+
+199
+00:06:41,560 --> 00:06:43,080
+mundo real, como por exemplo, ele tem um
+
+200
+00:06:43,080 --> 00:06:44,599
+trecho aqui que ele usa a arquitetura do
+
+201
+00:06:44,599 --> 00:06:46,639
+Twitter para ir te mostrando como que as
+
+202
+00:06:46,639 --> 00:06:48,560
+coisas funcionam por baixo dos panos,
+
+203
+00:06:48,560 --> 00:06:50,039
+exatamente igual eu faço aqui nos vídeos
+
+204
+00:06:50,039 --> 00:06:51,840
+de system design do canal. Inclusive
+
+205
+00:06:51,840 --> 00:06:53,840
+isso aqui, cara, é o ouro para quem quer
+
+206
+00:06:53,840 --> 00:06:55,599
+aprender mais sobre system design. Isso
+
+207
+00:06:55,599 --> 00:06:57,599
+porque nas entrevistas por aí afora,
+
+208
+00:06:57,599 --> 00:06:59,120
+quando alguém te pede para projetar um
+
+209
+00:06:59,120 --> 00:07:01,479
+sistema como YouTube, WhatsApp, o Google
+
+210
+00:07:01,479 --> 00:07:03,560
+Drive ou o Ticket Master, o erro do
+
+211
+00:07:03,560 --> 00:07:05,879
+iniciante é sair desenhando caixinha de
+
+212
+00:07:05,879 --> 00:07:08,039
+load balancer e colocando réplicas do
+
+213
+00:07:08,039 --> 00:07:09,919
+servidor e acha que isso é escalar o
+
+214
+00:07:09,919 --> 00:07:12,400
+sistema. Só que quando você lê essa
+
+215
+00:07:12,400 --> 00:07:14,360
+primeira etapa do livro aqui, você vai
+
+216
+00:07:14,360 --> 00:07:16,639
+aprender primeiro a fazer as perguntas
+
+217
+00:07:16,639 --> 00:07:18,960
+certas antes de sair desenhando qualquer
+
+218
+00:07:18,960 --> 00:07:20,840
+coisa. E essas perguntas que você vai
+
+219
+00:07:20,840 --> 00:07:22,759
+fazer são perguntas como: Quantos
+
+220
+00:07:22,759 --> 00:07:24,720
+usuários tem a aplicação? Quantas
+
+221
+00:07:24,720 --> 00:07:26,960
+leituras ocorrem diariamente, quantas
+
+222
+00:07:26,960 --> 00:07:28,879
+escritas, qual é o volume de dados
+
+223
+00:07:28,879 --> 00:07:31,080
+transacionados, qual é a latência
+
+224
+00:07:31,080 --> 00:07:33,879
+aceitável para essa aplicação? São essas
+
+225
+00:07:33,879 --> 00:07:35,919
+perguntas que você vai aprender a fazer
+
+226
+00:07:35,919 --> 00:07:37,440
+depois que você vai lendo essa primeira
+
+227
+00:07:37,440 --> 00:07:39,759
+etapa. E é aqui que você começa a
+
+228
+00:07:39,759 --> 00:07:41,599
+entender que a arquitetura não começa
+
+229
+00:07:41,599 --> 00:07:43,240
+com tecnologia, a arquitetura começa com
+
+230
+00:07:43,240 --> 00:07:45,400
+as perguntas certas. E são essas
+
+231
+00:07:45,400 --> 00:07:47,400
+perguntas que você vai fazendo que vão
+
+232
+00:07:47,400 --> 00:07:49,759
+dando vida aos requisitos funcionais e
+
+233
+00:07:49,759 --> 00:07:52,240
+não funcionais de toda e qualquer
+
+234
+00:07:52,240 --> 00:07:54,599
+aplicação que precisa ser construída.
+
+235
+00:07:54,599 --> 00:07:57,159
+Então é aqui que você vai aprender todos
+
+236
+00:07:57,159 --> 00:07:59,720
+esses fundamentos da arquitetura. E além
+
+237
+00:07:59,720 --> 00:08:01,520
+de tudo isso que eu falei nessa primeira
+
+238
+00:08:01,520 --> 00:08:02,759
+parte do livro aqui, você ainda vai
+
+239
+00:08:02,759 --> 00:08:04,560
+aprender mais um monte de outras coisas,
+
+240
+00:08:04,560 --> 00:08:06,080
+como modelagem de dados. Você vai
+
+241
+00:08:06,080 --> 00:08:07,840
+aprender sobre bancos relacionais,
+
+242
+00:08:07,840 --> 00:08:09,560
+bancos orientados à coluna, banco
+
+243
+00:08:09,560 --> 00:08:11,560
+orientado a documento, banco de gráficos
+
+244
+00:08:11,560 --> 00:08:13,400
+e principalmente qual é o problema que
+
+245
+00:08:13,400 --> 00:08:15,400
+cada um deles resolve. Ele também vai
+
+246
+00:08:15,400 --> 00:08:17,199
+abrir a caixa preta desses bancos de
+
+247
+00:08:17,199 --> 00:08:18,879
+dados ali e te mostrar como que eles
+
+248
+00:08:18,879 --> 00:08:20,520
+funcionam por baixo dos panos. Então
+
+249
+00:08:20,520 --> 00:08:22,240
+você vai aprender o que que é indexação,
+
+250
+00:08:22,240 --> 00:08:24,039
+como que esses dados são armazenados
+
+251
+00:08:24,039 --> 00:08:25,879
+fisicamente no disco, como que
+
+252
+00:08:25,879 --> 00:08:28,080
+determinados bancos conseguem performar
+
+253
+00:08:28,080 --> 00:08:30,080
+melhor do que outros em alguns cenários.
+
+254
+00:08:30,080 --> 00:08:32,599
+E daria para eu ficar falando horas aqui
+
+255
+00:08:32,599 --> 00:08:34,479
+sobre tudo que você vai aprender só
+
+256
+00:08:34,479 --> 00:08:36,080
+nessa primeira parte do livro, até
+
+257
+00:08:36,080 --> 00:08:37,919
+porque, diga-se de passagem, é um livro
+
+258
+00:08:37,919 --> 00:08:39,880
+cheio de anabolizante, porém com uma
+
+259
+00:08:39,880 --> 00:08:42,120
+leitura extremamente fluida, uma leitura
+
+260
+00:08:42,120 --> 00:08:44,240
+fenomenal, muito prazeroso de ler esse
+
+261
+00:08:44,240 --> 00:08:46,200
+livro, você nem percebe que o tempo tá
+
+262
+00:08:46,200 --> 00:08:47,680
+passando enquanto você vai lendo. É um
+
+263
+00:08:47,680 --> 00:08:49,320
+livro muito bom, é um livro que te
+
+264
+00:08:49,320 --> 00:08:51,240
+prende enquanto você tá lendo. Mas em
+
+265
+00:08:51,240 --> 00:08:52,959
+resumo, toda essa primeira parte do
+
+266
+00:08:52,959 --> 00:08:54,800
+livro vai ser focada única e
+
+267
+00:08:54,800 --> 00:08:57,240
+exclusivamente em criar uma base para
+
+268
+00:08:57,240 --> 00:08:59,040
+você e te ensinar os fundamentos
+
+269
+00:08:59,040 --> 00:09:00,680
+iniciais da arquitetura de software,
+
+270
+00:09:00,680 --> 00:09:02,360
+quebrar algumas visões e alguns
+
+271
+00:09:02,360 --> 00:09:04,480
+conceitos errados que você possa ter. E,
+
+272
+00:09:04,480 --> 00:09:06,760
+por fim, te preparar pra segunda parte
+
+273
+00:09:06,760 --> 00:09:09,079
+desse livro, que, na minha opinião, é a
+
+274
+00:09:09,079 --> 00:09:11,240
+alma dessa obra de arte, que são os
+
+275
+00:09:11,240 --> 00:09:13,720
+dados distribuídos. Nessa segunda parte
+
+276
+00:09:13,720 --> 00:09:15,760
+do livro, a gente começa do capítulo 5
+
+277
+00:09:15,760 --> 00:09:18,079
+ao 9, onde o capítulo 5 fala sobre
+
+278
+00:09:18,079 --> 00:09:20,040
+replicação de dados, o capítulo seis
+
+279
+00:09:20,040 --> 00:09:22,200
+fala sobre particionamento, o sete fala
+
+280
+00:09:22,200 --> 00:09:24,519
+sobre transações, o oito fala sobre os
+
+281
+00:09:24,519 --> 00:09:26,760
+problemas dos sistemas distribuídos e o
+
+282
+00:09:26,760 --> 00:09:29,320
+nove fala sobre consistência e consenso
+
+283
+00:09:29,320 --> 00:09:30,920
+dos dados. E diferente da primeira
+
+284
+00:09:30,920 --> 00:09:32,920
+parte, onde o Martin Clpman te ensina
+
+285
+00:09:32,920 --> 00:09:34,920
+todos os fundamentos, partindo do
+
+286
+00:09:34,920 --> 00:09:36,920
+princípio de uma única arquitetura
+
+287
+00:09:36,920 --> 00:09:39,120
+centralizada, com um único servidor, um
+
+288
+00:09:39,120 --> 00:09:40,800
+único banco de dados e numa única
+
+289
+00:09:40,800 --> 00:09:42,800
+região, nessa segunda parte é onde ele
+
+290
+00:09:42,800 --> 00:09:44,360
+vai começar a entrar em algumas
+
+291
+00:09:44,360 --> 00:09:46,720
+perguntas muito mais difíceis, que são:
+
+292
+00:09:46,720 --> 00:09:48,519
+o que que acontece quando um sistema
+
+293
+00:09:48,519 --> 00:09:50,640
+cresce tanto que uma única máquina já
+
+294
+00:09:50,640 --> 00:09:52,399
+não é mais suficiente para suportar o
+
+295
+00:09:52,399 --> 00:09:54,360
+alto volume? Ou então quando um único
+
+296
+00:09:54,360 --> 00:09:56,399
+banco de dados começa a virar o gargalo
+
+297
+00:09:56,399 --> 00:09:58,360
+do sistema, ou então quando milhões de
+
+298
+00:09:58,360 --> 00:10:00,760
+usuários começam a acessar a aplicação
+
+299
+00:10:00,760 --> 00:10:03,480
+simultaneamente e isso começa a travar
+
+300
+00:10:03,480 --> 00:10:05,800
+toda a aplicação. Então é aqui que você
+
+301
+00:10:05,800 --> 00:10:08,480
+vai começar a entrar e mergulhar a fundo
+
+302
+00:10:08,480 --> 00:10:10,640
+no mundo dos sistemas distribuídos.
+
+303
+00:10:10,640 --> 00:10:12,320
+Então vai ser literalmente aqui que você
+
+304
+00:10:12,320 --> 00:10:14,360
+vai aprender as técnicas como replicação
+
+305
+00:10:14,360 --> 00:10:16,440
+de dados, replicação síncrona,
+
+306
+00:10:16,440 --> 00:10:18,240
+replicação assíncrona. Ele vai te
+
+307
+00:10:18,240 --> 00:10:20,120
+ensinar como que os bancos de dados
+
+308
+00:10:20,120 --> 00:10:22,320
+distribuídos funcionam por baixo dos
+
+309
+00:10:22,320 --> 00:10:24,079
+panos. E aqui você começa a aprender o
+
+310
+00:10:24,079 --> 00:10:25,760
+que que é consistência dos dados, o que
+
+311
+00:10:25,760 --> 00:10:27,600
+que é consenso, o que que é quórum, o
+
+312
+00:10:27,600 --> 00:10:29,240
+que que é raft, o que que é o teorema
+
+313
+00:10:29,240 --> 00:10:31,440
+cap, o teorema Passelk. Inclusive já tem
+
+314
+00:10:31,440 --> 00:10:32,880
+vídeo aqui no canal onde eu te ensino
+
+315
+00:10:32,880 --> 00:10:34,640
+tudo isso e é com esses conhecimentos
+
+316
+00:10:34,640 --> 00:10:36,399
+que você faz a escolha correta do banco
+
+317
+00:10:36,399 --> 00:10:38,040
+de dados pra tua aplicação. Então vou
+
+318
+00:10:38,040 --> 00:10:39,519
+deixar um card aqui em cima e o link na
+
+319
+00:10:39,519 --> 00:10:41,120
+descrição para você assistir depois.
+
+320
+00:10:41,120 --> 00:10:42,560
+Além disso, ele também vai entrar num
+
+321
+00:10:42,560 --> 00:10:44,480
+tema extremamente poderoso, que é o
+
+322
+00:10:44,480 --> 00:10:46,160
+particionamento dos dados, também
+
+323
+00:10:46,160 --> 00:10:48,079
+conhecido como charging, que também já
+
+324
+00:10:48,079 --> 00:10:49,680
+tem vídeo aqui no canal sobre isso. E
+
+325
+00:10:49,680 --> 00:10:51,160
+essa é a técnica que a gente usa em
+
+326
+00:10:51,160 --> 00:10:53,120
+aplicações de grande porte para escalar
+
+327
+00:10:53,120 --> 00:10:55,160
+horizontalmente o banco de dados e
+
+328
+00:10:55,160 --> 00:10:57,240
+distribuir bilhões de registros em
+
+329
+00:10:57,240 --> 00:10:59,519
+múltiplos fragmentos, sem transformar
+
+330
+00:10:59,519 --> 00:11:01,880
+tudo num causo. Ele vai te ensinar
+
+331
+00:11:01,880 --> 00:11:03,959
+também sobre transações distribuídas,
+
+332
+00:11:03,959 --> 00:11:05,680
+sobre concorrência, sobre race
+
+333
+00:11:05,680 --> 00:11:07,440
+condition. E vai ser literalmente aqui
+
+334
+00:11:07,440 --> 00:11:09,480
+que você vai começar a entender algumas
+
+335
+00:11:09,480 --> 00:11:11,959
+coisas que você achava que sabia, até
+
+336
+00:11:11,959 --> 00:11:13,600
+porque uma coisa é você conhecer as
+
+337
+00:11:13,600 --> 00:11:15,800
+propriedades e dos bancos de dados para
+
+338
+00:11:15,800 --> 00:11:17,639
+passar numa entrevista e outra coisa
+
+339
+00:11:17,639 --> 00:11:19,800
+completamente diferente é você entender
+
+340
+00:11:19,800 --> 00:11:21,760
+o problema que aquilo ali tá tentando
+
+341
+00:11:21,760 --> 00:11:23,800
+resolver na vida real. E além de tudo
+
+342
+00:11:23,800 --> 00:11:25,600
+isso que eu falei, nessa segunda parte
+
+343
+00:11:25,600 --> 00:11:27,600
+aqui do livro você também vai aprender
+
+344
+00:11:27,600 --> 00:11:29,560
+uma coisa extremamente importante, que
+
+345
+00:11:29,560 --> 00:11:31,560
+são os tradeoffs dos sistemas
+
+346
+00:11:31,560 --> 00:11:33,200
+distribuídos. Porque talvez uma das
+
+347
+00:11:33,200 --> 00:11:35,519
+maiores lições desse livro aqui é te
+
+348
+00:11:35,519 --> 00:11:36,839
+fazer entender que a arquitetura de
+
+349
+00:11:36,839 --> 00:11:39,519
+software não é sobre encontrar a solução
+
+350
+00:11:39,519 --> 00:11:42,000
+perfeita, tecnologia perfeita ou seja lá
+
+351
+00:11:42,000 --> 00:11:43,880
+o que for. Arquitetura de software é
+
+352
+00:11:43,880 --> 00:11:46,279
+sobre você escolher quais as dores você
+
+353
+00:11:46,279 --> 00:11:48,560
+tá disposto a aceitar. Você quer mais
+
+354
+00:11:48,560 --> 00:11:50,600
+consistência nos dados? Então, talvez
+
+355
+00:11:50,600 --> 00:11:51,839
+você precisa abrir mão da
+
+356
+00:11:51,839 --> 00:11:53,839
+disponibilidade da aplicação. Você quer
+
+357
+00:11:53,839 --> 00:11:56,480
+uma latência menor, um tempo de resposta
+
+358
+00:11:56,480 --> 00:11:58,480
+ali mais rápido da tua aplicação, então
+
+359
+00:11:58,480 --> 00:12:00,279
+talvez você precisa sacrificar a
+
+360
+00:12:00,279 --> 00:12:02,680
+consistência dos dados temporariamente
+
+361
+00:12:02,680 --> 00:12:04,639
+em detrimento da latência. Você quer o
+
+362
+00:12:04,639 --> 00:12:06,360
+quê? Você quer distribuir a carga
+
+363
+00:12:06,360 --> 00:12:08,079
+globalmente? Então talvez você vai ter
+
+364
+00:12:08,079 --> 00:12:10,440
+que adicionar aí uma certa complexidade
+
+365
+00:12:10,440 --> 00:12:12,360
+operacional. Então são esses
+
+366
+00:12:12,360 --> 00:12:13,959
+aprendizados aqui que mudam
+
+367
+00:12:13,959 --> 00:12:15,880
+completamente a tua forma de pensar
+
+368
+00:12:15,880 --> 00:12:17,600
+sobre arquitetura, porque você para de
+
+369
+00:12:17,600 --> 00:12:19,560
+ficar procurando qual é o banco melhor,
+
+370
+00:12:19,560 --> 00:12:21,440
+qual é a arquitetura melhor, qual é a
+
+371
+00:12:21,440 --> 00:12:23,600
+tecnologia, se é microsserviço, se é
+
+372
+00:12:23,600 --> 00:12:25,680
+event driven, seja lá o que for. E você
+
+373
+00:12:25,680 --> 00:12:27,760
+começa a fazer a pergunta correta. Qual
+
+374
+00:12:27,760 --> 00:12:29,399
+é o problema que eu tô tentando
+
+375
+00:12:29,399 --> 00:12:31,720
+resolver? Quais as ferramentas corretas
+
+376
+00:12:31,720 --> 00:12:33,760
+para isso? E quais são as coisas que eu
+
+377
+00:12:33,760 --> 00:12:36,160
+vou abrir mão para poder resolver esse
+
+378
+00:12:36,160 --> 00:12:39,120
+problema da melhor forma possível? Esse
+
+379
+00:12:39,120 --> 00:12:40,680
+é o trabalho de um arquiteto de
+
+380
+00:12:40,680 --> 00:12:42,720
+software. E aí quando você começa a
+
+381
+00:12:42,720 --> 00:12:44,839
+trabalhar dessa maneira, você finalmente
+
+382
+00:12:44,839 --> 00:12:46,720
+começa a entender porque que algumas
+
+383
+00:12:46,720 --> 00:12:48,839
+empresas gigantes tomam decisões
+
+384
+00:12:48,839 --> 00:12:50,600
+completamente estranhas. Porque às vezes
+
+385
+00:12:50,600 --> 00:12:52,079
+tu pode olhar para uma arquitetura do
+
+386
+00:12:52,079 --> 00:12:54,279
+YouTube, da Netflix, do WhatsApp, do
+
+387
+00:12:54,279 --> 00:12:56,120
+Uber ou seja lá o que for, e aí tu fica
+
+388
+00:12:56,120 --> 00:12:57,560
+pensando, por que que esses caras
+
+389
+00:12:57,560 --> 00:12:59,480
+complicaram tanto essa situação? Só que
+
+390
+00:12:59,480 --> 00:13:01,639
+depois que você começa a ler essa
+
+391
+00:13:01,639 --> 00:13:03,440
+segunda parte do livro, você começa a
+
+392
+00:13:03,440 --> 00:13:05,079
+perceber que eles não complicaram nada.
+
+393
+00:13:05,079 --> 00:13:07,120
+Eles só estavam resolvendo problemas que
+
+394
+00:13:07,120 --> 00:13:09,399
+você nem sequer sabia que existiam.
+
+395
+00:13:09,399 --> 00:13:11,600
+Então é aqui nessa segunda parte do
+
+396
+00:13:11,600 --> 00:13:13,920
+livro que você começa entrar no mundo
+
+397
+00:13:13,920 --> 00:13:15,600
+dos arquitetos de software. Você começa
+
+398
+00:13:15,600 --> 00:13:17,920
+a mudar a sua mentalidade e começa a
+
+399
+00:13:17,920 --> 00:13:19,880
+caminhar para se tornar um arquiteto
+
+400
+00:13:19,880 --> 00:13:21,720
+também. Porque é nesse momento que você
+
+401
+00:13:21,720 --> 00:13:23,480
+começa a entender que não é aquele papo
+
+402
+00:13:23,480 --> 00:13:25,120
+de microsserviço. Vamos usar
+
+403
+00:13:25,120 --> 00:13:26,600
+microsserviço, tá? Por que que você vai
+
+404
+00:13:26,600 --> 00:13:28,199
+usar microsserviço? Vamos usar event
+
+405
+00:13:28,199 --> 00:13:30,240
+driven architecture? Vamos usar CQRS?
+
+406
+00:13:30,240 --> 00:13:31,920
+Vamos usar mais baseado em que que você
+
+407
+00:13:31,920 --> 00:13:33,760
+vai usar? Então é aqui que você pega
+
+408
+00:13:33,760 --> 00:13:35,760
+esse conhecimento e começa a caminhar
+
+409
+00:13:35,760 --> 00:13:37,959
+para se tornar um arquiteto. Inclusive
+
+410
+00:13:37,959 --> 00:13:40,199
+se você quiser se tornar um arquiteto de
+
+411
+00:13:40,199 --> 00:13:41,720
+software, você vai dar uma olhada no
+
+412
+00:13:41,720 --> 00:13:43,480
+mapa do arquiteto, que é um guia de
+
+413
+00:13:43,480 --> 00:13:45,680
+carreira completo para eu te conduzir do
+
+414
+00:13:45,680 --> 00:13:47,920
+absoluto zero, passando pelo júnior,
+
+415
+00:13:47,920 --> 00:13:50,360
+pelo pleno, pelo snior, até você se
+
+416
+00:13:50,360 --> 00:13:52,160
+tornar um arquiteto de software e um
+
+417
+00:13:52,160 --> 00:13:53,800
+arquiteto de soluções. E lá dentro eu te
+
+418
+00:13:53,800 --> 00:13:55,639
+entrego tudo que você precisa estudar,
+
+419
+00:13:55,639 --> 00:13:57,600
+na ordem que você precisa estudar. Te
+
+420
+00:13:57,600 --> 00:13:59,160
+entrego também os conhecimentos que
+
+421
+00:13:59,160 --> 00:14:01,040
+estão descritos nesse livro aqui e mais
+
+422
+00:14:01,040 --> 00:14:02,839
+um monte de outros complementos. E ainda
+
+423
+00:14:02,839 --> 00:14:04,920
+te entrego um roadmap completo que vai
+
+424
+00:14:04,920 --> 00:14:06,880
+conduzir guiar a tua carreira
+
+425
+00:14:06,880 --> 00:14:09,399
+independente de onde você esteja ou do
+
+426
+00:14:09,399 --> 00:14:11,040
+teu nível de senioridade, que lá dentro
+
+427
+00:14:11,040 --> 00:14:12,800
+você vai ter acesso à minha pessoa, você
+
+428
+00:14:12,800 --> 00:14:14,360
+vai poder me consultar, tirar dúvidas
+
+429
+00:14:14,360 --> 00:14:15,759
+diretamente comigo que eu vou te
+
+430
+00:14:15,759 --> 00:14:17,800
+conduzindo, vou te guiando ali até você
+
+431
+00:14:17,800 --> 00:14:19,639
+se tornar um arquiteto de software e um
+
+432
+00:14:19,639 --> 00:14:21,480
+arquiteto de soluções com conhecimentos
+
+433
+00:14:21,480 --> 00:14:23,639
+práticos e pra vida real. Então vou
+
+434
+00:14:23,639 --> 00:14:26,079
+deixar o link na descrição, não deixa de
+
+435
+00:14:26,079 --> 00:14:28,040
+conferir. E vamos agora pra terceira e
+
+436
+00:14:28,040 --> 00:14:29,639
+última parte do nosso livro. E é
+
+437
+00:14:29,639 --> 00:14:31,639
+exatamente aqui que o Martin Klepman vai
+
+438
+00:14:31,639 --> 00:14:33,880
+subir ainda mais o nível. Isso porque é
+
+439
+00:14:33,880 --> 00:14:35,800
+agora que ele começa a responder uma
+
+440
+00:14:35,800 --> 00:14:38,399
+outra pergunta extremamente importante,
+
+441
+00:14:38,399 --> 00:14:40,519
+que é: o que que acontece quando os
+
+442
+00:14:40,519 --> 00:14:43,320
+próprios dados do nosso sistema começam
+
+443
+00:14:43,320 --> 00:14:46,040
+a gerar novos dados? Então é agora que a
+
+444
+00:14:46,040 --> 00:14:48,040
+gente chega na parte mais avançada do
+
+445
+00:14:48,040 --> 00:14:50,639
+livro, que são os dados derivados. Nessa
+
+446
+00:14:50,639 --> 00:14:52,199
+terceira e última parte do livro que vai
+
+447
+00:14:52,199 --> 00:14:54,680
+do capítulo 10 ao 12, onde o 10 é
+
+448
+00:14:54,680 --> 00:14:56,600
+processamento em lote, o 11 é
+
+449
+00:14:56,600 --> 00:14:59,120
+processamento de fluxo e o 12 é o futuro
+
+450
+00:14:59,120 --> 00:15:01,240
+dos sistemas de dados, o foco aqui é
+
+451
+00:15:01,240 --> 00:15:03,399
+literalmente entrar numa camada muito
+
+452
+00:15:03,399 --> 00:15:05,399
+mais profunda da arquitetura de software
+
+453
+00:15:05,399 --> 00:15:07,399
+que muito pouca gente conhece e domina,
+
+454
+00:15:07,399 --> 00:15:09,320
+que são os dados derivados. Isso porque
+
+455
+00:15:09,320 --> 00:15:11,759
+em grandes aplicações do mundo real, os
+
+456
+00:15:11,759 --> 00:15:14,399
+dados da aplicação raramente existem em
+
+457
+00:15:14,399 --> 00:15:16,880
+apenas um único formato. Ou seja, você
+
+458
+00:15:16,880 --> 00:15:19,240
+tem os dados originais que normalmente
+
+459
+00:15:19,240 --> 00:15:21,560
+nascem em alguma parte transacional do
+
+460
+00:15:21,560 --> 00:15:23,399
+teu sistema, como por exemplo, um pedido
+
+461
+00:15:23,399 --> 00:15:25,920
+foi criado, um pagamento foi aprovado, o
+
+462
+00:15:25,920 --> 00:15:28,279
+usuário clicou num botão, um motorista,
+
+463
+00:15:28,279 --> 00:15:30,079
+sei lá, aceitou uma corrida, um
+
+464
+00:15:30,079 --> 00:15:32,680
+pagamento Pix foi enviado. Tudo isso são
+
+465
+00:15:32,680 --> 00:15:34,839
+parte do teu sistema transacional. E
+
+466
+00:15:34,839 --> 00:15:36,800
+isso aqui gera o que a gente chama de
+
+467
+00:15:36,800 --> 00:15:39,000
+dados originais, que vão sendo gerados
+
+468
+00:15:39,000 --> 00:15:41,079
+ali ao longo do tempo no teu sistema. Só
+
+469
+00:15:41,079 --> 00:15:43,639
+que esses dados originais muuit das
+
+470
+00:15:43,639 --> 00:15:46,279
+vezes, eles precisam gerar outros dados.
+
+471
+00:15:46,279 --> 00:15:48,079
+Então, por exemplo, quando um pedido é
+
+472
+00:15:48,079 --> 00:15:50,319
+criado no teu sistema, isso gera os
+
+473
+00:15:50,319 --> 00:15:53,000
+dados originais daquele pedido. Só que o
+
+474
+00:15:53,000 --> 00:15:55,440
+fato desse pedido ter sido criado, isso
+
+475
+00:15:55,440 --> 00:15:57,639
+pode acabar alimentando, talvez um
+
+476
+00:15:57,639 --> 00:15:59,040
+relatório de vendas que, por
+
+477
+00:15:59,040 --> 00:16:01,360
+consequência, vai acabar gerando mais
+
+478
+00:16:01,360 --> 00:16:03,800
+outros dados só pelo fato de um pedido
+
+479
+00:16:03,800 --> 00:16:05,360
+ter sido criado. Se você tiver
+
+480
+00:16:05,360 --> 00:16:06,720
+trabalhando, de repente, com um sistema
+
+481
+00:16:06,720 --> 00:16:09,160
+de pagamentos, o pagamento de um pedido
+
+482
+00:16:09,160 --> 00:16:10,959
+criado pode alimentar um sistema de
+
+483
+00:16:10,959 --> 00:16:12,959
+antifraude, que também vai gerar outros
+
+484
+00:16:12,959 --> 00:16:15,040
+dados. Um clique que um usuário faz de
+
+485
+00:16:15,040 --> 00:16:16,759
+repente numa parte da tua aplicação e
+
+486
+00:16:16,759 --> 00:16:18,800
+você tá monitorando esse clique, isso
+
+487
+00:16:18,800 --> 00:16:20,720
+pode alimentar um sistema que de repente
+
+488
+00:16:20,720 --> 00:16:22,240
+fica ali rodando em background de
+
+489
+00:16:22,240 --> 00:16:24,000
+recomendações para poder recomendar
+
+490
+00:16:24,000 --> 00:16:25,920
+novos produtos similares para aquele
+
+491
+00:16:25,920 --> 00:16:28,079
+mesmo usuário. Então o lance aqui é o
+
+492
+00:16:28,079 --> 00:16:30,480
+seguinte, o dado, tá, o dado bruto ali,
+
+493
+00:16:30,480 --> 00:16:32,839
+o dado original da nossa aplicação, ele
+
+494
+00:16:32,839 --> 00:16:34,800
+nasce num determinado lugar, só que ele
+
+495
+00:16:34,800 --> 00:16:37,040
+começa a ser transformado, copiado,
+
+496
+00:16:37,040 --> 00:16:39,639
+agregado, enriquecido e projetado para
+
+497
+00:16:39,639 --> 00:16:41,600
+vários outros lugares. E é isso que o
+
+498
+00:16:41,600 --> 00:16:43,839
+Martin Clppman chama de dados derivados,
+
+499
+00:16:43,839 --> 00:16:45,920
+que são os dados que não necessariamente
+
+500
+00:16:45,920 --> 00:16:48,000
+representam a fonte original da verdade
+
+501
+00:16:48,000 --> 00:16:50,360
+do nosso sistema, mas são construídos a
+
+502
+00:16:50,360 --> 00:16:52,800
+partir dela para responder várias outras
+
+503
+00:16:52,800 --> 00:16:54,959
+perguntas, para servir outros casos de
+
+504
+00:16:54,959 --> 00:16:56,440
+uso, para melhorar a performance da
+
+505
+00:16:56,440 --> 00:16:58,560
+aplicação, para servir um analytics, um
+
+506
+00:16:58,560 --> 00:17:00,360
+dashboard e por aí vai. Então vai ser
+
+507
+00:17:00,360 --> 00:17:02,639
+literalmente aqui nessa última parte do
+
+508
+00:17:02,639 --> 00:17:04,400
+livro que você vai perceber que um
+
+509
+00:17:04,400 --> 00:17:06,439
+sistema de grande porte não é uma
+
+510
+00:17:06,439 --> 00:17:08,520
+aplicação parada em cima de um único
+
+511
+00:17:08,520 --> 00:17:10,240
+banco de dados. Um sistema de grande
+
+512
+00:17:10,240 --> 00:17:12,600
+porte é praticamente um organismo vivo,
+
+513
+00:17:12,600 --> 00:17:14,480
+onde os dados estão o tempo todo se
+
+514
+00:17:14,480 --> 00:17:16,400
+movendo de um lugar pro outro, sendo
+
+515
+00:17:16,400 --> 00:17:19,160
+transformados, processados, indexados,
+
+516
+00:17:19,160 --> 00:17:22,000
+agregados, publicados, consumidos e
+
+517
+00:17:22,000 --> 00:17:24,720
+reinterpretados por várias outras partes
+
+518
+00:17:24,720 --> 00:17:26,880
+da arquitetura. Então, é nessa parte do
+
+519
+00:17:26,880 --> 00:17:28,400
+livro que você começa a aprender a fazer
+
+520
+00:17:28,400 --> 00:17:30,200
+o processamento de dado em larga escala.
+
+521
+00:17:30,200 --> 00:17:31,559
+Você vai aprender conceitos como
+
+522
+00:17:31,559 --> 00:17:33,360
+processamento em lote, que é uma das
+
+523
+00:17:33,360 --> 00:17:35,120
+técnicas para você conseguir processar
+
+524
+00:17:35,120 --> 00:17:37,480
+volumes gigantescos de informação para
+
+525
+00:17:37,480 --> 00:17:39,360
+poder gerar relatório, analític,
+
+526
+00:17:39,360 --> 00:17:41,280
+monitorar comportamento do usuário,
+
+527
+00:17:41,280 --> 00:17:43,200
+métrica, inteligência do negócio e por
+
+528
+00:17:43,200 --> 00:17:45,080
+aí vai. Além disso, você também vai
+
+529
+00:17:45,080 --> 00:17:47,280
+aprender as técnicas de processamento de
+
+530
+00:17:47,280 --> 00:17:49,520
+fluxo em tempo real, ou seja, são
+
+531
+00:17:49,520 --> 00:17:51,640
+aqueles tipos de dados que você precisa
+
+532
+00:17:51,640 --> 00:17:53,520
+processar em tempo real no momento em
+
+533
+00:17:53,520 --> 00:17:54,960
+que eles vão acontecendo. Não dá para
+
+534
+00:17:54,960 --> 00:17:56,559
+você esperar para processar em lote
+
+535
+00:17:56,559 --> 00:17:58,000
+depois. E vai ser aqui que você vai
+
+536
+00:17:58,000 --> 00:17:59,679
+aprender as técnicas e as ferramentas
+
+537
+00:17:59,679 --> 00:18:01,360
+para fazer isso, como processamento
+
+538
+00:18:01,360 --> 00:18:03,559
+orientado a eventos, pipeline de dados
+
+539
+00:18:03,559 --> 00:18:06,000
+em tempo real, fila de mensageria com a
+
+540
+00:18:06,000 --> 00:18:08,840
+cáfica, log de evento, pub sub, event
+
+541
+00:18:08,840 --> 00:18:10,760
+stream e por aí vai. E além de tudo
+
+542
+00:18:10,760 --> 00:18:12,640
+isso, você ainda vai começar a entender
+
+543
+00:18:12,640 --> 00:18:14,640
+muito melhor algumas arquiteturas
+
+544
+00:18:14,640 --> 00:18:16,039
+específicas, como é o caso da
+
+545
+00:18:16,039 --> 00:18:18,320
+arquitetura orientada a eventos ou event
+
+546
+00:18:18,320 --> 00:18:20,360
+driven architecture, que também já tem
+
+547
+00:18:20,360 --> 00:18:22,400
+vídeo aqui no canal. E como eu disse,
+
+548
+00:18:22,400 --> 00:18:24,720
+daria para ficar falando por horas aqui
+
+549
+00:18:24,720 --> 00:18:26,919
+de tudo que você vai encontrar dentro
+
+550
+00:18:26,919 --> 00:18:29,559
+desta obra de arte aqui. Só que eu acho
+
+551
+00:18:29,559 --> 00:18:31,720
+que você já entendeu qual é a proposta
+
+552
+00:18:31,720 --> 00:18:33,640
+do livro. E a mensagem que eu quero que
+
+553
+00:18:33,640 --> 00:18:36,200
+você grave nesse exato momento é que se
+
+554
+00:18:36,200 --> 00:18:38,400
+você quer parar de ficar só no crude, no
+
+555
+00:18:38,400 --> 00:18:40,000
+framework e por aí vai, não que tenha
+
+556
+00:18:40,000 --> 00:18:41,280
+algum problema em você ser um
+
+557
+00:18:41,280 --> 00:18:43,000
+programador que só trabalha com isso ali
+
+558
+00:18:43,000 --> 00:18:44,600
+criando teus end point, teu crude, teu
+
+559
+00:18:44,600 --> 00:18:46,480
+frameworkzinho, não tem problema nenhum
+
+560
+00:18:46,480 --> 00:18:47,960
+você ser esse tipo de programador. Só
+
+561
+00:18:47,960 --> 00:18:50,039
+que se você quiser dar um passo além, se
+
+562
+00:18:50,039 --> 00:18:51,640
+tornar um arquiteto, começar a trabalhar
+
+563
+00:18:51,640 --> 00:18:53,159
+em grandes aplicações, começar a
+
+564
+00:18:53,159 --> 00:18:55,400
+projetar as coisas de verdade e sentir
+
+565
+00:18:55,400 --> 00:18:57,159
+aquele senso de que você realmente tá
+
+566
+00:18:57,159 --> 00:18:59,520
+construindo algo grande no mundo real,
+
+567
+00:18:59,520 --> 00:19:01,799
+aí eu recomendo para você que você leia
+
+568
+00:19:01,799 --> 00:19:03,919
+esse livro, porque esse livro aqui, eu
+
+569
+00:19:03,919 --> 00:19:06,679
+digo sem medo de errar, é uma leitura
+
+570
+00:19:06,679 --> 00:19:09,159
+obrigatória. E como eu sei que você é um
+
+571
+00:19:09,159 --> 00:19:10,720
+agoniado, eu sei que você deve estar aí,
+
+572
+00:19:10,720 --> 00:19:12,120
+onde é que eu vou ler aí o livro
+
+573
+00:19:12,120 --> 00:19:13,440
+em português? Como é que eu vou fazer
+
+574
+00:19:13,440 --> 00:19:15,039
+para ler? Então, para você ler esse
+
+575
+00:19:15,039 --> 00:19:16,640
+livro aqui em português, o que você vai
+
+576
+00:19:16,640 --> 00:19:18,200
+fazer é o seguinte. Eu vou deixar o link
+
+577
+00:19:18,200 --> 00:19:20,280
+desse livro aqui na descrição, caso você
+
+578
+00:19:20,280 --> 00:19:21,960
+queira adquirir esse livro aqui, tá? Vou
+
+579
+00:19:21,960 --> 00:19:23,360
+deixar o link dele na descrição. E eu
+
+580
+00:19:23,360 --> 00:19:25,120
+vou deixar também o link da Oiley, que é
+
+581
+00:19:25,120 --> 00:19:27,080
+a publicadora oficial desse livro aqui,
+
+582
+00:19:27,080 --> 00:19:28,960
+tá? É a mantenedora desse livro aqui, de
+
+583
+00:19:28,960 --> 00:19:30,679
+vários outros livros fantásticos, tá?
+
+584
+00:19:30,679 --> 00:19:31,960
+Que dá para você ler lá dentro. E o que
+
+585
+00:19:31,960 --> 00:19:33,520
+que você vai fazer? Eu vou deixar o link
+
+586
+00:19:33,520 --> 00:19:35,760
+na descrição da Oile e você vai entrar
+
+587
+00:19:35,760 --> 00:19:37,640
+lá, vai criar a sua conta com o seu
+
+588
+00:19:37,640 --> 00:19:39,320
+e-mail e você vai conseguir acessar o
+
+589
+00:19:39,320 --> 00:19:41,320
+conteúdo interno desse livro aqui. E
+
+590
+00:19:41,320 --> 00:19:43,360
+basta você traduzir para português,
+
+591
+00:19:43,360 --> 00:19:44,880
+beleza? O período ali que eles vão te
+
+592
+00:19:44,880 --> 00:19:46,600
+dar, acho que é de duas semanas, salvo
+
+593
+00:19:46,600 --> 00:19:48,559
+engano. Então você consegue ler uma boa
+
+594
+00:19:48,559 --> 00:19:50,120
+parte desse livro aqui em duas semanas,
+
+595
+00:19:50,120 --> 00:19:52,039
+caso você tenha o hábito da leitura. Mas
+
+596
+00:19:52,039 --> 00:19:53,559
+eu acredito que não dá para você
+
+597
+00:19:53,559 --> 00:19:55,679
+finalizar esse livro aqui em duas
+
+598
+00:19:55,679 --> 00:19:57,840
+semanas, até porque eu levei 3 meses,
+
+599
+00:19:57,840 --> 00:19:59,760
+quase 3 meses e meio, vamos dizer assim,
+
+600
+00:19:59,760 --> 00:20:01,120
+para poder finalizar esse livro. E olha
+
+601
+00:20:01,120 --> 00:20:02,559
+que eu sou um cara que lê bastante.
+
+602
+00:20:02,559 --> 00:20:04,520
+Então recomendo para você que comece a
+
+603
+00:20:04,520 --> 00:20:06,200
+assinatura ali na Ori ali, tá? Uma
+
+604
+00:20:06,200 --> 00:20:07,520
+assinaturazinha bem barata ali, você
+
+605
+00:20:07,520 --> 00:20:08,799
+consegue pagar tranquilamente e você
+
+606
+00:20:08,799 --> 00:20:10,400
+consegue ter ali não só esse livro, mas
+
+607
+00:20:10,400 --> 00:20:12,400
+um acervo completo de outros livros. Eu
+
+608
+00:20:12,400 --> 00:20:14,080
+não tô sendo patrocinado aqui pela
+
+609
+00:20:14,080 --> 00:20:16,120
+Oiley. Só tô te dando um caminho pr você
+
+610
+00:20:16,120 --> 00:20:17,640
+conseguir acessar esse livro e até
+
+611
+00:20:17,640 --> 00:20:19,360
+começar a ler ele gratuitamente em
+
+612
+00:20:19,360 --> 00:20:21,520
+português, caso você não consiga ter a
+
+613
+00:20:21,520 --> 00:20:24,240
+versão impressa aqui original em inglês.
+
+614
+00:20:24,240 --> 00:20:25,640
+Beleza? Caso você já saiba ler em
+
+615
+00:20:25,640 --> 00:20:27,360
+inglês, eu recomendo fortemente que você
+
+616
+00:20:27,360 --> 00:20:28,919
+adquira esse livro, porque isso aqui é o
+
+617
+00:20:28,919 --> 00:20:30,520
+livro de cabeceira, cara. Eu recomendo
+
+618
+00:20:30,520 --> 00:20:32,280
+fortemente. Eu sempre digo aqui no
+
+619
+00:20:32,280 --> 00:20:34,240
+canal, cara, a leitura é algo que me
+
+620
+00:20:34,240 --> 00:20:36,520
+trouxe 80% ou mais de todo o
+
+621
+00:20:36,520 --> 00:20:38,360
+conhecimento que eu tenho. Então eu não
+
+622
+00:20:38,360 --> 00:20:40,280
+abro mão de sempre estar recomendando
+
+623
+00:20:40,280 --> 00:20:42,919
+que você leia. Leia, porque independente
+
+624
+00:20:42,919 --> 00:20:44,480
+do tema do que você tá lendo, cara, lê
+
+625
+00:20:44,480 --> 00:20:46,440
+até gibi. Você tiver que ler gibi, lê
+
+626
+00:20:46,440 --> 00:20:48,559
+gibi, ler mangá, ler o que você quiser,
+
+627
+00:20:48,559 --> 00:20:51,039
+mas leia. A leitura é um hábito
+
+628
+00:20:51,039 --> 00:20:53,840
+extremamente fundamental e pode mudar só
+
+629
+00:20:53,840 --> 00:20:56,080
+a sua carreira, mas também a sua vida.
+
+630
+00:20:56,080 --> 00:20:57,600
+Beleza? Bom, e agora que tu chegou até o
+
+631
+00:20:57,600 --> 00:20:59,000
+final desse vídeo aqui, já entendeu tudo
+
+632
+00:20:59,000 --> 00:21:01,080
+que tu precisava a respeito desse livro
+
+633
+00:21:01,080 --> 00:21:03,120
+aqui, que é campeão, livro bom demais.
+
+634
+00:21:03,120 --> 00:21:04,880
+Deixa teu like aí, se inscreve no canal,
+
+635
+00:21:04,880 --> 00:21:06,120
+ativa o sininho da vaquinha para tu não
+
+636
+00:21:06,120 --> 00:21:07,799
+perder nenhuma notificação. Não se
+
+637
+00:21:07,799 --> 00:21:09,320
+esquece de dar uma olhada também no mapa
+
+638
+00:21:09,320 --> 00:21:10,960
+do arquiteto, um guia de carreira
+
+639
+00:21:10,960 --> 00:21:12,600
+completo para eu te conduzir do absoluto
+
+640
+00:21:12,600 --> 00:21:14,320
+zero até o arquiteto de software. Então
+
+641
+00:21:14,320 --> 00:21:15,840
+o link vai est na descrição, dá um
+
+642
+00:21:15,840 --> 00:21:17,520
+confere aí depois. Se ficou qualquer
+
+643
+00:21:17,520 --> 00:21:19,279
+dúvida, deixa nos comentários abaixo que
+
+644
+00:21:19,279 --> 00:21:20,720
+eu prometo que eu tire um tempo para te
+
+645
+00:21:20,720 --> 00:21:22,559
+responder. Por fim, eu vou ficando por
+
+646
+00:21:22,559 --> 00:21:25,159
+aqui. Um forte abraço para você e nos
+
+647
+00:21:25,159 --> 00:21:28,520
+vemos em breve.

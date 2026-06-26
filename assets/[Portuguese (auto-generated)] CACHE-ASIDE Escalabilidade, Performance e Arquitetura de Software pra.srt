@@ -1,0 +1,3691 @@
+1
+00:00:00,080 --> 00:00:01,800
+Imagina que você tá numa entrevista
+
+2
+00:00:01,800 --> 00:00:04,040
+técnica para uma vaga de programador e o
+
+3
+00:00:04,040 --> 00:00:05,960
+avaliador vira para você e manda o
+
+4
+00:00:05,960 --> 00:00:08,160
+seguinte cenário para você resolver.
+
+5
+00:00:08,160 --> 00:00:09,719
+Vamos supor que o sistema em que você
+
+6
+00:00:09,719 --> 00:00:11,440
+trabalha começou a receber um volume
+
+7
+00:00:11,440 --> 00:00:13,599
+muito alto de acessos simultâneos. No
+
+8
+00:00:13,599 --> 00:00:15,519
+começo, tudo funcionava muito bem, mas
+
+9
+00:00:15,519 --> 00:00:17,000
+conforme o número de usuários foi
+
+10
+00:00:17,000 --> 00:00:19,039
+aumentando, a aplicação começou a ficar
+
+11
+00:00:19,039 --> 00:00:20,840
+muito lenta e todos os usuários
+
+12
+00:00:20,840 --> 00:00:22,760
+começaram a reclamar. Depois de muito
+
+13
+00:00:22,760 --> 00:00:24,480
+investigar, você descobriu que o banco
+
+14
+00:00:24,480 --> 00:00:26,439
+de dados está sendo bombardeado com
+
+15
+00:00:26,439 --> 00:00:28,480
+consultas repetidas para buscar sempre
+
+16
+00:00:28,480 --> 00:00:30,599
+os mesmos dados. E que foi esse acesso
+
+17
+00:00:30,599 --> 00:00:32,520
+de consultas que acabou transformando o
+
+18
+00:00:32,520 --> 00:00:34,680
+banco de dados no principal gargalo do
+
+19
+00:00:34,680 --> 00:00:36,680
+sistema, prejudicando a performance da
+
+20
+00:00:36,680 --> 00:00:39,520
+aplicação inteira. O que você faria para
+
+21
+00:00:39,520 --> 00:00:41,640
+resolver esse problema sem trocar o
+
+22
+00:00:41,640 --> 00:00:43,440
+banco de dados e sem depender de
+
+23
+00:00:43,440 --> 00:00:45,719
+upgrades na infraestrutura? Esse tipo de
+
+24
+00:00:45,719 --> 00:00:47,640
+pergunta técnica é mais comum do que
+
+25
+00:00:47,640 --> 00:00:50,160
+você imagina e é exatamente aqui que
+
+26
+00:00:50,160 --> 00:00:52,239
+muita gente trava. Mas quem conhece a
+
+27
+00:00:52,239 --> 00:00:54,399
+arquitetura de verdade sabe exatamente
+
+28
+00:00:54,399 --> 00:00:56,600
+que tipo de solução aplicar nesse
+
+29
+00:00:56,600 --> 00:00:59,000
+cenário. E uma das soluções mais simples
+
+30
+00:00:59,000 --> 00:01:01,160
+e mais eficazes para resolver esse tipo
+
+31
+00:01:01,160 --> 00:01:03,920
+de problema é conhecida como cash Aside
+
+32
+00:01:03,920 --> 00:01:06,400
+Pattern. E é exatamente esse padrão que
+
+33
+00:01:06,400 --> 00:01:08,560
+eu vou te ensinar no vídeo de hoje. Fala
+
+34
+00:01:08,560 --> 00:01:10,400
+pessoal, Renato Augusto aqui de novo e
+
+35
+00:01:10,400 --> 00:01:12,439
+dessa vez para te ensinar na prática o
+
+36
+00:01:12,439 --> 00:01:14,640
+padrão arquitetural conhecido como Cash
+
+37
+00:01:14,640 --> 00:01:16,640
+Aside Pattern. Esse é um dos padrões
+
+38
+00:01:16,640 --> 00:01:18,560
+mais simples de ser implementado, porém
+
+39
+00:01:18,560 --> 00:01:20,439
+muito poderoso quando o assunto é lidar
+
+40
+00:01:20,439 --> 00:01:22,320
+com gargalos no banco de dados e também
+
+41
+00:01:22,320 --> 00:01:24,159
+com performance e escalabilidade de
+
+42
+00:01:24,159 --> 00:01:26,200
+aplicações web. E o melhor disso tudo é
+
+43
+00:01:26,200 --> 00:01:28,320
+que esse padrão vai fazer você brilhar
+
+44
+00:01:28,320 --> 00:01:30,320
+nas entrevistas técnicas, porque você
+
+45
+00:01:30,320 --> 00:01:32,560
+mostra que sabe como otimizar sistemas
+
+46
+00:01:32,560 --> 00:01:34,479
+de verdade resolvendo problemas de
+
+47
+00:01:34,479 --> 00:01:36,560
+performance com soluções arquiteturais
+
+48
+00:01:36,560 --> 00:01:38,079
+maduras. Então, pra gente não perder
+
+49
+00:01:38,079 --> 00:01:39,520
+mais tempo, bora pra tela e vamos
+
+50
+00:01:39,520 --> 00:01:41,000
+entender quais são os problemas que esse
+
+51
+00:01:41,000 --> 00:01:42,880
+padrão resolve, como que você consegue
+
+52
+00:01:42,880 --> 00:01:44,680
+implementar ele hoje ainda no teu
+
+53
+00:01:44,680 --> 00:01:46,560
+sistema e quais são os cuidados que você
+
+54
+00:01:46,560 --> 00:01:48,759
+tem que ter ao lidar com cash no dia a
+
+55
+00:01:48,759 --> 00:01:50,520
+dia. Bora lá. Bom, então vamos lá. Vamos
+
+56
+00:01:50,520 --> 00:01:52,000
+direto ao ponto aqui, vamos direto ao
+
+57
+00:01:52,000 --> 00:01:53,560
+que interessa pra gente entender como
+
+58
+00:01:53,560 --> 00:01:55,399
+que funciona esse padrão conhecido como
+
+59
+00:01:55,399 --> 00:01:57,079
+Cash Asside, quais são os problemas que
+
+60
+00:01:57,079 --> 00:01:58,680
+ele resolve, como que a gente consegue
+
+61
+00:01:58,680 --> 00:02:00,280
+implementar ele no nosso dia a dia.
+
+62
+00:02:00,280 --> 00:02:01,399
+Então, já te adianto que a gente vai
+
+63
+00:02:01,399 --> 00:02:02,799
+olhar para código também e
+
+64
+00:02:02,799 --> 00:02:04,560
+principalmente quais são os tradeoffs
+
+65
+00:02:04,560 --> 00:02:06,000
+que a gente precisa fazer pra gente
+
+66
+00:02:06,000 --> 00:02:08,119
+colocar isso aqui em funcionamento, tá?
+
+67
+00:02:08,119 --> 00:02:09,560
+Então vamos lá. Qual que é o problema
+
+68
+00:02:09,560 --> 00:02:11,480
+que a gente precisa resolver aqui, tá?
+
+69
+00:02:11,480 --> 00:02:12,920
+Acho que esse diagrama aqui já é muito
+
+70
+00:02:12,920 --> 00:02:14,840
+claro, mas a gente vai fazer o seguinte,
+
+71
+00:02:14,840 --> 00:02:16,319
+a gente vai fazer uma pequena simulação
+
+72
+00:02:16,319 --> 00:02:17,599
+aqui, que é o seguinte, vamos imaginar
+
+73
+00:02:17,599 --> 00:02:18,720
+que a gente trabalha, que a gente foi
+
+74
+00:02:18,720 --> 00:02:20,400
+contratado, né, como arquiteto ou como
+
+75
+00:02:20,400 --> 00:02:22,239
+programador pela empresa Shop Greeds,
+
+76
+00:02:22,239 --> 00:02:23,480
+que é uma empresa do segmento de
+
+77
+00:02:23,480 --> 00:02:25,440
+e-commerce. Então ele vende produtos
+
+78
+00:02:25,440 --> 00:02:27,480
+online ali. E a nossa missão aqui é
+
+79
+00:02:27,480 --> 00:02:29,319
+apenas cuidar dessa plataforma, é
+
+80
+00:02:29,319 --> 00:02:31,080
+desenvolver os novos módulos, é botar
+
+81
+00:02:31,080 --> 00:02:32,800
+ela para funcionar, é manter ela
+
+82
+00:02:32,800 --> 00:02:34,720
+funcionando ao longo do tempo e também
+
+83
+00:02:34,720 --> 00:02:36,519
+preparar ela para lidar com picos de
+
+84
+00:02:36,519 --> 00:02:38,319
+carga como possíveis Black Fridays.
+
+85
+00:02:38,319 --> 00:02:40,239
+Beleza? Até aqui mistério nenhum. E aí,
+
+86
+00:02:40,239 --> 00:02:41,920
+vamos reparar um detalhe aqui no front
+
+87
+00:02:41,920 --> 00:02:43,640
+end, que é o seguinte. Aqui no front end
+
+88
+00:02:43,640 --> 00:02:45,840
+dessa aplicação, a gente tem aqui, ó, as
+
+89
+00:02:45,840 --> 00:02:48,000
+categorias em destaque. Então, a gente
+
+90
+00:02:48,000 --> 00:02:50,040
+tem seis categorias em destaque aqui.
+
+91
+00:02:50,040 --> 00:02:51,239
+Então, o que eu quero que você entenda
+
+92
+00:02:51,239 --> 00:02:53,159
+aqui é o seguinte. Essas categorias
+
+93
+00:02:53,159 --> 00:02:55,440
+aqui, elas estão armazenadas lá no banco
+
+94
+00:02:55,440 --> 00:02:57,200
+de dados. Então, toda vez que alguém
+
+95
+00:02:57,200 --> 00:02:59,599
+acessa o nosso front end aqui, o front
+
+96
+00:02:59,599 --> 00:03:01,760
+end faz uma requisição lá na nossa API,
+
+97
+00:03:01,760 --> 00:03:03,720
+no nosso back end. E o nosso back end
+
+98
+00:03:03,720 --> 00:03:05,720
+precisa fazer uma consulta no banco de
+
+99
+00:03:05,720 --> 00:03:08,080
+dados e retornar quais são as categorias
+
+100
+00:03:08,080 --> 00:03:10,440
+em destaque, beleza? A nossa aplicação,
+
+101
+00:03:10,440 --> 00:03:13,920
+ela pode ter n 300 categorias, mas o
+
+102
+00:03:13,920 --> 00:03:16,159
+pessoal de produto, de venda, lá do
+
+103
+00:03:16,159 --> 00:03:18,360
+marketing, na telinha de cadastro deles
+
+104
+00:03:18,360 --> 00:03:20,200
+lá, eles escolhem quais vão ser as
+
+105
+00:03:20,200 --> 00:03:21,720
+categorias que vão estar em destaque,
+
+106
+00:03:21,720 --> 00:03:24,360
+seja nessa semana, no mês, tanto faz.
+
+107
+00:03:24,360 --> 00:03:26,080
+Esse é o cenário que a gente tá
+
+108
+00:03:26,080 --> 00:03:28,640
+inserido, tá? E qual é o problema dessa
+
+109
+00:03:28,640 --> 00:03:30,439
+situação aqui? Vamos imaginar que tá
+
+110
+00:03:30,439 --> 00:03:32,200
+vindo uma Black Friday por aí e a gente
+
+111
+00:03:32,200 --> 00:03:34,400
+vai precisar lidar com picos muito alto
+
+112
+00:03:34,400 --> 00:03:36,239
+de requisições simultâneas, de vários
+
+113
+00:03:36,239 --> 00:03:38,080
+clientes querendo comprar e por aí vai.
+
+114
+00:03:38,080 --> 00:03:40,239
+Então o que que acontece? Toda vez que
+
+115
+00:03:40,239 --> 00:03:42,319
+alguém acessa essa nossa página, o que
+
+116
+00:03:42,319 --> 00:03:43,959
+acontece é que aquele bloquinho lá do
+
+117
+00:03:43,959 --> 00:03:45,920
+front end, para ele ser alimentado com
+
+118
+00:03:45,920 --> 00:03:47,640
+as categorias que estão destaque, o
+
+119
+00:03:47,640 --> 00:03:49,640
+front end precisa fazer uma requisição
+
+120
+00:03:49,640 --> 00:03:52,360
+na nossa API. E a API, por sua vez, vai
+
+121
+00:03:52,360 --> 00:03:54,599
+acabar espancando o banco de dados com
+
+122
+00:03:54,599 --> 00:03:56,799
+um monte de select. E aonde que tá o
+
+123
+00:03:56,799 --> 00:03:58,439
+problema disso tudo aqui? O problema tá
+
+124
+00:03:58,439 --> 00:04:00,840
+justamente no banco de dados. Por quê?
+
+125
+00:04:00,840 --> 00:04:02,599
+Porque ele é o elo mais fraco dessa
+
+126
+00:04:02,599 --> 00:04:04,439
+relação. Porque toda operação que a
+
+127
+00:04:04,439 --> 00:04:06,560
+gente faz no banco de dados consome
+
+128
+00:04:06,560 --> 00:04:08,640
+recurso. Principalmente os bancos de
+
+129
+00:04:08,640 --> 00:04:11,200
+dados relacionais, eles precisam lidar
+
+130
+00:04:11,200 --> 00:04:13,360
+com atomicidade, com a consistência dos
+
+131
+00:04:13,360 --> 00:04:15,760
+dados, com isolamento, com durabilidade,
+
+132
+00:04:15,760 --> 00:04:17,239
+sem contar que eles precisam lidar com
+
+133
+00:04:17,239 --> 00:04:19,600
+índice, transação, bloqueio. Então, não
+
+134
+00:04:19,600 --> 00:04:21,840
+é tão simples assim você entupir teu
+
+135
+00:04:21,840 --> 00:04:23,680
+banco de dados com um monte de selects e
+
+136
+00:04:23,680 --> 00:04:25,160
+achar que ele vai te responder num tempo
+
+137
+00:04:25,160 --> 00:04:27,080
+hábil. Não é assim que funciona, até
+
+138
+00:04:27,080 --> 00:04:28,680
+porque o banco de dados ele tem um
+
+139
+00:04:28,680 --> 00:04:30,520
+número de conexões simultâneas que ele
+
+140
+00:04:30,520 --> 00:04:32,039
+consegue aguentar. E aí quando você
+
+141
+00:04:32,039 --> 00:04:33,840
+entope o banco de dados com um monte de
+
+142
+00:04:33,840 --> 00:04:35,639
+operações, o que ele vai fazer é criar
+
+143
+00:04:35,639 --> 00:04:38,000
+uma fila de atendimento. E aí, como ele
+
+144
+00:04:38,000 --> 00:04:40,199
+não vai conseguir atender todo mundo num
+
+145
+00:04:40,199 --> 00:04:42,000
+tempo hábil, o que que vai acontecer? A
+
+146
+00:04:42,000 --> 00:04:44,160
+API vai ficar esperando a resposta aqui
+
+147
+00:04:44,160 --> 00:04:45,759
+do banco de dados, não vai ter a
+
+148
+00:04:45,759 --> 00:04:47,440
+resposta num tempo hábil e vai começar a
+
+149
+00:04:47,440 --> 00:04:49,440
+retornar time out lá pro front end. O
+
+150
+00:04:49,440 --> 00:04:51,000
+que vai acontecer? A aplicação vai
+
+151
+00:04:51,000 --> 00:04:52,639
+acabar ficando fora do ar. Por quê?
+
+152
+00:04:52,639 --> 00:04:54,160
+porque o banco de dados abriu o bico,
+
+153
+00:04:54,160 --> 00:04:56,000
+pediu água e não aguentou lidar com essa
+
+154
+00:04:56,000 --> 00:04:58,479
+quantidade exagerada de requisições. E
+
+155
+00:04:58,479 --> 00:05:00,400
+geralmente é esse cenário que vão te
+
+156
+00:05:00,400 --> 00:05:02,400
+passar em algumas entrevistas, é esse
+
+157
+00:05:02,400 --> 00:05:04,160
+cenário aqui que vão te dar para você
+
+158
+00:05:04,160 --> 00:05:06,320
+poder resolver. E aí, como que a gente
+
+159
+00:05:06,320 --> 00:05:09,000
+resolve esse cenário aqui com o padrão
+
+160
+00:05:09,000 --> 00:05:11,520
+Cash Asside? Lembrando, existem outras
+
+161
+00:05:11,520 --> 00:05:13,360
+formas da gente resolver isso aqui. A
+
+162
+00:05:13,360 --> 00:05:15,120
+gente poderia cachear os dados lá a
+
+163
+00:05:15,120 --> 00:05:16,639
+nível de front end, mas isso aí
+
+164
+00:05:16,639 --> 00:05:18,680
+envolveriam outros tradeoffs. A gente
+
+165
+00:05:18,680 --> 00:05:20,680
+poderia envolver outras estratégias aqui
+
+166
+00:05:20,680 --> 00:05:22,919
+que não vem ao caso, mas a mais comum é
+
+167
+00:05:22,919 --> 00:05:24,759
+a gente implementar o Cash Aside, que é
+
+168
+00:05:24,759 --> 00:05:27,319
+uma técnica extremamente poderosa, muito
+
+169
+00:05:27,319 --> 00:05:28,880
+simples de ser implementada, que tu vai
+
+170
+00:05:28,880 --> 00:05:30,639
+aprender hoje ainda. Beleza? Então vamos
+
+171
+00:05:30,639 --> 00:05:32,639
+lá. Como que a gente resolve essa
+
+172
+00:05:32,639 --> 00:05:35,160
+situação aqui, já que os nossos clientes
+
+173
+00:05:35,160 --> 00:05:37,680
+aqui estão entupindo a API com um monte
+
+174
+00:05:37,680 --> 00:05:39,759
+de requisições para esse end point aqui,
+
+175
+00:05:39,759 --> 00:05:41,720
+para buscar as categorias que estão em
+
+176
+00:05:41,720 --> 00:05:43,240
+destaque. Que que a gente precisa fazer
+
+177
+00:05:43,240 --> 00:05:44,919
+primeiro? A gente precisa aliviar o
+
+178
+00:05:44,919 --> 00:05:46,759
+banco de dados, a gente precisa liberar
+
+179
+00:05:46,759 --> 00:05:48,639
+ele, a gente precisa requisitar o banco
+
+180
+00:05:48,639 --> 00:05:50,319
+de dados somente quando for muito
+
+181
+00:05:50,319 --> 00:05:52,440
+necessário. E como que a gente faz isso?
+
+182
+00:05:52,440 --> 00:05:54,600
+Implementando uma camada de cash entre o
+
+183
+00:05:54,600 --> 00:05:56,720
+banco de dados e a nossa API. Então, o
+
+184
+00:05:56,720 --> 00:05:57,919
+que que eu vou fazer aqui? Eu vou
+
+185
+00:05:57,919 --> 00:06:00,919
+duplicar esse nosso diagrama aqui. E aí
+
+186
+00:06:00,919 --> 00:06:02,560
+a gente vai fazer o seguinte. A partir
+
+187
+00:06:02,560 --> 00:06:04,319
+de agora eu vou nomear isso aqui para
+
+188
+00:06:04,319 --> 00:06:06,479
+cash Asside. E a gente vai começar a
+
+189
+00:06:06,479 --> 00:06:08,639
+fazer a nossa implementação aqui. Então
+
+190
+00:06:08,639 --> 00:06:10,080
+vamos lá. Que que a gente precisa fazer
+
+191
+00:06:10,080 --> 00:06:11,520
+primeiro aqui? Primeira coisa que eu vou
+
+192
+00:06:11,520 --> 00:06:14,280
+fazer é anular essa conexão com o banco
+
+193
+00:06:14,280 --> 00:06:15,520
+de dados. Então o que que a gente vai
+
+194
+00:06:15,520 --> 00:06:17,120
+fazer aqui agora? É o seguinte. Eu vou
+
+195
+00:06:17,120 --> 00:06:20,000
+buscar aqui uma imagem do Redis. Vou
+
+196
+00:06:20,000 --> 00:06:22,639
+pegar o ícone dele aqui e ele vai ser o
+
+197
+00:06:22,639 --> 00:06:24,759
+mecanismo que a gente vai utilizar para
+
+198
+00:06:24,759 --> 00:06:27,280
+fazer o cacheamento desses nossos dados.
+
+199
+00:06:27,280 --> 00:06:28,759
+E para você que ainda não sabe o que que
+
+200
+00:06:28,759 --> 00:06:31,240
+é o Redis, o Redis basicamente também é
+
+201
+00:06:31,240 --> 00:06:33,160
+um banco de dados, tá? Só que ele opera
+
+202
+00:06:33,160 --> 00:06:36,120
+a nível de memória RAM, ele não opera a
+
+203
+00:06:36,120 --> 00:06:37,880
+nível de disco, como é os bancos de
+
+204
+00:06:37,880 --> 00:06:40,360
+dados tradicionais aí, como post, gris
+
+205
+00:06:40,360 --> 00:06:43,080
+myle e por aí vai. Então o rediz ele é
+
+206
+00:06:43,080 --> 00:06:45,199
+muito mais rápido do que um banco
+
+207
+00:06:45,199 --> 00:06:47,520
+normal, porque ele tá a nível de memória
+
+208
+00:06:47,520 --> 00:06:49,479
+RAM, então ele vai ser muito mais
+
+209
+00:06:49,479 --> 00:06:51,319
+rápido. E aí para você tirar onda
+
+210
+00:06:51,319 --> 00:06:52,919
+naquela entrevista, para você meter
+
+211
+00:06:52,919 --> 00:06:54,319
+aquela bronca, eu vou te explicar porque
+
+212
+00:06:54,319 --> 00:06:55,520
+que ele é mais rápido. Eu tô com uma
+
+213
+00:06:55,520 --> 00:06:57,720
+imagem aqui que mostra exatamente isso,
+
+214
+00:06:57,720 --> 00:07:00,000
+tá? Ela mostra exatamente quais são os
+
+215
+00:07:00,000 --> 00:07:02,560
+níveis de velocidade ali, dependendo da
+
+216
+00:07:02,560 --> 00:07:04,479
+camada que você tiver lhe dando. Então,
+
+217
+00:07:04,479 --> 00:07:06,919
+repara, quando a gente fala de HD,
+
+218
+00:07:06,919 --> 00:07:09,000
+aquele descão magnético, a gente tá
+
+219
+00:07:09,000 --> 00:07:11,720
+falando de tempos de resposta de até 10
+
+220
+00:07:11,720 --> 00:07:14,240
+msundos, tá? Em média 10 msundos ali
+
+221
+00:07:14,240 --> 00:07:15,520
+para tu buscar ou inserir um dado
+
+222
+00:07:15,520 --> 00:07:17,440
+básico. Quando a gente fala de insert lá
+
+223
+00:07:17,440 --> 00:07:19,840
+num postre da vida, ainda no HDzão, a
+
+224
+00:07:19,840 --> 00:07:22,639
+gente tá falando de 1 msundo de tempo de
+
+225
+00:07:22,639 --> 00:07:24,400
+resposta. Então, beleza, até aqui
+
+226
+00:07:24,400 --> 00:07:26,240
+tranquilo. Quando a gente fala de
+
+227
+00:07:26,240 --> 00:07:29,639
+leitura de dados no SSD, a gente está
+
+228
+00:07:29,639 --> 00:07:33,759
+falando de 100 microsegundos, tá? 100
+
+229
+00:07:33,759 --> 00:07:37,520
+micross muito mais rápido do que 1 mso e
+
+230
+00:07:37,520 --> 00:07:40,479
+muito mais rápido ainda do que 10 ms.
+
+231
+00:07:40,479 --> 00:07:42,759
+Beleza? Quando a gente fala de rediz,
+
+232
+00:07:42,759 --> 00:07:44,960
+ele tá quase lá no topo da cadeia
+
+233
+00:07:44,960 --> 00:07:47,240
+alimentar. O que que acontece? O Redis,
+
+234
+00:07:47,240 --> 00:07:49,759
+como ele opera a nível de memória RAM, e
+
+235
+00:07:49,759 --> 00:07:52,479
+a memória RAM é extremamente rápida, a
+
+236
+00:07:52,479 --> 00:07:55,840
+gente tá falando de 100 Nanosundos, isso
+
+237
+00:07:55,840 --> 00:07:58,520
+é muito mais rápido do que 100
+
+238
+00:07:58,520 --> 00:08:02,400
+microssos, do que 1 mso, do que 10 ms é
+
+239
+00:08:02,400 --> 00:08:04,680
+por isso que o redis é extremamente
+
+240
+00:08:04,680 --> 00:08:06,960
+veloz. Então não dá para comparar o
+
+241
+00:08:06,960 --> 00:08:09,560
+redis com SSD, com HD, com qualquer
+
+242
+00:08:09,560 --> 00:08:11,400
+outra coisa. E não é só o redis que
+
+243
+00:08:11,400 --> 00:08:13,680
+opera a nível de memória RAM. Tem outros
+
+244
+00:08:13,680 --> 00:08:15,720
+mecanismos aí, tem outros bancos ali que
+
+245
+00:08:15,720 --> 00:08:17,240
+também operam a nível de memória.
+
+246
+00:08:17,240 --> 00:08:19,159
+Beleza? Então vamos voltar aqui pro
+
+247
+00:08:19,159 --> 00:08:21,240
+nosso diagrama. Deixa eu apagar essa
+
+248
+00:08:21,240 --> 00:08:23,120
+imagem daqui. E como é que a gente vai
+
+249
+00:08:23,120 --> 00:08:25,199
+resolver esse problema aqui do banco de
+
+250
+00:08:25,199 --> 00:08:27,280
+dados? Tá? Já que não faz sentido a
+
+251
+00:08:27,280 --> 00:08:29,159
+gente ficar espancando o banco de dados
+
+252
+00:08:29,159 --> 00:08:31,240
+para pegar esses dados aqui que mudam
+
+253
+00:08:31,240 --> 00:08:32,959
+muito pouco e depois a gente vai falar
+
+254
+00:08:32,959 --> 00:08:34,919
+sobre o tipo de dado que é interessante
+
+255
+00:08:34,919 --> 00:08:36,880
+você cachear. Que que a gente vai fazer?
+
+256
+00:08:36,880 --> 00:08:38,479
+A gente vai simplesmente a partir de
+
+257
+00:08:38,479 --> 00:08:41,479
+agora requisitar esses dados no redisc.
+
+258
+00:08:41,479 --> 00:08:43,519
+a gente não vai mais bater no nosso
+
+259
+00:08:43,519 --> 00:08:44,920
+banco de dados, a gente vai bater
+
+260
+00:08:44,920 --> 00:08:46,959
+primeiro no redisc. E o que que acontece
+
+261
+00:08:46,959 --> 00:08:48,800
+quando a gente fala de bater no redis? A
+
+262
+00:08:48,800 --> 00:08:50,279
+gente tá falando o seguinte: a minha
+
+263
+00:08:50,279 --> 00:08:52,800
+aplicação, a minha APIzinha aqui, o meu
+
+264
+00:08:52,800 --> 00:08:55,240
+código, ele vai simplesmente receber a
+
+265
+00:08:55,240 --> 00:08:57,120
+requisição do front e repassar essa
+
+266
+00:08:57,120 --> 00:08:58,720
+requisição lá pro Redis. Na verdade, não
+
+267
+00:08:58,720 --> 00:09:00,680
+é repassar, ele vai consultar o Redis.
+
+268
+00:09:00,680 --> 00:09:03,880
+Redis, existe esse dado aí, existe essas
+
+269
+00:09:03,880 --> 00:09:06,519
+categorias em destaque aí dentro. O
+
+270
+00:09:06,519 --> 00:09:08,560
+redis vai responder. Quando o redis
+
+271
+00:09:08,560 --> 00:09:10,880
+responder lá paraa nossa aplicação, que
+
+272
+00:09:10,880 --> 00:09:12,760
+que vai acontecer? Nossa aplicação, o
+
+273
+00:09:12,760 --> 00:09:14,839
+nosso código vai olhar a resposta e vai
+
+274
+00:09:14,839 --> 00:09:17,279
+verificar, existia esse dado lá dentro
+
+275
+00:09:17,279 --> 00:09:19,560
+ou é nulo. Se for nulo, aí o que que eu
+
+276
+00:09:19,560 --> 00:09:21,200
+tenho que fazer? Aí sim eu vou lá no
+
+277
+00:09:21,200 --> 00:09:23,120
+banco de dados buscar os dados que eu tô
+
+278
+00:09:23,120 --> 00:09:24,600
+precisando. Inclusive, vou até apagar
+
+279
+00:09:24,600 --> 00:09:26,200
+esse fogo daqui porque não faz mais
+
+280
+00:09:26,200 --> 00:09:27,839
+sentido. O banco não está mais pegando
+
+281
+00:09:27,839 --> 00:09:30,680
+fogo, tá? Então, a terceira, o terceiro
+
+282
+00:09:30,680 --> 00:09:32,959
+caminho é ir no banco de dados e buscar
+
+283
+00:09:32,959 --> 00:09:34,680
+esses dados quando eles não são
+
+284
+00:09:34,680 --> 00:09:36,000
+encontrados no redisco. Vamos
+
+285
+00:09:36,000 --> 00:09:37,920
+recapitular isso aqui. Frontend mandou
+
+286
+00:09:37,920 --> 00:09:40,000
+uma requisição pra nossa PI. Nossa PI
+
+287
+00:09:40,000 --> 00:09:42,120
+vai buscar lá no cash do Redis. Beleza,
+
+288
+00:09:42,120 --> 00:09:44,000
+Redis? Existe esse dado aí? Existe essa
+
+289
+00:09:44,000 --> 00:09:45,880
+tal dessas categorias em destaque aí
+
+290
+00:09:45,880 --> 00:09:47,360
+dentro? O Redis, logicamente vai
+
+291
+00:09:47,360 --> 00:09:48,880
+responder que não. A gente acabou de
+
+292
+00:09:48,880 --> 00:09:50,440
+instalar ele lá no servidor, então
+
+293
+00:09:50,440 --> 00:09:51,839
+acabamos de subir uma instânciazinha
+
+294
+00:09:51,839 --> 00:09:53,680
+dele no Docker. Não vai existir dado
+
+295
+00:09:53,680 --> 00:09:55,560
+nenhum no Redis. do redistro tá vazio e
+
+296
+00:09:55,560 --> 00:09:57,560
+aí ele vai responder que não, não existe
+
+297
+00:09:57,560 --> 00:10:00,279
+dado nenhum aqui. Aí sim a gente vai lá
+
+298
+00:10:00,279 --> 00:10:02,240
+no banco de dados, tá Renato? Mas aí não
+
+299
+00:10:02,240 --> 00:10:04,279
+mudou nada, é agora que entra a
+
+300
+00:10:04,279 --> 00:10:06,120
+estratégia. Por quê? A gente vem no
+
+301
+00:10:06,120 --> 00:10:08,839
+banco de dados e busca esses dados das
+
+302
+00:10:08,839 --> 00:10:11,200
+categorias em destaque. Com esses dados
+
+303
+00:10:11,200 --> 00:10:13,560
+em mãos, a gente não vai devolver pro
+
+304
+00:10:13,560 --> 00:10:16,000
+front endora, a gente vai simplesmente
+
+305
+00:10:16,000 --> 00:10:18,519
+criar uma cópia desses dados dentro do
+
+306
+00:10:18,519 --> 00:10:20,320
+redis. E aí o que que vai acontecer?
+
+307
+00:10:20,320 --> 00:10:22,279
+Depois disso a gente devolve pro usuário
+
+308
+00:10:22,279 --> 00:10:24,600
+que solicitou. Beleza? Isso foi o ciclo
+
+309
+00:10:24,600 --> 00:10:26,800
+de uma requisição. O que que vai
+
+310
+00:10:26,800 --> 00:10:28,959
+acontecer com a próxima requisição? A
+
+311
+00:10:28,959 --> 00:10:31,360
+próxima requisição vai chegar e o nosso
+
+312
+00:10:31,360 --> 00:10:33,240
+servidor, a nossa API vai receber essa
+
+313
+00:10:33,240 --> 00:10:35,480
+requisição e vai bater lá no redis. Ô
+
+314
+00:10:35,480 --> 00:10:38,240
+Redis, existe essa tal dessas categorias
+
+315
+00:10:38,240 --> 00:10:39,920
+em destaque aí dentro? E o Redis vai
+
+316
+00:10:39,920 --> 00:10:41,600
+responder que sim e vai entregar os
+
+317
+00:10:41,600 --> 00:10:43,440
+dados. E aí quando Rediz entregar os
+
+318
+00:10:43,440 --> 00:10:45,279
+dados, a gente devolve pro front end.
+
+319
+00:10:45,279 --> 00:10:47,240
+Então o que que aconteceu? A comunicação
+
+320
+00:10:47,240 --> 00:10:49,320
+com o banco acabou. A nossa API não
+
+321
+00:10:49,320 --> 00:10:51,320
+busca mais esses dados no banco de
+
+322
+00:10:51,320 --> 00:10:52,959
+dados. E calma que isso aqui não é a
+
+323
+00:10:52,959 --> 00:10:54,760
+solução final. Parece muito perfeito,
+
+324
+00:10:54,760 --> 00:10:56,320
+mas calma. A gente já vai entrar mais a
+
+325
+00:10:56,320 --> 00:10:58,240
+fundo nessa situação aqui. Só que por
+
+326
+00:10:58,240 --> 00:10:59,959
+hora, o que eu quero que você entenda é
+
+327
+00:10:59,959 --> 00:11:02,399
+que se a gente anulou pelo menos
+
+328
+00:11:02,399 --> 00:11:05,040
+momentaneamente a comunicação com o
+
+329
+00:11:05,040 --> 00:11:07,079
+banco de dados aqui e a gente tá lidando
+
+330
+00:11:07,079 --> 00:11:09,800
+agora com o cash, com o redis a nível de
+
+331
+00:11:09,800 --> 00:11:11,959
+memória, olha só o que que acontece. a
+
+332
+00:11:11,959 --> 00:11:13,839
+gente para de espancar o nosso banco de
+
+333
+00:11:13,839 --> 00:11:15,800
+dados e agora a gente tem uma
+
+334
+00:11:15,800 --> 00:11:18,760
+performance muito maior, muito superior
+
+335
+00:11:18,760 --> 00:11:20,760
+na nossa aplicação, porque todo mundo
+
+336
+00:11:20,760 --> 00:11:23,480
+que solicitar esse dado das categorias
+
+337
+00:11:23,480 --> 00:11:25,279
+em destaque, esse dado tá armazenado
+
+338
+00:11:25,279 --> 00:11:27,200
+agora na memória do computador, na
+
+339
+00:11:27,200 --> 00:11:28,639
+memória do servidor. E aí o que que
+
+340
+00:11:28,639 --> 00:11:30,720
+acontece? Entra aquele tempo de resposta
+
+341
+00:11:30,720 --> 00:11:34,240
+que eu te falei de 100 nanosundos. Então
+
+342
+00:11:34,240 --> 00:11:36,519
+é muito rápido, vai ser muito rápido,
+
+343
+00:11:36,519 --> 00:11:38,240
+isso vai melhorar aí muito a experiência
+
+344
+00:11:38,240 --> 00:11:40,160
+do usuário, isso vai melhorar aí muito a
+
+345
+00:11:40,160 --> 00:11:43,079
+performance da nossa API, beleza? Só que
+
+346
+00:11:43,079 --> 00:11:45,160
+como nem tudo são flores, o que que
+
+347
+00:11:45,160 --> 00:11:47,000
+acontece? A gente tem alguns problemas
+
+348
+00:11:47,000 --> 00:11:48,760
+que a gente precisa lidar com essa
+
+349
+00:11:48,760 --> 00:11:50,800
+situação como um todo. Por quê? Porque a
+
+350
+00:11:50,800 --> 00:11:52,800
+partir de agora todo mundo tá batendo na
+
+351
+00:11:52,800 --> 00:11:54,839
+nossa PI e a nossa PI tá devolvendo o
+
+352
+00:11:54,839 --> 00:11:57,000
+dado lá das categorias em destaque lá
+
+353
+00:11:57,000 --> 00:11:58,720
+pro front end. Beleza? Para você
+
+354
+00:11:58,720 --> 00:12:00,279
+entender um pouquinho mais a fundo,
+
+355
+00:12:00,279 --> 00:12:02,320
+todas as outras operações, os outros
+
+356
+00:12:02,320 --> 00:12:04,519
+ends continuam acessando o banco de
+
+357
+00:12:04,519 --> 00:12:07,040
+dados, tá? Isso aqui só está funcionando
+
+358
+00:12:07,040 --> 00:12:08,760
+para nossas categorias em destaque,
+
+359
+00:12:08,760 --> 00:12:11,079
+porque nesse end point em específico, e
+
+360
+00:12:11,079 --> 00:12:12,240
+eu vou te mostrar isso a nível de
+
+361
+00:12:12,240 --> 00:12:14,240
+código, a gente decidiu por cachear
+
+362
+00:12:14,240 --> 00:12:16,199
+essas informações. Então a gente
+
+363
+00:12:16,199 --> 00:12:18,720
+implementou aqui o cash asside, que
+
+364
+00:12:18,720 --> 00:12:21,199
+seria meio que um cash do lado, cash ao
+
+365
+00:12:21,199 --> 00:12:23,560
+lado aqui, que é basicamente essa imagem
+
+366
+00:12:23,560 --> 00:12:25,880
+aqui. Beleza? Agora todo mundo está
+
+367
+00:12:25,880 --> 00:12:27,720
+recebendo os dados do nosso cash. Só que
+
+368
+00:12:27,720 --> 00:12:29,600
+como eu falei, nem tudo é perfeito. O
+
+369
+00:12:29,600 --> 00:12:32,000
+que que acontece se amanhã ou então hoje
+
+370
+00:12:32,000 --> 00:12:34,240
+à noite ainda ou daqui a pouco ou agora,
+
+371
+00:12:34,240 --> 00:12:36,399
+pessoal de produto for lá no nosso front
+
+372
+00:12:36,399 --> 00:12:38,800
+end, lá no frontendzinho deles, né, onde
+
+373
+00:12:38,800 --> 00:12:40,680
+eles fazem o gerenciamento das
+
+374
+00:12:40,680 --> 00:12:42,920
+categorias e trocar essas categorias
+
+375
+00:12:42,920 --> 00:12:45,000
+aqui, que que vai acontecer? A gente vai
+
+376
+00:12:45,000 --> 00:12:46,320
+ter alguns problemas. A gente vai ter
+
+377
+00:12:46,320 --> 00:12:48,560
+uma inconsistência de dados. Por quê?
+
+378
+00:12:48,560 --> 00:12:50,480
+Porque o pessoal foi lá e disse que,
+
+379
+00:12:50,480 --> 00:12:53,240
+cara, TV e áudio e desktop, laptop não
+
+380
+00:12:53,240 --> 00:12:55,600
+tá mais em alta. Chegou aí o inverno, a
+
+381
+00:12:55,600 --> 00:12:57,040
+gente vai vender produto de inverno.
+
+382
+00:12:57,040 --> 00:12:58,639
+Então vamos botar que as categorias em
+
+383
+00:12:58,639 --> 00:13:00,920
+destaque são agora as categorias ali de
+
+384
+00:13:00,920 --> 00:13:03,320
+produtos voltados pro inverno. Beleza?
+
+385
+00:13:03,320 --> 00:13:05,240
+Só que quando eles alterarem isso lá no
+
+386
+00:13:05,240 --> 00:13:07,440
+na telinha de crude deles lá e essas
+
+387
+00:13:07,440 --> 00:13:09,560
+informações forem persistidas no banco
+
+388
+00:13:09,560 --> 00:13:11,839
+de dados, o que que vai acontecer? Isso
+
+389
+00:13:11,839 --> 00:13:13,880
+não vai refletir aqui no front end. Por
+
+390
+00:13:13,880 --> 00:13:16,320
+quê? Porque a nossa API continua
+
+391
+00:13:16,320 --> 00:13:19,360
+buscando do cash e a informação, a
+
+392
+00:13:19,360 --> 00:13:21,600
+atualização desses dados lá na telinha
+
+393
+00:13:21,600 --> 00:13:24,320
+de crude do pessoal do produto acertou o
+
+394
+00:13:24,320 --> 00:13:26,320
+banco de dados. Lá não tem nenhum tipo
+
+395
+00:13:26,320 --> 00:13:28,360
+de interação com cash. Eles inseriram a
+
+396
+00:13:28,360 --> 00:13:30,519
+informação no banco de dados porque é o
+
+397
+00:13:30,519 --> 00:13:32,440
+banco de dados que tem que armazenar,
+
+398
+00:13:32,440 --> 00:13:34,839
+persistir as informações. O redis aqui
+
+399
+00:13:34,839 --> 00:13:36,360
+tá a nível de cash. Se o servidor
+
+400
+00:13:36,360 --> 00:13:38,279
+reiniciar, os dados da memória RAM são
+
+401
+00:13:38,279 --> 00:13:40,000
+voláteis, eles vão ser apagados e não
+
+402
+00:13:40,000 --> 00:13:41,360
+tem problema nenhum. Isso aqui é para
+
+403
+00:13:41,360 --> 00:13:43,360
+dados transitórios, dados voláteis. Mas
+
+404
+00:13:43,360 --> 00:13:45,279
+a persistência dos nossos dados, quem
+
+405
+00:13:45,279 --> 00:13:47,160
+tem que fazer é o banco de dados. Então,
+
+406
+00:13:47,160 --> 00:13:49,920
+temos notoriamente um problema. A gente
+
+407
+00:13:49,920 --> 00:13:52,639
+precisa de alguma forma, toda vez que os
+
+408
+00:13:52,639 --> 00:13:55,440
+dados forem atualizados no banco de
+
+409
+00:13:55,440 --> 00:13:57,560
+dados, que eles sejam atualizados no
+
+410
+00:13:57,560 --> 00:13:59,399
+cash também, ou pelo menos que eles
+
+411
+00:13:59,399 --> 00:14:01,920
+sejam invalidados no cash. E a gente vai
+
+412
+00:14:01,920 --> 00:14:03,600
+falar sobre isso um pouquinho mais a
+
+413
+00:14:03,600 --> 00:14:05,120
+nível de código. O nome disso é
+
+414
+00:14:05,120 --> 00:14:07,519
+invalidação de cash, tá? Mas para você
+
+415
+00:14:07,519 --> 00:14:09,920
+já entender aqui a solução como um todo,
+
+416
+00:14:09,920 --> 00:14:12,000
+aquele dado que a gente colocou aqui
+
+417
+00:14:12,000 --> 00:14:13,720
+dentro a primeira vez, o que que vai
+
+418
+00:14:13,720 --> 00:14:15,120
+acontecer? A gente vai criar um
+
+419
+00:14:15,120 --> 00:14:17,000
+mecanismo para invalidar esse dado
+
+420
+00:14:17,000 --> 00:14:18,639
+depois de algum determinado tempo.
+
+421
+00:14:18,639 --> 00:14:20,440
+Logicamente existem outras estratégias
+
+422
+00:14:20,440 --> 00:14:21,759
+para invalidar esse cash, mas
+
+423
+00:14:21,759 --> 00:14:22,959
+basicamente a gente vai fazer ele
+
+424
+00:14:22,959 --> 00:14:25,000
+inspirar automaticamente. E aí quando
+
+425
+00:14:25,000 --> 00:14:26,560
+ele inspirar, quando chegar uma
+
+426
+00:14:26,560 --> 00:14:27,920
+requisição depois que esse dado
+
+427
+00:14:27,920 --> 00:14:29,480
+inspirar, ele vai deixar de existir na
+
+428
+00:14:29,480 --> 00:14:31,440
+memória e aí vai acontecer aquele ciclo
+
+429
+00:14:31,440 --> 00:14:33,720
+de novo de bater no cash, não encontrar
+
+430
+00:14:33,720 --> 00:14:36,720
+o dado, retornar vazio e aí a nossa API
+
+431
+00:14:36,720 --> 00:14:38,440
+bater lá no banco de dados. Quando ela
+
+432
+00:14:38,440 --> 00:14:40,240
+bater no banco de dados, ela cria uma
+
+433
+00:14:40,240 --> 00:14:42,800
+cópia desses dados e armazena no redis e
+
+434
+00:14:42,800 --> 00:14:45,160
+todo o fluxo continua se repetindo, todo
+
+435
+00:14:45,160 --> 00:14:47,519
+ciclo, né? Então, beleza, entendido isso
+
+436
+00:14:47,519 --> 00:14:49,440
+aqui, vamos pro código, vamos
+
+437
+00:14:49,440 --> 00:14:51,120
+implementar isso aqui na prática, porque
+
+438
+00:14:51,120 --> 00:14:52,920
+eu acho que se não tiver claro até aqui,
+
+439
+00:14:52,920 --> 00:14:54,199
+vai ficar mais claro quando a gente
+
+440
+00:14:54,199 --> 00:14:55,720
+olhar pro código. E vamos implementar
+
+441
+00:14:55,720 --> 00:14:57,800
+isso aqui e tu vai sair daqui entendido
+
+442
+00:14:57,800 --> 00:15:01,000
+sobre cas e como que você resolve não só
+
+443
+00:15:01,000 --> 00:15:02,880
+esse problema, mas como que você também
+
+444
+00:15:02,880 --> 00:15:04,959
+se sai muito bem nas entrevistas,
+
+445
+00:15:04,959 --> 00:15:06,800
+principalmente as entrevistas que vão te
+
+446
+00:15:06,800 --> 00:15:08,639
+perguntar sobre esse tipo de problema,
+
+447
+00:15:08,639 --> 00:15:10,279
+sobre performance, sobre gargalo no
+
+448
+00:15:10,279 --> 00:15:12,560
+banco de dados e como que você consegue
+
+449
+00:15:12,560 --> 00:15:14,519
+fazer a resolução desses problemas.
+
+450
+00:15:14,519 --> 00:15:16,000
+Beleza? Bora pro código e vamos entender
+
+451
+00:15:16,000 --> 00:15:17,160
+como é que isso aqui funciona. Vamos lá.
+
+452
+00:15:17,160 --> 00:15:18,440
+Bom, então vamos lá. Vamos direto ao que
+
+453
+00:15:18,440 --> 00:15:19,920
+interessa. Vamos entender código aqui.
+
+454
+00:15:19,920 --> 00:15:20,959
+Vamos ver como é que a gente consegue
+
+455
+00:15:20,959 --> 00:15:22,600
+aplicar esse padrão aqui no nosso dia a
+
+456
+00:15:22,600 --> 00:15:24,199
+dia, no teu sisteminha aí também para tu
+
+457
+00:15:24,199 --> 00:15:25,680
+melhorar a performance e lidar com
+
+458
+00:15:25,680 --> 00:15:27,560
+gargalos de banco. Mas antes vai aquele
+
+459
+00:15:27,560 --> 00:15:29,319
+recado de sempre aqui, tá? Tudo que eu
+
+460
+00:15:29,319 --> 00:15:30,759
+te ensino aqui nesse canal é
+
+461
+00:15:30,759 --> 00:15:32,839
+completamente agnóstico e independente
+
+462
+00:15:32,839 --> 00:15:34,319
+de linguagem de programação. Então tu
+
+463
+00:15:34,319 --> 00:15:35,600
+vai conseguir implementar isso aqui em
+
+464
+00:15:35,600 --> 00:15:37,199
+qualquer linguagem, qualquer framework.
+
+465
+00:15:37,199 --> 00:15:38,519
+Por quê? Porque isso aqui é padrão
+
+466
+00:15:38,519 --> 00:15:39,920
+arquitetural. Isso é princípio de
+
+467
+00:15:39,920 --> 00:15:41,480
+arquitetura, isso é fundamento. Beleza?
+
+468
+00:15:41,480 --> 00:15:42,759
+Inclusive, eu tô até tentando dar uma
+
+469
+00:15:42,759 --> 00:15:44,319
+variada aqui. Ultimamente eu tenho trago
+
+470
+00:15:44,319 --> 00:15:46,240
+PHP, já trouxe Python, também trouxe
+
+471
+00:15:46,240 --> 00:15:47,600
+Goleng aqui já no canal. Hoje a gente
+
+472
+00:15:47,600 --> 00:15:49,000
+vai ver JavaScript aqui com uma
+
+473
+00:15:49,000 --> 00:15:51,160
+aplicaçãozinha bem básica, tá? Com Node
+
+474
+00:15:51,160 --> 00:15:53,199
+aqui, com express bem básico, que é para
+
+475
+00:15:53,199 --> 00:15:54,759
+todo mundo conseguir entender. Esse
+
+476
+00:15:54,759 --> 00:15:56,279
+conteúdo aqui é para abarcar todo mundo.
+
+477
+00:15:56,279 --> 00:15:57,440
+Aqui a gente não faz diferença de
+
+478
+00:15:57,440 --> 00:15:59,000
+ninguém. Se você é novo, se você é
+
+479
+00:15:59,000 --> 00:16:00,680
+iniciante, tá chegando agora, se tu já
+
+480
+00:16:00,680 --> 00:16:02,440
+tá calejado, todo mundo vai conseguir
+
+481
+00:16:02,440 --> 00:16:03,759
+entender isso aqui. Beleza? Então vamos
+
+482
+00:16:03,759 --> 00:16:04,880
+lá. O que que a gente tem aqui? A gente
+
+483
+00:16:04,880 --> 00:16:06,399
+tem um arquivinho de rota aqui que
+
+484
+00:16:06,399 --> 00:16:08,319
+simula um controller na nossa aplicação,
+
+485
+00:16:08,319 --> 00:16:10,040
+tá? E logicamente eu poderia estar
+
+486
+00:16:10,040 --> 00:16:12,120
+utilizando um ORM aqui, poderia estar
+
+487
+00:16:12,120 --> 00:16:13,360
+utilizando algumas coisas mais
+
+488
+00:16:13,360 --> 00:16:15,160
+avançadas, só que a ideia aqui, mais uma
+
+489
+00:16:15,160 --> 00:16:16,920
+vez é que todo mundo consiga entender.
+
+490
+00:16:16,920 --> 00:16:18,680
+Então o que que acontece? Essa nossa
+
+491
+00:16:18,680 --> 00:16:20,680
+rota aqui, esse nosso end point, né, de
+
+492
+00:16:20,680 --> 00:16:22,759
+categorias aqui, o featured aqui, é
+
+493
+00:16:22,759 --> 00:16:24,720
+justamente para simular aquele end point
+
+494
+00:16:24,720 --> 00:16:26,319
+que a gente viu lá no diagrama. E o que
+
+495
+00:16:26,319 --> 00:16:28,000
+que tá acontecendo aqui dentro desse end
+
+496
+00:16:28,000 --> 00:16:30,360
+point? Basicamente ele tá fazendo aqui
+
+497
+00:16:30,360 --> 00:16:32,040
+uma busca no banco de dados, tá
+
+498
+00:16:32,040 --> 00:16:34,160
+selecionando o ID, o nome e a imagem
+
+499
+00:16:34,160 --> 00:16:36,399
+aqui, a URL da imagem fictícia,
+
+500
+00:16:36,399 --> 00:16:39,040
+logicamente da tabela de categorias onde
+
+501
+00:16:39,040 --> 00:16:41,279
+o is featured, né, que é se essa
+
+502
+00:16:41,279 --> 00:16:43,720
+categoria está realmente em destaque for
+
+503
+00:16:43,720 --> 00:16:46,560
+igual true. Logicamente essa relação
+
+504
+00:16:46,560 --> 00:16:48,639
+aqui poderia ser em duas tabelas,
+
+505
+00:16:48,639 --> 00:16:50,319
+poderia ter uma tabela pivô, alguma
+
+506
+00:16:50,319 --> 00:16:52,319
+coisa mais rebuscada, mas mais uma vez
+
+507
+00:16:52,319 --> 00:16:54,519
+isso aqui é conteúdo para abarcar todo
+
+508
+00:16:54,519 --> 00:16:56,079
+mundo, beleza? Então vamos lá. A gente
+
+509
+00:16:56,079 --> 00:16:58,160
+tem basicamente aqui um select sendo
+
+510
+00:16:58,160 --> 00:17:00,040
+feito no banco de dados todas as vezes
+
+511
+00:17:00,040 --> 00:17:01,639
+que chega uma requisição nesse end
+
+512
+00:17:01,639 --> 00:17:02,959
+point. Show de bola. E o que que
+
+513
+00:17:02,959 --> 00:17:05,280
+acontece depois? A gente tá retornando a
+
+514
+00:17:05,280 --> 00:17:06,799
+resposta para quem chamar. Então o que
+
+515
+00:17:06,799 --> 00:17:08,000
+que eu tenho aqui? Eu tenho aqui um
+
+516
+00:17:08,000 --> 00:17:09,959
+Postman, tá? Postmanzinho aqui bem
+
+517
+00:17:09,959 --> 00:17:12,160
+básico, que toda vez que eu bato lá, ele
+
+518
+00:17:12,160 --> 00:17:14,480
+me retorna esses quatro registros aqui,
+
+519
+00:17:14,480 --> 00:17:16,760
+essas quatro categorias fictícias. E da
+
+520
+00:17:16,760 --> 00:17:18,480
+onde que tá vindo essas categorias aqui?
+
+521
+00:17:18,480 --> 00:17:20,839
+Basicamente estão vindo daqui, ó. Eu vou
+
+522
+00:17:20,839 --> 00:17:22,319
+abrir aqui o banco de dados. Eu tenho
+
+523
+00:17:22,319 --> 00:17:24,520
+duas conexões aqui, uma comg e uma com
+
+524
+00:17:24,520 --> 00:17:26,880
+redis. E aqui no PSC que eu vou abrir, a
+
+525
+00:17:26,880 --> 00:17:28,280
+gente tem a tabelinha aqui de
+
+526
+00:17:28,280 --> 00:17:30,200
+categorias. Essas categorias aqui,
+
+527
+00:17:30,200 --> 00:17:32,360
+logicamente, mais uma vez, são fictícias
+
+528
+00:17:32,360 --> 00:17:34,480
+e a gente tem aqui quatro categorias que
+
+529
+00:17:34,480 --> 00:17:36,679
+estão marcados como true, tá? No
+
+530
+00:17:36,679 --> 00:17:38,320
+featured aqui. Então, essas quatro
+
+531
+00:17:38,320 --> 00:17:40,400
+categorias são as categorias que estão
+
+532
+00:17:40,400 --> 00:17:42,320
+em destaque, que teoricamente
+
+533
+00:17:42,320 --> 00:17:44,559
+apareceriam lá no nosso front end nas
+
+534
+00:17:44,559 --> 00:17:46,679
+categorias destacadas. Show de bola. Se
+
+535
+00:17:46,679 --> 00:17:48,799
+eu vier aqui e mudar e botar mais umas
+
+536
+00:17:48,799 --> 00:17:50,200
+duas aqui para true, que que vai
+
+537
+00:17:50,200 --> 00:17:52,000
+acontecer? Eu vou salvar aqui e eu vou
+
+538
+00:17:52,000 --> 00:17:53,880
+voltar lá no Postman. Quando eu faço a
+
+539
+00:17:53,880 --> 00:17:55,960
+requisição novamente, agora ele traz
+
+540
+00:17:55,960 --> 00:17:58,200
+mais duas categorias aqui. Show de bola.
+
+541
+00:17:58,200 --> 00:18:00,080
+Então, a gente tem seis categorias aqui
+
+542
+00:18:00,080 --> 00:18:01,919
+sendo buscadas lá do banco de dados e
+
+543
+00:18:01,919 --> 00:18:03,480
+que estão sendo retornadas pelo nosso
+
+544
+00:18:03,480 --> 00:18:05,080
+end point. Show de bola. Mistério
+
+545
+00:18:05,080 --> 00:18:07,440
+nenhum. Aplicaçãozinha super simples e
+
+546
+00:18:07,440 --> 00:18:09,640
+tá tranquilo. Agora vamos voltar lá e
+
+547
+00:18:09,640 --> 00:18:10,960
+vamos entender aqui quais são os
+
+548
+00:18:10,960 --> 00:18:12,760
+problemas. Por quê? Porque se a nossa
+
+549
+00:18:12,760 --> 00:18:14,799
+aplicação agora começar a receber uma
+
+550
+00:18:14,799 --> 00:18:17,120
+carga muito alta de requisições, quem
+
+551
+00:18:17,120 --> 00:18:19,559
+vai sofrer é o banco de dados. Então o
+
+552
+00:18:19,559 --> 00:18:22,080
+banco de dados vai ser espancado e não
+
+553
+00:18:22,080 --> 00:18:24,159
+vai conseguir atender esses selects com
+
+554
+00:18:24,159 --> 00:18:25,919
+maestria. Que vai acontecer mais uma
+
+555
+00:18:25,919 --> 00:18:27,640
+vez, ele vai criar aquela fila e não vai
+
+556
+00:18:27,640 --> 00:18:29,080
+conseguir atender todo mundo. Então,
+
+557
+00:18:29,080 --> 00:18:31,280
+como que a gente implementa um casinho
+
+558
+00:18:31,280 --> 00:18:32,840
+aqui? É extremamente simples, cara. Tu
+
+559
+00:18:32,840 --> 00:18:33,880
+vai ver como é que isso aqui é fácil.
+
+560
+00:18:33,880 --> 00:18:34,720
+Vamos lá. Como que a gente vai
+
+561
+00:18:34,720 --> 00:18:35,880
+implementar isso aqui? Eu vou
+
+562
+00:18:35,880 --> 00:18:37,559
+basicamente fazer o seguinte. Eu vou
+
+563
+00:18:37,559 --> 00:18:39,960
+criar uma variável aqui chamada de cash
+
+564
+00:18:39,960 --> 00:18:42,720
+key e vou nomear ela como as categorias
+
+565
+00:18:42,720 --> 00:18:45,120
+que são destacadas, tá? Isso aqui vai
+
+566
+00:18:45,120 --> 00:18:47,039
+ser o ID, tá? vai ser como se fosse um
+
+567
+00:18:47,039 --> 00:18:49,039
+ID no banco de dados lá do redis pra
+
+568
+00:18:49,039 --> 00:18:50,480
+gente poder identificar o que que a
+
+569
+00:18:50,480 --> 00:18:51,760
+gente tá armazenando lá dentro. Calma
+
+570
+00:18:51,760 --> 00:18:53,159
+que tu já vai entender. Então, com isso
+
+571
+00:18:53,159 --> 00:18:54,799
+aqui criado, o que que eu preciso fazer
+
+572
+00:18:54,799 --> 00:18:56,720
+agora? Eu preciso simplesmente começar a
+
+573
+00:18:56,720 --> 00:18:58,799
+lidar com cash. E para lidar com cash,
+
+574
+00:18:58,799 --> 00:19:00,360
+eu tenho aqui na minha pastinha de
+
+575
+00:19:00,360 --> 00:19:02,400
+configs aqui, eu tenho aqui uma conexão
+
+576
+00:19:02,400 --> 00:19:04,520
+com o redis sendo configurada.
+
+577
+00:19:04,520 --> 00:19:06,400
+Logicamente na sua linguagem você vai
+
+578
+00:19:06,400 --> 00:19:08,559
+ter aí uma biblioteca que já faz isso. É
+
+579
+00:19:08,559 --> 00:19:10,520
+bem tranquilo, tá? Lidar com cash, ter
+
+580
+00:19:10,520 --> 00:19:12,320
+algum objeto que manipule cash na
+
+581
+00:19:12,320 --> 00:19:14,080
+memória para você já tem para todas as
+
+582
+00:19:14,080 --> 00:19:15,720
+linguagens e todos os frates, tá?
+
+583
+00:19:15,720 --> 00:19:17,400
+Inclusive, a nível de curiosidade, o
+
+584
+00:19:17,400 --> 00:19:19,280
+Rediz, ele utiliza um protocolo chamado
+
+585
+00:19:19,280 --> 00:19:21,799
+RP, que significa redis serialization
+
+586
+00:19:21,799 --> 00:19:24,120
+protocol, que é extremamente mais rápido
+
+587
+00:19:24,120 --> 00:19:26,520
+do que o próprio HTTP. Então, se você já
+
+588
+00:19:26,520 --> 00:19:28,200
+tá na dúvida aí de tipo, cara, eu tenho
+
+589
+00:19:28,200 --> 00:19:30,320
+que instalar o Redis na minha máquina,
+
+590
+00:19:30,320 --> 00:19:31,799
+no meu servidor mesmo que tá a
+
+591
+00:19:31,799 --> 00:19:33,600
+aplicação, ou eu posso jogar isso num
+
+592
+00:19:33,600 --> 00:19:35,600
+servidor externo, posso fazer tipo uma
+
+593
+00:19:35,600 --> 00:19:37,679
+arquitetura distribuída ali com cash? E
+
+594
+00:19:37,679 --> 00:19:39,360
+sim, você pode, você não precisa
+
+595
+00:19:39,360 --> 00:19:41,880
+comunicar a tua aplicação pelo protocolo
+
+596
+00:19:41,880 --> 00:19:44,320
+HTTP, utilizando HTTP para poder fazer a
+
+597
+00:19:44,320 --> 00:19:46,039
+comunicação com o teu servidor de cash,
+
+598
+00:19:46,039 --> 00:19:48,280
+você vai utilizar o protocolo RP, que é
+
+599
+00:19:48,280 --> 00:19:50,400
+o Red Serialization Protocol, que é
+
+600
+00:19:50,400 --> 00:19:51,880
+muito rápido, cara. É muito rápido.
+
+601
+00:19:51,880 --> 00:19:53,679
+Então, já respondendo a dúvida que eu
+
+602
+00:19:53,679 --> 00:19:55,760
+sei que muita gente vai ficar, você não
+
+603
+00:19:55,760 --> 00:19:57,880
+precisa ter o Redis instalado no seu
+
+604
+00:19:57,880 --> 00:19:59,559
+servidor. É uma boa prática você
+
+605
+00:19:59,559 --> 00:20:01,240
+distribuir ele se você tiver falando de
+
+606
+00:20:01,240 --> 00:20:03,320
+microsserviços, mas isso é um tema para
+
+607
+00:20:03,320 --> 00:20:05,280
+outro vídeo, tá? O ideal aqui é que você
+
+608
+00:20:05,280 --> 00:20:07,919
+saiba utilizar apenas o cash Asse. Show
+
+609
+00:20:07,919 --> 00:20:09,679
+de bola. Então, eu tenho aqui o meu
+
+610
+00:20:09,679 --> 00:20:11,960
+redis client aqui sendo montado, tá? A
+
+611
+00:20:11,960 --> 00:20:13,679
+gente passa aqui uma conexãozinha. Esse
+
+612
+00:20:13,679 --> 00:20:15,559
+rediz aqui é por causa do docker, tá?
+
+613
+00:20:15,559 --> 00:20:17,320
+Então eu não vou botar aqui local host,
+
+614
+00:20:17,320 --> 00:20:19,039
+eu vou botar redis aqui porque é o nome
+
+615
+00:20:19,039 --> 00:20:20,880
+do contêiner Docker que tá rodando. Tema
+
+616
+00:20:20,880 --> 00:20:22,080
+também pro outro vídeo, mas cara, isso
+
+617
+00:20:22,080 --> 00:20:23,360
+aqui é extremamente simples, tá? Isso
+
+618
+00:20:23,360 --> 00:20:24,280
+aqui é básico, isso aqui não tem
+
+619
+00:20:24,280 --> 00:20:25,600
+mistério nenhum. Beleza? Então o que que
+
+620
+00:20:25,600 --> 00:20:27,360
+eu vou fazer? Eu tenho que basicamente
+
+621
+00:20:27,360 --> 00:20:29,520
+importar esse cara aqui dentro do meu
+
+622
+00:20:29,520 --> 00:20:30,880
+arquivo, tá? Então vou chamar ele aqui
+
+623
+00:20:30,880 --> 00:20:32,799
+de redis e vou chamar o redis aqui
+
+624
+00:20:32,799 --> 00:20:34,960
+dentro. Beleza? Com esse objeto do rediz
+
+625
+00:20:34,960 --> 00:20:36,679
+aqui dentro eu já tenho uma conexão
+
+626
+00:20:36,679 --> 00:20:38,520
+configurada, então eu consigo fazer
+
+627
+00:20:38,520 --> 00:20:40,440
+algumas magias aqui. E qual que vai ser
+
+628
+00:20:40,440 --> 00:20:42,280
+a primeira coisa que a gente vai fazer
+
+629
+00:20:42,280 --> 00:20:44,280
+lembrando lá do nosso diagrama? Chegou a
+
+630
+00:20:44,280 --> 00:20:45,840
+requisição no nosso end point. Que que a
+
+631
+00:20:45,840 --> 00:20:47,559
+gente precisa fazer? A gente precisa
+
+632
+00:20:47,559 --> 00:20:49,600
+consultar o cash. Então, que que eu vou
+
+633
+00:20:49,600 --> 00:20:52,600
+fazer? Vou criar uma variável
+
+634
+00:20:52,600 --> 00:20:55,280
+aqui, vou dar um get aqui e vou mandar
+
+635
+00:20:55,280 --> 00:20:57,000
+ele procurar o cash key. Então, o que
+
+636
+00:20:57,000 --> 00:20:58,320
+que acontece aqui? A gente tá criando
+
+637
+00:20:58,320 --> 00:21:00,760
+uma variável que tá pegando, tá chamando
+
+638
+00:21:00,760 --> 00:21:02,200
+rediz e tá fazendo o seguinte: Rediz,
+
+639
+00:21:02,200 --> 00:21:03,960
+manda para mim, busca aí para mim, por
+
+640
+00:21:03,960 --> 00:21:06,960
+favor, todos os registros aí ou o valor
+
+641
+00:21:06,960 --> 00:21:09,120
+que tá vinculado a essa chave aqui, ou
+
+642
+00:21:09,120 --> 00:21:11,320
+seja, essas categorias em destaque aqui,
+
+643
+00:21:11,320 --> 00:21:12,880
+beleza? Busca para mim aí. Que que a
+
+644
+00:21:12,880 --> 00:21:14,120
+gente tem que fazer depois? A gente
+
+645
+00:21:14,120 --> 00:21:15,760
+simplesmente faz um if aqui para
+
+646
+00:21:15,760 --> 00:21:18,320
+verificar se isso tá preenchido. Se isso
+
+647
+00:21:18,320 --> 00:21:20,480
+aqui estiver preenchido, significa que
+
+648
+00:21:20,480 --> 00:21:23,080
+esse dado aqui existe no cash e que o
+
+649
+00:21:23,080 --> 00:21:24,720
+cash retornou. Então, o que que eu vou
+
+650
+00:21:24,720 --> 00:21:26,600
+fazer a partir de agora? Eu simplesmente
+
+651
+00:21:26,600 --> 00:21:28,799
+vou retornar os meus dados lá pro front
+
+652
+00:21:28,799 --> 00:21:31,320
+end e fim de papo, não vai nem chegar a
+
+653
+00:21:31,320 --> 00:21:32,640
+entrar nessa linha aqui. Então, como é
+
+654
+00:21:32,640 --> 00:21:34,320
+que a gente faz isso? Eu vou retornar
+
+655
+00:21:34,320 --> 00:21:37,240
+aqui com Jon, vou fazer um passe aqui
+
+656
+00:21:37,240 --> 00:21:40,120
+das categorias e pronto, fim de papo
+
+657
+00:21:40,120 --> 00:21:42,600
+acabou. Buscamos os dados no cash e
+
+658
+00:21:42,600 --> 00:21:45,080
+retornamos eles se encontrarmos ele no
+
+659
+00:21:45,080 --> 00:21:47,279
+cash. Agora, o que que acontece? Se ele
+
+660
+00:21:47,279 --> 00:21:48,919
+não encontrar o dado no cash? Ele
+
+661
+00:21:48,919 --> 00:21:51,039
+simplesmente não vai cair no IF e aí ele
+
+662
+00:21:51,039 --> 00:21:53,240
+vai buscar lá no banco de dados esses
+
+663
+00:21:53,240 --> 00:21:54,760
+dados. E aí, o que que tem que acontecer
+
+664
+00:21:54,760 --> 00:21:56,360
+depois que ele busca os dados no banco?
+
+665
+00:21:56,360 --> 00:21:58,000
+A gente tem que criar uma cópia desses
+
+666
+00:21:58,000 --> 00:22:00,240
+dados dentro do cash. Então, o que que a
+
+667
+00:22:00,240 --> 00:22:01,600
+gente precisa fazer? A gente precisa
+
+668
+00:22:01,600 --> 00:22:03,720
+chamar o rediz aqui e dar um set. E
+
+669
+00:22:03,720 --> 00:22:05,919
+nesse set aqui, que que a gente faz? A
+
+670
+00:22:05,919 --> 00:22:08,679
+gente passa o cash key e as categorias
+
+671
+00:22:08,679 --> 00:22:10,880
+que foram buscadas lá, que estão em
+
+672
+00:22:10,880 --> 00:22:12,720
+destaques, que vieram aqui do banco de
+
+673
+00:22:12,720 --> 00:22:14,480
+dados. E depois a gente retorna isso pro
+
+674
+00:22:14,480 --> 00:22:16,880
+front end. É simples assim, não tem
+
+675
+00:22:16,880 --> 00:22:18,840
+mistério nenhum. Qualquer linguagem,
+
+676
+00:22:18,840 --> 00:22:21,080
+qualquer framework vai funcionar dessa
+
+677
+00:22:21,080 --> 00:22:22,960
+exata maneira. Lógico que não está
+
+678
+00:22:22,960 --> 00:22:24,360
+finalizado. Por quê? Porque a gente
+
+679
+00:22:24,360 --> 00:22:25,880
+precisa ainda lidar com aquele lance da
+
+680
+00:22:25,880 --> 00:22:27,400
+invalidação e tudo mais. Mas vamos
+
+681
+00:22:27,400 --> 00:22:28,559
+entender como é que isso aqui tá
+
+682
+00:22:28,559 --> 00:22:30,000
+funcionando. Vamos lá. Eu vou voltar
+
+683
+00:22:30,000 --> 00:22:32,039
+aqui no Postman, tá? E aqui a gente tem
+
+684
+00:22:32,039 --> 00:22:34,320
+seis categorias que estão em destaque.
+
+685
+00:22:34,320 --> 00:22:35,679
+Vou subir um pouquinho mais isso aqui
+
+686
+00:22:35,679 --> 00:22:37,640
+para ficar visível. Quando eu chamar
+
+687
+00:22:37,640 --> 00:22:39,400
+isso aqui a primeira vez, ele deu um
+
+688
+00:22:39,400 --> 00:22:41,080
+erro. Agora, por que que deu um erro?
+
+689
+00:22:41,080 --> 00:22:42,120
+Deixa eu validar aqui o que que
+
+690
+00:22:42,120 --> 00:22:43,799
+aconteceu. Ah, ele deu um erro por causa
+
+691
+00:22:43,799 --> 00:22:45,919
+disso aqui, ó. Tem que chamar o string
+
+692
+00:22:45,919 --> 00:22:47,960
+aqui, ó. Beleza, entendido isso aqui.
+
+693
+00:22:47,960 --> 00:22:49,799
+Vamos voltar para lá, pro nosso Postman
+
+694
+00:22:49,799 --> 00:22:51,559
+e fazer a requisição novamente. Beleza?
+
+695
+00:22:51,559 --> 00:22:53,480
+Trouxe aqui seis dados, seis registros
+
+696
+00:22:53,480 --> 00:22:55,000
+aqui. E aí, que que a gente vai fazer
+
+697
+00:22:55,000 --> 00:22:56,679
+agora? Mais nada. Vamos chamar de novo
+
+698
+00:22:56,679 --> 00:22:58,320
+esses dados aqui agora, por mais que
+
+699
+00:22:58,320 --> 00:23:00,679
+você não perceba, estão vindo do cash,
+
+700
+00:23:00,679 --> 00:23:02,799
+tá? Por quê? Porque a primeira vez que a
+
+701
+00:23:02,799 --> 00:23:04,559
+gente consultou, ele bateu aqui e não
+
+702
+00:23:04,559 --> 00:23:06,080
+encontrou no cash. Então, ele buscou no
+
+703
+00:23:06,080 --> 00:23:08,440
+banco de dados e salvou no cash depois e
+
+704
+00:23:08,440 --> 00:23:10,120
+retornou. Agora, quando a gente vai de
+
+705
+00:23:10,120 --> 00:23:12,039
+novo lá, ele tá agora vindo do cash. Por
+
+706
+00:23:12,039 --> 00:23:13,640
+quê? Porque esse dado já existe no cash.
+
+707
+00:23:13,640 --> 00:23:14,919
+Quer ver como é que esse dado existe no
+
+708
+00:23:14,919 --> 00:23:16,400
+cash? Vamos lá. Eu vou fechar aqui a
+
+709
+00:23:16,400 --> 00:23:18,080
+conexão com Postigres e vou abrir aqui a
+
+710
+00:23:18,080 --> 00:23:19,559
+conexão com redis. Deixa eu atualizar
+
+711
+00:23:19,559 --> 00:23:21,240
+isso aqui. Beleza? Então, tá aqui, ó.
+
+712
+00:23:21,240 --> 00:23:23,440
+featured categories. Beleza? A gente tem
+
+713
+00:23:23,440 --> 00:23:25,520
+todos os dados que foram salvos aqui
+
+714
+00:23:25,520 --> 00:23:27,200
+dentro, tá? Que foi o retorno lá do
+
+715
+00:23:27,200 --> 00:23:28,640
+banco de dados. Só que aí a gente vai
+
+716
+00:23:28,640 --> 00:23:30,039
+entrar naquele problema que eu te falei.
+
+717
+00:23:30,039 --> 00:23:31,960
+Por quê? Porque se eu vier aqui agora no
+
+718
+00:23:31,960 --> 00:23:33,960
+banco de dados mesmo, no Postgrid e
+
+719
+00:23:33,960 --> 00:23:35,919
+atualizar aquela tabela lá, atualizar
+
+720
+00:23:35,919 --> 00:23:37,720
+aquela aquela lista de categorias, eu
+
+721
+00:23:37,720 --> 00:23:39,919
+vou fazer o seguinte, essas seis aqui eu
+
+722
+00:23:39,919 --> 00:23:41,799
+vou tirar, eu vou botar tudo para falso
+
+723
+00:23:41,799 --> 00:23:44,120
+aqui e a gente vai botar só duas
+
+724
+00:23:44,120 --> 00:23:45,559
+categorias em destaque. Vou deixar só
+
+725
+00:23:45,559 --> 00:23:47,000
+essas duas aqui em destaque. Vamos ver o
+
+726
+00:23:47,000 --> 00:23:48,400
+que que vai acontecer. Acabei de salvar
+
+727
+00:23:48,400 --> 00:23:50,159
+lá no banco, tem duas categorias aqui em
+
+728
+00:23:50,159 --> 00:23:51,840
+destaque. Vamos lá no Postman e vamos
+
+729
+00:23:51,840 --> 00:23:53,360
+atualizar. Quando eu vou no Postman, o
+
+730
+00:23:53,360 --> 00:23:54,799
+que que tá acontecendo? Ele não tá
+
+731
+00:23:54,799 --> 00:23:56,520
+buscando aquelas duas. Por quê? A gente
+
+732
+00:23:56,520 --> 00:23:58,200
+atualizou o dado no banco. Só que esses
+
+733
+00:23:58,200 --> 00:24:00,600
+dados aqui estão vindo do cash e isso é
+
+734
+00:24:00,600 --> 00:24:01,960
+um problema. Então vamos voltar no
+
+735
+00:24:01,960 --> 00:24:03,480
+código aqui pra gente entender. Olhando
+
+736
+00:24:03,480 --> 00:24:04,600
+pro código aqui o que que tá
+
+737
+00:24:04,600 --> 00:24:06,600
+acontecendo? Ele só tá batendo no cash e
+
+738
+00:24:06,600 --> 00:24:08,159
+retornando. Então a gente precisa de
+
+739
+00:24:08,159 --> 00:24:10,960
+alguma forma invalidar esse cash que tá
+
+740
+00:24:10,960 --> 00:24:12,799
+armazenado aqui dentro do redis. E
+
+741
+00:24:12,799 --> 00:24:15,279
+existem diversas formas de invalidar
+
+742
+00:24:15,279 --> 00:24:17,720
+cash. Inclusive invalidação de cash é
+
+743
+00:24:17,720 --> 00:24:19,840
+uma parada que às vezes é polêmico, às
+
+744
+00:24:19,840 --> 00:24:21,440
+vezes traz uma certa dor de cabeça e
+
+745
+00:24:21,440 --> 00:24:23,520
+tal, mas a forma mais simples da gente
+
+746
+00:24:23,520 --> 00:24:25,399
+invalidar esse cash aqui é a seguinte,
+
+747
+00:24:25,399 --> 00:24:29,159
+ó. Eu vou trocar esse set aqui por 7x. E
+
+748
+00:24:29,159 --> 00:24:32,760
+esse 7X é um outro método desse objeto
+
+749
+00:24:32,760 --> 00:24:34,720
+aqui do redis, só que ele aceita mais um
+
+750
+00:24:34,720 --> 00:24:36,520
+parâmetro. Qual é o parâmetro que ele
+
+751
+00:24:36,520 --> 00:24:38,520
+aceita? É o de tempo. Então eu vou
+
+752
+00:24:38,520 --> 00:24:41,320
+passar aqui 10 segundos. E esses 10
+
+753
+00:24:41,320 --> 00:24:44,440
+segundos é o tempo em que esse item aqui
+
+754
+00:24:44,440 --> 00:24:46,640
+vai ficar armazenado dentro do cash.
+
+755
+00:24:46,640 --> 00:24:48,919
+Depois de 10 segundos, ele vai sumir
+
+756
+00:24:48,919 --> 00:24:51,000
+automaticamente da memória. Ele não vai
+
+757
+00:24:51,000 --> 00:24:52,760
+estar mais lá. Então vamos entender como
+
+758
+00:24:52,760 --> 00:24:54,520
+que isso impacta a nossa aplicação. Eu
+
+759
+00:24:54,520 --> 00:24:56,039
+vou apagar esse cash daqui porque
+
+760
+00:24:56,039 --> 00:24:58,120
+logicamente como ele não foi marcado
+
+761
+00:24:58,120 --> 00:25:00,240
+aqui com nenhum tempo de inspiração, ele
+
+762
+00:25:00,240 --> 00:25:01,720
+vai ficar aqui infinito e a gente nunca
+
+763
+00:25:01,720 --> 00:25:03,159
+vai conseguir chegar na linha de baixo.
+
+764
+00:25:03,159 --> 00:25:04,840
+Então eu simplesmente vou dropar esse
+
+765
+00:25:04,840 --> 00:25:07,559
+dado aqui e fim de papo. Vamos lá.
+
+766
+00:25:07,559 --> 00:25:09,279
+Quando eu bater agora no Postman, o que
+
+767
+00:25:09,279 --> 00:25:11,520
+que vai acontecer? Ele vai bater no cash
+
+768
+00:25:11,520 --> 00:25:13,200
+e não vai encontrar dado nenhum. Então
+
+769
+00:25:13,200 --> 00:25:14,760
+ele vai buscar o dado do banco de dados.
+
+770
+00:25:14,760 --> 00:25:17,360
+Vamos lá. Trouxe aqui as nossas duas
+
+771
+00:25:17,360 --> 00:25:19,320
+categorias que foram atualizadas lá no
+
+772
+00:25:19,320 --> 00:25:21,000
+banco. Beleza? Que que aconteceu nesse
+
+773
+00:25:21,000 --> 00:25:23,399
+momento? Ele veio aqui, não encontrou no
+
+774
+00:25:23,399 --> 00:25:25,440
+cash, buscou no banco de dados e
+
+775
+00:25:25,440 --> 00:25:27,799
+armazenou ele aqui dentro do cash com
+
+776
+00:25:27,799 --> 00:25:30,440
+tempo de inspiração de 10 segundos, tá?
+
+777
+00:25:30,440 --> 00:25:32,080
+Então o que que vai acontecer aqui? Como
+
+778
+00:25:32,080 --> 00:25:34,080
+já deve ter passado os 10 segundos, ele
+
+779
+00:25:34,080 --> 00:25:35,880
+não vai ter atualizado lá. Então eu vou
+
+780
+00:25:35,880 --> 00:25:37,559
+fazer o seguinte, eu vou botar para 20
+
+781
+00:25:37,559 --> 00:25:39,360
+segundos aqui e a gente vai fazer de
+
+782
+00:25:39,360 --> 00:25:41,520
+novo essa consulta, tá? O Cash já
+
+783
+00:25:41,520 --> 00:25:43,120
+inspirou, provavelmente. Vamos consultar
+
+784
+00:25:43,120 --> 00:25:44,640
+aqui, deixa eu atualizar pra gente
+
+785
+00:25:44,640 --> 00:25:45,960
+consultar e você vê que não tem mais
+
+786
+00:25:45,960 --> 00:25:47,480
+dado nenhum no Cash. Então, mais uma
+
+787
+00:25:47,480 --> 00:25:49,440
+vez, se eu voltar no Postman, ele vai
+
+788
+00:25:49,440 --> 00:25:51,120
+buscar do banco de dados porque não
+
+789
+00:25:51,120 --> 00:25:52,799
+existe Cash. Eu vou fazer o seguinte, eu
+
+790
+00:25:52,799 --> 00:25:54,880
+vou consultar aqui agora, ele vai buscar
+
+791
+00:25:54,880 --> 00:25:56,559
+no banco, vai armazenar no cash e vai
+
+792
+00:25:56,559 --> 00:25:58,039
+retornar o resultado pra gente. Só que
+
+793
+00:25:58,039 --> 00:25:59,960
+eu vou rapidamente lá no banco de dados
+
+794
+00:25:59,960 --> 00:26:01,480
+e vou alterar o valor. E aí tu vai
+
+795
+00:26:01,480 --> 00:26:02,640
+entender porque isso aqui é
+
+796
+00:26:02,640 --> 00:26:04,679
+interessante. Ó, vamos lá. Beleza. Foi e
+
+797
+00:26:04,679 --> 00:26:06,000
+buscou. O que que eu vou fazer? Eu vou
+
+798
+00:26:06,000 --> 00:26:07,720
+voltar aqui no nosso código, vou na
+
+799
+00:26:07,720 --> 00:26:09,559
+tabela de categorias e vou atualizar
+
+800
+00:26:09,559 --> 00:26:11,360
+aqui, ó. Vou botar para true. Vou botar
+
+801
+00:26:11,360 --> 00:26:13,159
+para true aqui também e aqui para true.
+
+802
+00:26:13,159 --> 00:26:15,120
+E vou salvar. Vamos voltar lá no nosso
+
+803
+00:26:15,120 --> 00:26:16,440
+post, mano. Você vai entender o
+
+804
+00:26:16,440 --> 00:26:18,679
+seguinte. Consultei. Só tem duas
+
+805
+00:26:18,679 --> 00:26:20,159
+categorias. E aí eu vou ficar
+
+806
+00:26:20,159 --> 00:26:21,559
+consultando aqui. Olha o tempo de
+
+807
+00:26:21,559 --> 00:26:23,320
+resposta, ó. 14, 15. Eu vou ficar
+
+808
+00:26:23,320 --> 00:26:25,279
+consultando. Ó lá, ó. Pronto, atualizou.
+
+809
+00:26:25,279 --> 00:26:27,640
+Então o Cashirou automaticamente depois
+
+810
+00:26:27,640 --> 00:26:29,440
+de 20 segundos e agora ele conseguiu
+
+811
+00:26:29,440 --> 00:26:32,080
+atualizar esses dados. Então, com esse
+
+812
+00:26:32,080 --> 00:26:33,760
+essa técnica aqui de invalidação é
+
+813
+00:26:33,760 --> 00:26:36,120
+conhecida como TTL, tá? Esse segundo
+
+814
+00:26:36,120 --> 00:26:38,000
+parâmetro aqui que a gente passa é
+
+815
+00:26:38,000 --> 00:26:40,840
+conhecido como TTL. Esse TTL significa
+
+816
+00:26:40,840 --> 00:26:43,159
+time to leave, que é o tempo de de vida
+
+817
+00:26:43,159 --> 00:26:44,880
+dele, tá? É o tempo que esse dado vai
+
+818
+00:26:44,880 --> 00:26:47,279
+ficar sobrevivendo lá no cash. Isso aqui
+
+819
+00:26:47,279 --> 00:26:48,880
+é muito interessante em diversos
+
+820
+00:26:48,880 --> 00:26:50,760
+cenários. Então, por exemplo, nesse
+
+821
+00:26:50,760 --> 00:26:53,399
+cenário onde, cara, é um dado do front
+
+822
+00:26:53,399 --> 00:26:55,760
+end, não é um dado tão sensível, não é
+
+823
+00:26:55,760 --> 00:26:57,640
+crítico, não tem importância se demorar
+
+824
+00:26:57,640 --> 00:26:59,480
+um certo tempo ali para atualizar, a
+
+825
+00:26:59,480 --> 00:27:00,880
+gente pode usar aqui um TTLzinho
+
+826
+00:27:00,880 --> 00:27:02,799
+tranquilo. Recomendo que você dê uma
+
+827
+00:27:02,799 --> 00:27:04,600
+estudada em outras técnicas, eu vou
+
+828
+00:27:04,600 --> 00:27:06,360
+trazer aqui no canal. Inclusive, não
+
+829
+00:27:06,360 --> 00:27:08,799
+existe só o Cash Aside, tá? Existem
+
+830
+00:27:08,799 --> 00:27:11,200
+outras estratégias que fazem uso do cash
+
+831
+00:27:11,200 --> 00:27:13,440
+aqui, só que com um outro formato para
+
+832
+00:27:13,440 --> 00:27:15,440
+resolver outros tipos de problema. Então
+
+833
+00:27:15,440 --> 00:27:16,960
+eu vou trazer esse tipo de conteúdo aqui
+
+834
+00:27:16,960 --> 00:27:18,760
+no canal, mas eu espero que até aqui
+
+835
+00:27:18,760 --> 00:27:21,159
+você já tenha entendido a importância do
+
+836
+00:27:21,159 --> 00:27:23,279
+cash, como que a gente invalida ele e
+
+837
+00:27:23,279 --> 00:27:25,159
+como que a gente brinca com ele aqui,
+
+838
+00:27:25,159 --> 00:27:26,960
+utilizando um simples postm aqui,
+
+839
+00:27:26,960 --> 00:27:29,000
+simulando que seria o nosso front end.
+
+840
+00:27:29,000 --> 00:27:31,279
+Bom, aqui vão algumas considerações para
+
+841
+00:27:31,279 --> 00:27:33,120
+você levar em conta na hora que você for
+
+842
+00:27:33,120 --> 00:27:35,440
+mexer com cash. Primeira delas, não saia
+
+843
+00:27:35,440 --> 00:27:37,159
+por aí feito maníaco querendo
+
+844
+00:27:37,159 --> 00:27:38,799
+implementar isso em tudo quanto é lugar.
+
+845
+00:27:38,799 --> 00:27:40,600
+Por quê? Quando a gente fala de cash,
+
+846
+00:27:40,600 --> 00:27:42,760
+você tem que sempre lembrar que o cash
+
+847
+00:27:42,760 --> 00:27:44,960
+está sendo armazenado na memória do
+
+848
+00:27:44,960 --> 00:27:46,960
+computador, ou seja, na memória do seu
+
+849
+00:27:46,960 --> 00:27:48,720
+servidor. E quando a gente fala de
+
+850
+00:27:48,720 --> 00:27:51,159
+memória, memória é um recurso muito
+
+851
+00:27:51,159 --> 00:27:53,120
+escasso. E quando você começa a
+
+852
+00:27:53,120 --> 00:27:55,600
+armazenar muita coisa na memória do seu
+
+853
+00:27:55,600 --> 00:27:57,640
+computador, o que que vai acontecer? as
+
+854
+00:27:57,640 --> 00:28:00,000
+aplicações, ou seja, o código da sua
+
+855
+00:28:00,000 --> 00:28:02,200
+API, que também está rodando na memória,
+
+856
+00:28:02,200 --> 00:28:04,519
+vai começar a competir por recurso e
+
+857
+00:28:04,519 --> 00:28:06,640
+isso não faz o menor sentido. Então,
+
+858
+00:28:06,640 --> 00:28:08,840
+toma cuidado com que tipo de dado você
+
+859
+00:28:08,840 --> 00:28:11,399
+vai jogar na memória do seu computador.
+
+860
+00:28:11,399 --> 00:28:12,880
+Eu costumo dizer que tem três
+
+861
+00:28:12,880 --> 00:28:14,799
+características que um dado tem que ter
+
+862
+00:28:14,799 --> 00:28:16,440
+para você armazenar ele no cash.
+
+863
+00:28:16,440 --> 00:28:18,240
+Primeiro, o dado tem que ser muito
+
+864
+00:28:18,240 --> 00:28:19,840
+requisitado. Ele sendo muito
+
+865
+00:28:19,840 --> 00:28:21,880
+requisitado, já é um primeiro fator para
+
+866
+00:28:21,880 --> 00:28:24,360
+você considerar armazenar ele em cash. O
+
+867
+00:28:24,360 --> 00:28:27,600
+segundo fator, esse dado não pode ter a
+
+868
+00:28:27,600 --> 00:28:30,200
+necessidade de ser consistente o tempo
+
+869
+00:28:30,200 --> 00:28:32,120
+todo. Por exemplo, você não pode
+
+870
+00:28:32,120 --> 00:28:34,760
+armazenar dados de saldo bancário, de
+
+871
+00:28:34,760 --> 00:28:37,080
+conta bancária dentro do cash. Por quê?
+
+872
+00:28:37,080 --> 00:28:38,880
+Porque você viu que tem um delay.
+
+873
+00:28:38,880 --> 00:28:40,880
+Imagina se você faz um Pix, mas o saldo
+
+874
+00:28:40,880 --> 00:28:42,720
+continua lá travadão, parado. Você faz
+
+875
+00:28:42,720 --> 00:28:44,919
+um Pix de R$ 1.000, tinha R$ 1.000 na
+
+876
+00:28:44,919 --> 00:28:46,919
+conta e depois que o Pix foi, continua
+
+877
+00:28:46,919 --> 00:28:49,399
+os R$ 1.000 até o cash expirar. Não faz
+
+878
+00:28:49,399 --> 00:28:51,640
+sentido isso. Então, toma cuidado com
+
+879
+00:28:51,640 --> 00:28:54,159
+esse tipo de informação que você fica
+
+880
+00:28:54,159 --> 00:28:56,120
+transitando dentro do cash, porque Cash
+
+881
+00:28:56,120 --> 00:28:57,960
+não foi feito para isso. Cash foi feito
+
+882
+00:28:57,960 --> 00:28:59,960
+para você armazenar dados que não tenha
+
+883
+00:28:59,960 --> 00:29:02,960
+a necessidade de consistência quente, ou
+
+884
+00:29:02,960 --> 00:29:04,960
+seja, de uma consistência forte. Esses
+
+885
+00:29:04,960 --> 00:29:06,720
+dados podem sim ter uma certa
+
+886
+00:29:06,720 --> 00:29:08,559
+consistência eventual, que é assim que a
+
+887
+00:29:08,559 --> 00:29:10,320
+gente chama, quando o dado não tem essa
+
+888
+00:29:10,320 --> 00:29:12,720
+atualização em tempo real. E segundo,
+
+889
+00:29:12,720 --> 00:29:15,919
+ele precisa sim ser um dado que é muito
+
+890
+00:29:15,919 --> 00:29:18,000
+requisitado. Uma terceira característica
+
+891
+00:29:18,000 --> 00:29:19,679
+é que tem que ser um dado que não mude
+
+892
+00:29:19,679 --> 00:29:21,640
+com tanta frequência. Imagina, você tá
+
+893
+00:29:21,640 --> 00:29:23,880
+ali cacheando um dado que muda a cada
+
+894
+00:29:23,880 --> 00:29:25,760
+segundo. Não faz menor sentido você
+
+895
+00:29:25,760 --> 00:29:27,360
+fazer isso. Então, tem que ser um dado
+
+896
+00:29:27,360 --> 00:29:29,600
+que não muda com tanta frequência, tem
+
+897
+00:29:29,600 --> 00:29:31,559
+que ser um dado extremamente requisitado
+
+898
+00:29:31,559 --> 00:29:33,440
+e tem que ser um dado que possa ter uma
+
+899
+00:29:33,440 --> 00:29:35,679
+consistência fraca, ou seja, que não tem
+
+900
+00:29:35,679 --> 00:29:37,600
+necessidade de consistência forte,
+
+901
+00:29:37,600 --> 00:29:39,720
+aquela consistência quente. Atualizou no
+
+902
+00:29:39,720 --> 00:29:41,399
+banco, eu posso sim ter um delay, não
+
+903
+00:29:41,399 --> 00:29:43,039
+tem problema nenhum. E quando a gente
+
+904
+00:29:43,039 --> 00:29:46,480
+fala de invalidação de cash, existe N
+
+905
+00:29:46,480 --> 00:29:49,880
+estratégias. Tem LRU, MNU, tem WR
+
+906
+00:29:49,880 --> 00:29:52,240
+through, tem um monte de estratégias
+
+907
+00:29:52,240 --> 00:29:54,880
+para você invalidar o cash, tá? Cabe é
+
+908
+00:29:54,880 --> 00:29:56,600
+você dar uma olhada. Se deixar nos
+
+909
+00:29:56,600 --> 00:29:58,559
+comentários, eu vou trazer vídeo aqui
+
+910
+00:29:58,559 --> 00:30:00,559
+sobre system design, sobre arquitetura
+
+911
+00:30:00,559 --> 00:30:02,360
+mais alto nível e logicamente que
+
+912
+00:30:02,360 --> 00:30:04,200
+abarcando todo mundo, porque esse é o
+
+913
+00:30:04,200 --> 00:30:05,799
+propósito aqui do canal. Se esse vídeo
+
+914
+00:30:05,799 --> 00:30:07,640
+te ajudou e você aprendeu, considere se
+
+915
+00:30:07,640 --> 00:30:09,200
+tornar um membro exclusivo aqui do
+
+916
+00:30:09,200 --> 00:30:10,679
+canal, apoiando essa produção
+
+917
+00:30:10,679 --> 00:30:12,440
+exclusivaça de conteúdos que eu trago
+
+918
+00:30:12,440 --> 00:30:14,279
+para você semanalmente. Se ficou
+
+919
+00:30:14,279 --> 00:30:16,039
+qualquer dúvida, deixa nos comentários
+
+920
+00:30:16,039 --> 00:30:17,440
+abaixo que eu prometo que eu tiro um
+
+921
+00:30:17,440 --> 00:30:19,120
+tempo para te responder. Por fim, eu vou
+
+922
+00:30:19,120 --> 00:30:21,279
+ficando por aqui. Um forte abraço para
+
+923
+00:30:21,279 --> 00:30:25,760
+você e nos vemos em breve.

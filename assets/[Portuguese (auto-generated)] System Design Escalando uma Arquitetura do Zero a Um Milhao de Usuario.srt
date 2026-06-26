@@ -1,0 +1,5231 @@
+1
+00:00:00,080 --> 00:00:02,240
+Uma das perguntas que mais aparecem nas
+
+2
+00:00:02,240 --> 00:00:04,319
+entrevistas técnicas para programador é
+
+3
+00:00:04,319 --> 00:00:06,120
+se você sabe lidar com performance e
+
+4
+00:00:06,120 --> 00:00:07,879
+escalabilidade de aplicações,
+
+5
+00:00:07,879 --> 00:00:10,000
+principalmente as aplicações web. No
+
+6
+00:00:10,000 --> 00:00:11,120
+vídeo de hoje eu vou te ensinar a
+
+7
+00:00:11,120 --> 00:00:13,360
+escalar uma aplicação do absoluto zero
+
+8
+00:00:13,360 --> 00:00:15,480
+até 1 milhão de usuários e que com toda
+
+9
+00:00:15,480 --> 00:00:17,520
+a certeza, vai te salvar na tua próxima
+
+10
+00:00:17,520 --> 00:00:19,600
+entrevista. Fala pessoal, Renato Augusto
+
+11
+00:00:19,600 --> 00:00:21,160
+aqui de novo e dessa vez para falar de
+
+12
+00:00:21,160 --> 00:00:23,439
+arquitetura de software e system design.
+
+13
+00:00:23,439 --> 00:00:24,880
+Se você já trabalha com programação há
+
+14
+00:00:24,880 --> 00:00:26,640
+algum tempo, é bem provável que você já
+
+15
+00:00:26,640 --> 00:00:28,480
+tenha encarado perguntas e desafios
+
+16
+00:00:28,480 --> 00:00:30,279
+técnicos que te colocavam para resolver
+
+17
+00:00:30,279 --> 00:00:32,480
+um suposto cenário de uma aplicação que
+
+18
+00:00:32,480 --> 00:00:34,480
+começou a lidar com muitos usuários e
+
+19
+00:00:34,480 --> 00:00:36,239
+que isso estava gerando lentidão na
+
+20
+00:00:36,239 --> 00:00:38,079
+aplicação ou derrubando o servidor
+
+21
+00:00:38,079 --> 00:00:40,120
+durante os picos de acesso. E esse tipo
+
+22
+00:00:40,120 --> 00:00:42,120
+de desafio aparece e muito nas
+
+23
+00:00:42,120 --> 00:00:43,480
+entrevistas técnicas, porque o
+
+24
+00:00:43,480 --> 00:00:45,160
+recrutador não quer só saber se você
+
+25
+00:00:45,160 --> 00:00:46,800
+sabe escrever código, ele quer saber se
+
+26
+00:00:46,800 --> 00:00:48,680
+você é alguém capaz de lidar com os
+
+27
+00:00:48,680 --> 00:00:50,559
+problemas e desafios de uma aplicação do
+
+28
+00:00:50,559 --> 00:00:52,719
+mundo real. E é exatamente aqui que a
+
+29
+00:00:52,719 --> 00:00:54,760
+maioria dos programadores acaba travando
+
+30
+00:00:54,760 --> 00:00:56,640
+na entrevista, principalmente aqueles
+
+31
+00:00:56,640 --> 00:00:58,840
+que nunca tiveram contato com system ou
+
+32
+00:00:58,840 --> 00:01:00,680
+não manjam muito de arquitetura. Então,
+
+33
+00:01:00,680 --> 00:01:02,680
+para tu nunca mais passar aperto nas
+
+34
+00:01:02,680 --> 00:01:04,239
+próximas entrevistas, hoje a gente vai
+
+35
+00:01:04,239 --> 00:01:06,119
+pegar uma aplicação do absoluto Zero e
+
+36
+00:01:06,119 --> 00:01:07,920
+vamos arquitetar uma solução para
+
+37
+00:01:07,920 --> 00:01:09,840
+escalar essa aplicação para que ela seja
+
+38
+00:01:09,840 --> 00:01:12,159
+capaz de suportar 1 milhão de usuários.
+
+39
+00:01:12,159 --> 00:01:14,000
+E tudo isso, logicamente lidando com
+
+40
+00:01:14,000 --> 00:01:15,960
+todos os tradeoffs e desafios que vão
+
+41
+00:01:15,960 --> 00:01:17,759
+surgindo ao longo do caminho. Então, sem
+
+42
+00:01:17,759 --> 00:01:19,560
+mais enrolação, bora pra tela, porque
+
+43
+00:01:19,560 --> 00:01:21,520
+tem muita coisa pra gente ver e muita
+
+44
+00:01:21,520 --> 00:01:23,400
+informação para eu te passar. Bora lá.
+
+45
+00:01:23,400 --> 00:01:24,560
+Bom, então vamos lá. Vamos direto ao
+
+46
+00:01:24,560 --> 00:01:25,600
+ponto aqui. Vamos direto ao que
+
+47
+00:01:25,600 --> 00:01:27,040
+interessa, porque tem muita coisa pra
+
+48
+00:01:27,040 --> 00:01:28,560
+gente ver nesse vídeo daqui. Então, qual
+
+49
+00:01:28,560 --> 00:01:30,640
+que vai ser a nossa missão nesse vídeo
+
+50
+00:01:30,640 --> 00:01:32,280
+aqui, tá? Nossa missão aqui basicamente
+
+51
+00:01:32,280 --> 00:01:33,439
+vai ser o seguinte. A gente vai pegar
+
+52
+00:01:33,439 --> 00:01:35,320
+essa arquitetura inicial aqui e a gente
+
+53
+00:01:35,320 --> 00:01:37,479
+vai transformar, a gente vai evoluir
+
+54
+00:01:37,479 --> 00:01:39,320
+essa arquitetura ao longo desse nosso
+
+55
+00:01:39,320 --> 00:01:40,799
+vídeo aqui. E aí ao longo do vídeo eu
+
+56
+00:01:40,799 --> 00:01:42,200
+vou te ensinando as técnicas, os
+
+57
+00:01:42,200 --> 00:01:44,000
+fundamentos, os conceitos para você
+
+58
+00:01:44,000 --> 00:01:46,000
+levar pra tua entrevista técnica, tá?
+
+59
+00:01:46,000 --> 00:01:47,799
+Para tu poder demonstrar conhecimento. E
+
+60
+00:01:47,799 --> 00:01:49,560
+ao final desse vídeo daqui a gente vai
+
+61
+00:01:49,560 --> 00:01:51,200
+ter evoluída essa arquitetura aqui, que
+
+62
+00:01:51,200 --> 00:01:52,840
+é bem simplista, tá? Já vou falar sobre
+
+63
+00:01:52,840 --> 00:01:54,719
+ela para uma arquitetura muito mais
+
+64
+00:01:54,719 --> 00:01:56,399
+robusta, uma arquitetura escalável,
+
+65
+00:01:56,399 --> 00:01:58,240
+resiliente, tolerante a falhas, uma
+
+66
+00:01:58,240 --> 00:02:00,280
+arquitetura altamente disponível e mais
+
+67
+00:02:00,280 --> 00:02:01,840
+um monte de outras coisas. Beleza? E
+
+68
+00:02:01,840 --> 00:02:03,600
+antes de mais nada, se você já leu o
+
+69
+00:02:03,600 --> 00:02:05,520
+livro System Design Interview, você sabe
+
+70
+00:02:05,520 --> 00:02:07,439
+que isso aqui é conteúdo que foi dito lá
+
+71
+00:02:07,439 --> 00:02:09,039
+no livro. Então, ao final desse vídeo
+
+72
+00:02:09,039 --> 00:02:10,360
+aqui, eu vou mencionar o livro, vou
+
+73
+00:02:10,360 --> 00:02:12,160
+mencionar o autor também, se você quiser
+
+74
+00:02:12,160 --> 00:02:13,959
+aprender um pouquinho mais sobre sistem,
+
+75
+00:02:13,959 --> 00:02:15,239
+sobre arquitetura e mais um monte de
+
+76
+00:02:15,239 --> 00:02:16,480
+outras coisas, beleza? Então vamos lá,
+
+77
+00:02:16,480 --> 00:02:17,800
+vamos ao que importa aqui. Que que a
+
+78
+00:02:17,800 --> 00:02:18,879
+gente tem aqui com essa nossa
+
+79
+00:02:18,879 --> 00:02:20,360
+arquitetura inicial, tá? A gente tem
+
+80
+00:02:20,360 --> 00:02:21,680
+aqui uma arquiteturazinha bem básica,
+
+81
+00:02:21,680 --> 00:02:23,120
+tá? Então vamos simular o seguinte, a
+
+82
+00:02:23,120 --> 00:02:24,879
+gente tem a nossa API que você foi lá,
+
+83
+00:02:24,879 --> 00:02:27,519
+escreveu em Java, PHP, C#ARP, Node,
+
+84
+00:02:27,519 --> 00:02:29,400
+Python, tanto faz. E você subiu um
+
+85
+00:02:29,400 --> 00:02:31,280
+servidorzinho pra sua API, tá? você tem
+
+86
+00:02:31,280 --> 00:02:32,720
+uma API lá, o domínio dela é
+
+87
+00:02:32,720 --> 00:02:34,480
+api.meite.com
+
+88
+00:02:34,480 --> 00:02:36,760
+e aí a gente tem aqui a camada do front
+
+89
+00:02:36,760 --> 00:02:38,440
+end, beleza? Então, nessa nossa
+
+90
+00:02:38,440 --> 00:02:40,560
+aplicação aqui, o front end separado do
+
+91
+00:02:40,560 --> 00:02:41,760
+back end, tá? Isso aqui é para
+
+92
+00:02:41,760 --> 00:02:43,159
+facilitar, tá? Porque no livro ele
+
+93
+00:02:43,159 --> 00:02:44,720
+menciona também a questão do front ali e
+
+94
+00:02:44,720 --> 00:02:45,840
+tudo mais, só que isso aqui ficaria um
+
+95
+00:02:45,840 --> 00:02:47,239
+vídeo muito grande. Então, a gente vai
+
+96
+00:02:47,239 --> 00:02:48,959
+separar o front do back end, então a
+
+97
+00:02:48,959 --> 00:02:51,400
+gente vai escalar a nossa API para 1
+
+98
+00:02:51,400 --> 00:02:52,959
+milhão de usuários, tá? Depois eu posso
+
+99
+00:02:52,959 --> 00:02:54,599
+fazer um vídeo escalando a parte do
+
+100
+00:02:54,599 --> 00:02:56,720
+front end, mas para todos os efeitos, a
+
+101
+00:02:56,720 --> 00:02:58,440
+gente tem lá o front end que é feito em
+
+102
+00:02:58,440 --> 00:03:00,400
+React, em Angular, tanto faz. e o
+
+103
+00:03:00,400 --> 00:03:02,319
+aplicativo mobile aqui também que tá
+
+104
+00:03:02,319 --> 00:03:04,159
+rodando lá a nível de front end e todos
+
+105
+00:03:04,159 --> 00:03:06,400
+os dois aqui consomem da nossa API. E
+
+106
+00:03:06,400 --> 00:03:08,040
+aí, como é que funciona aqui por baixo
+
+107
+00:03:08,040 --> 00:03:09,519
+dos panos as coisas? As coisas funcionam
+
+108
+00:03:09,519 --> 00:03:11,480
+mais ou menos assim, ó. O front end vai
+
+109
+00:03:11,480 --> 00:03:13,360
+requisitar a nossa API, ou seja, vai
+
+110
+00:03:13,360 --> 00:03:15,080
+chamar o domínio da nossa aplicação, que
+
+111
+00:03:15,080 --> 00:03:17,080
+é o api.meite.com.
+
+112
+00:03:17,080 --> 00:03:19,000
+Por baixo dos panos, essa requisição vai
+
+113
+00:03:19,000 --> 00:03:21,159
+bater num DNS, que é o domain name
+
+114
+00:03:21,159 --> 00:03:22,760
+system, tá? Que é o sistema de nome de
+
+115
+00:03:22,760 --> 00:03:24,280
+domínio, que é basicamente quem faz ali
+
+116
+00:03:24,280 --> 00:03:26,200
+a conversão, tá? do domínio pro endereço
+
+117
+00:03:26,200 --> 00:03:27,879
+IP da onde tá aquele servidor que você
+
+118
+00:03:27,879 --> 00:03:29,680
+tá procurando, justamente para você não
+
+119
+00:03:29,680 --> 00:03:31,560
+ter que ficar gravando endereço IP de
+
+120
+00:03:31,560 --> 00:03:33,360
+tudo quanto é servidor. É justamente por
+
+121
+00:03:33,360 --> 00:03:34,760
+isso que existe domínio. Então aqui você
+
+122
+00:03:34,760 --> 00:03:36,159
+tem que entender um pouquinho de como
+
+123
+00:03:36,159 --> 00:03:37,920
+que a web funciona, como que as coisas
+
+124
+00:03:37,920 --> 00:03:39,519
+funcionam ali por baixo dos panos. Então
+
+125
+00:03:39,519 --> 00:03:42,239
+a requisição procurando api.meite.com
+
+126
+00:03:42,239 --> 00:03:44,920
+bate no DNS. O DNS retorna o endereço IP
+
+127
+00:03:44,920 --> 00:03:46,239
+da onde tá aquele servidor e a
+
+128
+00:03:46,239 --> 00:03:47,720
+requisição segue adiante. Com a
+
+129
+00:03:47,720 --> 00:03:49,080
+requisição seguindo adiante vai
+
+130
+00:03:49,080 --> 00:03:51,040
+encontrar o nosso servidor, vai bater na
+
+131
+00:03:51,040 --> 00:03:52,799
+nossa APIzinha aqui. Nossa PI vai
+
+132
+00:03:52,799 --> 00:03:54,599
+processar a requisição, vai chegar lá no
+
+133
+00:03:54,599 --> 00:03:56,799
+end point, tal, no controller e ela vai
+
+134
+00:03:56,799 --> 00:03:59,400
+devolver aqui uma resposta em Jzon, tá?
+
+135
+00:03:59,400 --> 00:04:01,200
+E para todos os efeitos, o banco de
+
+136
+00:04:01,200 --> 00:04:03,239
+dados está aqui também. Então, a gente
+
+137
+00:04:03,239 --> 00:04:05,480
+instalou o banco de dados no mesmo
+
+138
+00:04:05,480 --> 00:04:08,000
+servidor da aplicação. Beleza? Essa é a
+
+139
+00:04:08,000 --> 00:04:10,439
+nossa arquitetura inicial. É com isso
+
+140
+00:04:10,439 --> 00:04:11,920
+aqui que a gente vai começar, tá? Isso
+
+141
+00:04:11,920 --> 00:04:13,879
+aqui é muito básico, é muito simplista,
+
+142
+00:04:13,879 --> 00:04:15,280
+cara. Isso aqui não tem mistério nenhum.
+
+143
+00:04:15,280 --> 00:04:17,000
+Beleza? E aí o que que acontece? A gente
+
+144
+00:04:17,000 --> 00:04:19,040
+precisa dar algum jeito de fazer o quê?
+
+145
+00:04:19,040 --> 00:04:20,680
+De fazer com que a nossa aplicação, que
+
+146
+00:04:20,680 --> 00:04:22,880
+a nossa arquitetura inicial aqui consiga
+
+147
+00:04:22,880 --> 00:04:24,520
+suportar 1 milhão de usuários. Só que
+
+148
+00:04:24,520 --> 00:04:26,440
+não é de uma vez só. Você não faz uma
+
+149
+00:04:26,440 --> 00:04:28,320
+única coisa aqui e pronto, suporta 1
+
+150
+00:04:28,320 --> 00:04:30,280
+milhão de usuários. Não, esse processo é
+
+151
+00:04:30,280 --> 00:04:32,280
+gradual, ele é evolutivo, então a gente
+
+152
+00:04:32,280 --> 00:04:34,520
+tem que ir avaliando o que a gente tem e
+
+153
+00:04:34,520 --> 00:04:36,520
+ir dando pequenos passos ao longo do
+
+154
+00:04:36,520 --> 00:04:38,000
+caminho até a gente chegar com
+
+155
+00:04:38,000 --> 00:04:40,000
+arquitetura que suporte essa volumetria
+
+156
+00:04:40,000 --> 00:04:41,960
+massiva de usuários e de requisições
+
+157
+00:04:41,960 --> 00:04:43,560
+simultâneas. Beleza? Então, a primeira
+
+158
+00:04:43,560 --> 00:04:44,960
+coisa que a gente tem que avaliar é o
+
+159
+00:04:44,960 --> 00:04:46,120
+que a gente tem. E o que que a gente
+
+160
+00:04:46,120 --> 00:04:47,479
+tem? A gente tem uma arquitetura aqui,
+
+161
+00:04:47,479 --> 00:04:49,199
+cara, que tá altamente acoplada. a gente
+
+162
+00:04:49,199 --> 00:04:50,919
+tem o banco de dados dentro do próprio
+
+163
+00:04:50,919 --> 00:04:52,919
+servidor aqui da aplicação. Então aqui a
+
+164
+00:04:52,919 --> 00:04:54,400
+gente já tem o primeiro problema que é o
+
+165
+00:04:54,400 --> 00:04:56,360
+seguinte: o nosso banco de dados e a
+
+166
+00:04:56,360 --> 00:04:58,520
+nossa aplicação lá, o código rodando e
+
+167
+00:04:58,520 --> 00:05:00,320
+tudo mais na memória dá problema por
+
+168
+00:05:00,320 --> 00:05:02,280
+quê? Vão começar a competir por recurso,
+
+169
+00:05:02,280 --> 00:05:04,080
+cara. vão começar a competir por recurso
+
+170
+00:05:04,080 --> 00:05:06,199
+e isso pode acabar inutilizando o nosso
+
+171
+00:05:06,199 --> 00:05:07,479
+servidor. Nosso servidor pode acabar
+
+172
+00:05:07,479 --> 00:05:08,960
+caindo, pode ficar fora do ar, pode
+
+173
+00:05:08,960 --> 00:05:10,960
+acabar aumentando e muito a latência, ou
+
+174
+00:05:10,960 --> 00:05:13,039
+seja, o tempo de resposta da aplicação.
+
+175
+00:05:13,039 --> 00:05:14,720
+E sem contar que nós já temos um
+
+176
+00:05:14,720 --> 00:05:16,280
+problema aqui que a gente vai falar
+
+177
+00:05:16,280 --> 00:05:17,800
+muito ao longo dessa aula aqui, que é o
+
+178
+00:05:17,800 --> 00:05:19,680
+seguinte, que é um ponto único de falha.
+
+179
+00:05:19,680 --> 00:05:21,360
+A nossa aplicação, ela tem um ponto
+
+180
+00:05:21,360 --> 00:05:22,680
+único de falha, que é o quê? Que é o
+
+181
+00:05:22,680 --> 00:05:24,759
+servidor. Se acontecer algum desastre,
+
+182
+00:05:24,759 --> 00:05:26,479
+alguma coisa, algum problema físico
+
+183
+00:05:26,479 --> 00:05:28,039
+mesmo no servidor e ele ficar fora do
+
+184
+00:05:28,039 --> 00:05:29,680
+ar, toda a nossa aplicação tá fora do
+
+185
+00:05:29,680 --> 00:05:31,240
+ar. Por quê? porque o front end não vai
+
+186
+00:05:31,240 --> 00:05:32,840
+conseguir consumir os dados. A aplicação
+
+187
+00:05:32,840 --> 00:05:34,319
+vai ficar literalmente fora do ar, cara.
+
+188
+00:05:34,319 --> 00:05:36,080
+Então, a gente precisa começar a
+
+189
+00:05:36,080 --> 00:05:37,880
+resolver esses problemas. Mas vamos por
+
+190
+00:05:37,880 --> 00:05:39,319
+parte, vamos devagar que a gente vai
+
+191
+00:05:39,319 --> 00:05:40,960
+chegar até lá. Primeira coisa que a
+
+192
+00:05:40,960 --> 00:05:42,919
+gente precisa fazer é o quê? É separar
+
+193
+00:05:42,919 --> 00:05:44,759
+os servidores. Então, eu preciso de um
+
+194
+00:05:44,759 --> 00:05:46,840
+servidor pra minha aplicação e eu
+
+195
+00:05:46,840 --> 00:05:48,520
+preciso de um servidor pro meu banco de
+
+196
+00:05:48,520 --> 00:05:50,319
+dados. Por quê? Porque fazendo isso, eu
+
+197
+00:05:50,319 --> 00:05:52,160
+consigo dimensionar eles de maneira
+
+198
+00:05:52,160 --> 00:05:53,800
+separada. eu consigo fazer essa
+
+199
+00:05:53,800 --> 00:05:56,120
+separação e eu consigo tratar cada um de
+
+200
+00:05:56,120 --> 00:05:58,080
+acordo com a demanda de cada um deles.
+
+201
+00:05:58,080 --> 00:06:00,199
+Então, o próximo diagrama aqui é
+
+202
+00:06:00,199 --> 00:06:02,759
+exatamente o que acontece, é a evolução
+
+203
+00:06:02,759 --> 00:06:04,440
+gradual da nossa arquitetura que a gente
+
+204
+00:06:04,440 --> 00:06:06,720
+faz o quê? A gente separou o nosso banco
+
+205
+00:06:06,720 --> 00:06:08,560
+de dados e colocou ele num servidor à
+
+206
+00:06:08,560 --> 00:06:10,639
+parte. Então agora nós temos o servidor
+
+207
+00:06:10,639 --> 00:06:12,680
+pra nossa API e nós temos um servidor
+
+208
+00:06:12,680 --> 00:06:14,280
+pro nosso banco de dados. E aí aqui vai
+
+209
+00:06:14,280 --> 00:06:16,319
+acontecer, né, a escrita, leitura ali, o
+
+210
+00:06:16,319 --> 00:06:18,199
+update, o delite no banco, ele retorna
+
+211
+00:06:18,199 --> 00:06:19,800
+os dados aqui pra nossa aplicação e o
+
+212
+00:06:19,800 --> 00:06:21,759
+fluxo permanece o mesmo. Mesma coisa,
+
+213
+00:06:21,759 --> 00:06:24,080
+bate lá no DNS, retorna o IP e aí as
+
+214
+00:06:24,080 --> 00:06:25,960
+requisições chegam na nossa aplicação.
+
+215
+00:06:25,960 --> 00:06:27,680
+Show de bola, nós já conseguimos dar o
+
+216
+00:06:27,680 --> 00:06:29,599
+nosso primeiro passo. Dá para suportar 1
+
+217
+00:06:29,599 --> 00:06:31,199
+milhão de usuários com isso aqui? Lógico
+
+218
+00:06:31,199 --> 00:06:33,120
+que não estamos longe disso aqui, porém
+
+219
+00:06:33,120 --> 00:06:35,319
+já temos aí uma evoluçãozinha gradual,
+
+220
+00:06:35,319 --> 00:06:37,080
+já conseguimos alcançar alguma coisa
+
+221
+00:06:37,080 --> 00:06:38,800
+aqui. Pelo menos um pouquinho mais de
+
+222
+00:06:38,800 --> 00:06:40,440
+usuários a gente vai conseguir atender.
+
+223
+00:06:40,440 --> 00:06:41,720
+Por quê? Porque a gente tem um servidor
+
+224
+00:06:41,720 --> 00:06:43,479
+dedicado agora pra nossa aplicação e a
+
+225
+00:06:43,479 --> 00:06:44,919
+gente tem um servidor dedicado pro banco
+
+226
+00:06:44,919 --> 00:06:46,560
+de dados. Então agora o número de
+
+227
+00:06:46,560 --> 00:06:48,479
+usuários pode ir aumentando aos poucos
+
+228
+00:06:48,479 --> 00:06:49,759
+que a nossa aplicação, a nossa
+
+229
+00:06:49,759 --> 00:06:51,520
+arquitetura consegue lidar com um
+
+230
+00:06:51,520 --> 00:06:53,360
+pouquinho mais de usuários. Beleza? Só
+
+231
+00:06:53,360 --> 00:06:55,000
+que aí a gente tem ainda alguns
+
+232
+00:06:55,000 --> 00:06:56,599
+problemas, alguns desafios pra gente
+
+233
+00:06:56,599 --> 00:06:58,440
+enfrentar e vamos enfrentando todos eles
+
+234
+00:06:58,440 --> 00:07:00,199
+aqui. Qual que é a desvantagem ou então
+
+235
+00:07:00,199 --> 00:07:01,840
+qual que é o problema dessa arquitetura
+
+236
+00:07:01,840 --> 00:07:03,199
+aqui quando a gente fala de tentar
+
+237
+00:07:03,199 --> 00:07:04,639
+atender 1 milhão de usuários ou um
+
+238
+00:07:04,639 --> 00:07:06,759
+volume muito massivo de requisições?
+
+239
+00:07:06,759 --> 00:07:08,240
+Porque assim, ó, essa arquitetura não é
+
+240
+00:07:08,240 --> 00:07:10,039
+que ela seja ruim, tem muita aplicação
+
+241
+00:07:10,039 --> 00:07:11,599
+que roda com essa arquitetura aqui
+
+242
+00:07:11,599 --> 00:07:13,319
+perfeitamente, com pé nas costas,
+
+243
+00:07:13,319 --> 00:07:15,039
+resolve qualquer probleminha. Isso tudo
+
+244
+00:07:15,039 --> 00:07:17,319
+aqui depende do que você está tentando
+
+245
+00:07:17,319 --> 00:07:18,840
+arquitetar. É justamente para você não
+
+246
+00:07:18,840 --> 00:07:20,319
+sair por aí feito um doido achando que
+
+247
+00:07:20,319 --> 00:07:21,680
+não, essa arquitetura aqui não presta,
+
+248
+00:07:21,680 --> 00:07:23,199
+não serve para nada porque tem isso de
+
+249
+00:07:23,199 --> 00:07:24,599
+desvantagem, tem aquilo. Não, não é
+
+250
+00:07:24,599 --> 00:07:26,039
+assim que funciona. Não é que isso aqui
+
+251
+00:07:26,039 --> 00:07:27,400
+é ruim, não. Beleza? É essa a
+
+252
+00:07:27,400 --> 00:07:28,840
+mentalidade. Então, vamos lá. Quais que
+
+253
+00:07:28,840 --> 00:07:30,919
+são os desafios dessa nossa arquitetura
+
+254
+00:07:30,919 --> 00:07:32,479
+aqui? O desafio é o seguinte. Repara que
+
+255
+00:07:32,479 --> 00:07:34,240
+aqui a gente tem uma coisa chamada ponto
+
+256
+00:07:34,240 --> 00:07:36,199
+único de falha de novo. Por quê? Se o
+
+257
+00:07:36,199 --> 00:07:38,319
+nosso banco de dados falhar, a nossa
+
+258
+00:07:38,319 --> 00:07:40,440
+aplicação falha. Se a nossa API, se o
+
+259
+00:07:40,440 --> 00:07:42,520
+nosso servidor falhar, a nossa aplicação
+
+260
+00:07:42,520 --> 00:07:43,879
+inteira vai falhar. Toda a nossa
+
+261
+00:07:43,879 --> 00:07:45,840
+arquitetura vai falhar. Então, a gente
+
+262
+00:07:45,840 --> 00:07:48,039
+tem que mitigar esse ponto único de
+
+263
+00:07:48,039 --> 00:07:49,560
+falha, porque nós estamos tentando
+
+264
+00:07:49,560 --> 00:07:51,280
+atender uma volumetria muito alta de
+
+265
+00:07:51,280 --> 00:07:53,800
+usuários. Então, quando a gente fala de
+
+266
+00:07:53,800 --> 00:07:56,080
+atender muitos usuários, a gente vai ter
+
+267
+00:07:56,080 --> 00:07:57,360
+que esbarrar no tema que é
+
+268
+00:07:57,360 --> 00:07:59,639
+escalabilidade. A gente precisa escalar
+
+269
+00:07:59,639 --> 00:08:01,639
+a nossa arquitetura. E aí quando a gente
+
+270
+00:08:01,639 --> 00:08:03,919
+começa falando de escalabilidade, a
+
+271
+00:08:03,919 --> 00:08:05,280
+gente vai encontrar dois tipos de
+
+272
+00:08:05,280 --> 00:08:07,319
+escalabilidade, que é o quê? É a escala
+
+273
+00:08:07,319 --> 00:08:09,280
+vertical e a escala horizontal. O que
+
+274
+00:08:09,280 --> 00:08:10,840
+que é a escala vertical, Renato? Escala
+
+275
+00:08:10,840 --> 00:08:12,800
+vertical é literalmente você adicionar
+
+276
+00:08:12,800 --> 00:08:14,319
+mais hardware, tá? Mais poder
+
+277
+00:08:14,319 --> 00:08:15,720
+computacional, mais poder de
+
+278
+00:08:15,720 --> 00:08:17,599
+processamento, mais memória RAM, mais
+
+279
+00:08:17,599 --> 00:08:19,840
+armazenamento lá no seu servidor. E a
+
+280
+00:08:19,840 --> 00:08:22,199
+escalabilidade horizontal é você criar
+
+281
+00:08:22,199 --> 00:08:24,479
+réplicas da sua API, da sua aplicação,
+
+282
+00:08:24,479 --> 00:08:26,400
+do seu sisteminha e colocar isso em
+
+283
+00:08:26,400 --> 00:08:28,400
+servidores separados, tá? Calma que eu
+
+284
+00:08:28,400 --> 00:08:29,520
+já vou te mostrar qual que é a
+
+285
+00:08:29,520 --> 00:08:31,080
+ferramenta que você vai utilizar para
+
+286
+00:08:31,080 --> 00:08:32,640
+unificar tudo isso aqui, para você fazer
+
+287
+00:08:32,640 --> 00:08:34,760
+a escala horizontal, tá? Então nós temos
+
+288
+00:08:34,760 --> 00:08:37,240
+aqui dois tipos de escalas. E aí, mais
+
+289
+00:08:37,240 --> 00:08:39,279
+uma vez, o que é que nós estamos
+
+290
+00:08:39,279 --> 00:08:40,919
+tentando fazer? Nós estamos tentando
+
+291
+00:08:40,919 --> 00:08:42,719
+atender 1 milhão de usuários. A escala
+
+292
+00:08:42,719 --> 00:08:45,160
+vertical vai nos atender? Não, não vai
+
+293
+00:08:45,160 --> 00:08:47,000
+nos atender. Não vai atender o nosso
+
+294
+00:08:47,000 --> 00:08:48,760
+propósito, tá? Não é, mais uma vez, não
+
+295
+00:08:48,760 --> 00:08:50,279
+é que ela seja ruim, é que ela não
+
+296
+00:08:50,279 --> 00:08:51,800
+atende o nosso propósito. Por qu,
+
+297
+00:08:51,800 --> 00:08:53,160
+Renato? Porque é o seguinte, quando a
+
+298
+00:08:53,160 --> 00:08:54,680
+gente pegar o nosso servidor lá e
+
+299
+00:08:54,680 --> 00:08:56,560
+adicionar mais poder de processamento,
+
+300
+00:08:56,560 --> 00:08:58,079
+mais memória RAM, mais poder de
+
+301
+00:08:58,079 --> 00:08:59,959
+armazenamento e tudo mais, esse número
+
+302
+00:08:59,959 --> 00:09:02,160
+tem um limite. Esse número ele é finito.
+
+303
+00:09:02,160 --> 00:09:03,600
+Ele não é um número infinito. Eu não
+
+304
+00:09:03,600 --> 00:09:05,399
+posso adicionar um número ilimitado de
+
+305
+00:09:05,399 --> 00:09:07,079
+memória RAM no servidor. Não funciona,
+
+306
+00:09:07,079 --> 00:09:09,279
+não é assim. Tem um teto. E aí, além
+
+307
+00:09:09,279 --> 00:09:11,160
+disso, a gente tem o outro problema que
+
+308
+00:09:11,160 --> 00:09:13,120
+é o quê? O ponto único de falha. Por
+
+309
+00:09:13,120 --> 00:09:14,959
+quê? Porque se eu pego o meu servidor da
+
+310
+00:09:14,959 --> 00:09:17,040
+minha aplicação e entupo ele de memória
+
+311
+00:09:17,040 --> 00:09:18,279
+RAM, entupo ele de poder de
+
+312
+00:09:18,279 --> 00:09:19,880
+processamento, poder computacional, o
+
+313
+00:09:19,880 --> 00:09:21,640
+que que vai acontecer? ele vai ficar lá,
+
+314
+00:09:21,640 --> 00:09:23,600
+vai est mais robusto, mais parrudo, vai
+
+315
+00:09:23,600 --> 00:09:25,560
+conseguir atender ali um número maior de
+
+316
+00:09:25,560 --> 00:09:28,240
+requisições, porém se acontecer alguma
+
+317
+00:09:28,240 --> 00:09:30,519
+coisa com o servidor, a aplicação mais
+
+318
+00:09:30,519 --> 00:09:32,880
+uma vez vai ficar fora do ar. Então aqui
+
+319
+00:09:32,880 --> 00:09:35,279
+nesse caso não vai nos atender porque
+
+320
+00:09:35,279 --> 00:09:37,040
+nós precisamos de uma aplicação
+
+321
+00:09:37,040 --> 00:09:38,600
+altamente disponível, de uma
+
+322
+00:09:38,600 --> 00:09:40,880
+arquitetura, né, altamente disponível,
+
+323
+00:09:40,880 --> 00:09:42,440
+porque se nós estamos lidando com 1
+
+324
+00:09:42,440 --> 00:09:43,680
+milhão de usuários, cara, a nossa
+
+325
+00:09:43,680 --> 00:09:45,279
+aplicação não pode ficar fora do ar.
+
+326
+00:09:45,279 --> 00:09:46,399
+Então a gente tem que pensar nisso.
+
+327
+00:09:46,399 --> 00:09:48,160
+Redundância, tá? Failover. Que que é
+
+328
+00:09:48,160 --> 00:09:50,160
+Failover? Filover é você pegar o teu
+
+329
+00:09:50,160 --> 00:09:52,200
+servidor aqui, se ele falhar, você tem
+
+330
+00:09:52,200 --> 00:09:53,839
+um backup para botar no lugar dele. Isso
+
+331
+00:09:53,839 --> 00:09:55,120
+é redundância, cara. Trabalhar com
+
+332
+00:09:55,120 --> 00:09:57,160
+redundância. Então, escalabilidade
+
+333
+00:09:57,160 --> 00:09:59,440
+vertical não nos atende nesse momento.
+
+334
+00:09:59,440 --> 00:10:01,320
+Então, nós vamos ter que escalar a nossa
+
+335
+00:10:01,320 --> 00:10:03,320
+arquitetura horizontalmente. Como que a
+
+336
+00:10:03,320 --> 00:10:04,959
+gente faz isso, Renato? A gente escala
+
+337
+00:10:04,959 --> 00:10:06,880
+horizontalmente utilizando uma
+
+338
+00:10:06,880 --> 00:10:09,240
+ferramenta chamada load balancer, tá?
+
+339
+00:10:09,240 --> 00:10:10,800
+Que que é um load balancer, tá? Pensa
+
+340
+00:10:10,800 --> 00:10:12,680
+assim, ó. Load Balancer é uma ferramenta
+
+341
+00:10:12,680 --> 00:10:13,839
+que o que que a gente vai fazer? A gente
+
+342
+00:10:13,839 --> 00:10:15,839
+vai criar réplicas da nossa aplicação,
+
+343
+00:10:15,839 --> 00:10:18,000
+da nossa PI, e vamos subir um novo
+
+344
+00:10:18,000 --> 00:10:20,120
+servidor com a réplica da nossa PI, com
+
+345
+00:10:20,120 --> 00:10:21,560
+a réplica do nosso código e vamos
+
+346
+00:10:21,560 --> 00:10:22,760
+colocar isso para rodar em outro
+
+347
+00:10:22,760 --> 00:10:25,160
+servidor. E aí na ponta, ou seja, na
+
+348
+00:10:25,160 --> 00:10:26,640
+frente desses dois servidores, a gente
+
+349
+00:10:26,640 --> 00:10:28,200
+vai colocar esse load balancer, que
+
+350
+00:10:28,200 --> 00:10:30,760
+traduzindo ficaria balanceador de carga
+
+351
+00:10:30,760 --> 00:10:32,800
+e é ele quem vai receber toda a
+
+352
+00:10:32,800 --> 00:10:34,880
+enchurrada de requisições do front end
+
+353
+00:10:34,880 --> 00:10:36,760
+ou de quem estiver chamando a nossa
+
+354
+00:10:36,760 --> 00:10:38,120
+aplicação. E aí, como é que vai
+
+355
+00:10:38,120 --> 00:10:40,120
+funcionar, tá? Primeira coisa para você
+
+356
+00:10:40,120 --> 00:10:42,360
+entender legal é o seguinte. na imagem
+
+357
+00:10:42,360 --> 00:10:43,800
+número um lá, o que que estava
+
+358
+00:10:43,800 --> 00:10:45,800
+acontecendo? Vamos lá. Bem aqui, ó, a
+
+359
+00:10:45,800 --> 00:10:48,120
+gente configurava o IP do nosso servidor
+
+360
+00:10:48,120 --> 00:10:50,760
+lá no DNS. Então, a gente apontava o
+
+361
+00:10:50,760 --> 00:10:52,279
+API.meite.com
+
+362
+00:10:52,279 --> 00:10:53,959
+pro IP do nosso servidor, da nossa
+
+363
+00:10:53,959 --> 00:10:55,480
+aplicação. Beleza? Que que tá
+
+364
+00:10:55,480 --> 00:10:57,360
+acontecendo aqui embaixo? Agora aqui é o
+
+365
+00:10:57,360 --> 00:10:59,120
+seguinte, a gente vai configurar o IP
+
+366
+00:10:59,120 --> 00:11:00,839
+público do Load Balancer. A gente não
+
+367
+00:11:00,839 --> 00:11:03,079
+vai mais colocar a nossa aplicação
+
+368
+00:11:03,079 --> 00:11:05,000
+exposta pra internet, inclusive isso é
+
+369
+00:11:05,000 --> 00:11:06,880
+uma boa prática de segurança, tá? Elas
+
+370
+00:11:06,880 --> 00:11:08,720
+vão trabalhar agora com IPs privados,
+
+371
+00:11:08,720 --> 00:11:10,720
+tá? A nossa aplicação mesmo, nosso
+
+372
+00:11:10,720 --> 00:11:12,680
+servidor, a nossa API, ela não vai ser
+
+373
+00:11:12,680 --> 00:11:14,279
+acessível pro mundo externo, pra
+
+374
+00:11:14,279 --> 00:11:16,279
+internet. Quem vai ser acessível vai ser
+
+375
+00:11:16,279 --> 00:11:18,079
+quem? Vai ser o nosso load balancer.
+
+376
+00:11:18,079 --> 00:11:19,480
+Então é por isso que a gente vai
+
+377
+00:11:19,480 --> 00:11:21,320
+configurar o IP público do Load
+
+378
+00:11:21,320 --> 00:11:23,240
+Balancer, tá? Apontando aqui pro nosso
+
+379
+00:11:23,240 --> 00:11:25,360
+DNS, aqui pro nosso domínio, na verdade.
+
+380
+00:11:25,360 --> 00:11:27,360
+E aí todo mundo que requisitar vai
+
+381
+00:11:27,360 --> 00:11:29,320
+mandar as requisições pro load balancer
+
+382
+00:11:29,320 --> 00:11:31,680
+e ele é que vai fazer a distribuição de
+
+383
+00:11:31,680 --> 00:11:33,800
+carga aqui entre as nossas réplicas,
+
+384
+00:11:33,800 --> 00:11:35,480
+entre as nossas instâncias, tá? Porque
+
+385
+00:11:35,480 --> 00:11:37,760
+ele logicamente conhece o IP privado de
+
+386
+00:11:37,760 --> 00:11:39,240
+cada servidorzinho, tá? Isso aqui você
+
+387
+00:11:39,240 --> 00:11:40,760
+cria, você configura, se tiver usando o
+
+388
+00:11:40,760 --> 00:11:42,600
+cloud aí uma WS da vida, você configura
+
+389
+00:11:42,600 --> 00:11:44,519
+lá sua rede privada e aí vai est tudo
+
+390
+00:11:44,519 --> 00:11:46,079
+certo, tá? Você bota o load balancer lá
+
+391
+00:11:46,079 --> 00:11:47,680
+para comunicar com as suas instâncias
+
+392
+00:11:47,680 --> 00:11:49,320
+internamente. Então, do lado de fora
+
+393
+00:11:49,320 --> 00:11:50,880
+ninguém consegue acessar. E aí, vamos
+
+394
+00:11:50,880 --> 00:11:52,399
+lá. Que que a gente resolveu com isso
+
+395
+00:11:52,399 --> 00:11:53,800
+aqui? Primeiro, a gente resolveu o
+
+396
+00:11:53,800 --> 00:11:55,680
+problema do failover e redundância lá.
+
+397
+00:11:55,680 --> 00:11:57,360
+Por quê? Porque se um desses servidores
+
+398
+00:11:57,360 --> 00:11:59,120
+ficar fora do A, a gente tem o outro.
+
+399
+00:11:59,120 --> 00:12:00,839
+Então, a nossa aplicação agora, nossa
+
+400
+00:12:00,839 --> 00:12:02,560
+arquitetura agora já está com uma
+
+401
+00:12:02,560 --> 00:12:04,600
+disponibilidade muito melhor, já é muito
+
+402
+00:12:04,600 --> 00:12:07,120
+mais disponível. E uma outra vantagem é
+
+403
+00:12:07,120 --> 00:12:08,639
+que se o tráfego aumentar
+
+404
+00:12:08,639 --> 00:12:10,920
+repentinamente, a gente pode vir aqui e
+
+405
+00:12:10,920 --> 00:12:12,720
+subir novas instâncias aqui, que o
+
+406
+00:12:12,720 --> 00:12:14,199
+próprio Load Balancer aqui já se
+
+407
+00:12:14,199 --> 00:12:15,920
+encarrega de poder fazer aqui a
+
+408
+00:12:15,920 --> 00:12:18,040
+distribuição de carga entre essas novas
+
+409
+00:12:18,040 --> 00:12:20,240
+réplicas, tá? Então isso aqui te dá um
+
+410
+00:12:20,240 --> 00:12:22,440
+poder absurdo na sua arquitetura. Só que
+
+411
+00:12:22,440 --> 00:12:24,320
+como nem tudo são flores, eu já
+
+412
+00:12:24,320 --> 00:12:26,480
+mencionei isso aqui na nossa caminhada,
+
+413
+00:12:26,480 --> 00:12:28,279
+o que que acontece? A gente tem algumas
+
+414
+00:12:28,279 --> 00:12:30,240
+desvantagens aqui também, porque nem
+
+415
+00:12:30,240 --> 00:12:31,880
+tudo é perfeito, cara. Não existe bala
+
+416
+00:12:31,880 --> 00:12:33,440
+de prata. Quem acha que tem bala de
+
+417
+00:12:33,440 --> 00:12:34,720
+prata para resolver? Não existe esse
+
+418
+00:12:34,720 --> 00:12:36,040
+negócio de bala de prata. Então, o que
+
+419
+00:12:36,040 --> 00:12:37,519
+que acontece aqui? Aqui a gente
+
+420
+00:12:37,519 --> 00:12:39,880
+conseguiu abrir a camada web, a porta da
+
+421
+00:12:39,880 --> 00:12:41,560
+web, tá? A porteira tá aberta, então
+
+422
+00:12:41,560 --> 00:12:43,199
+agora a gente configura instâncias ali
+
+423
+00:12:43,199 --> 00:12:44,839
+para lidar com fluxo massivo de
+
+424
+00:12:44,839 --> 00:12:46,760
+requisições. Só que temos um problema.
+
+425
+00:12:46,760 --> 00:12:48,519
+Quem é que vai chorar agora? Quem é que
+
+426
+00:12:48,519 --> 00:12:50,320
+vai abrir o bico? É o banco de dados,
+
+427
+00:12:50,320 --> 00:12:52,240
+porque ele é quem vai se tornar o ponto
+
+428
+00:12:52,240 --> 00:12:53,920
+único de falha da aplicação, porque até
+
+429
+00:12:53,920 --> 00:12:55,560
+então a gente só tem um único banco de
+
+430
+00:12:55,560 --> 00:12:57,519
+dados. E agora tu imagina todas essas
+
+431
+00:12:57,519 --> 00:12:59,600
+instâncias aqui conectando no mesmo
+
+432
+00:12:59,600 --> 00:13:01,240
+banco de dados. O que que vai acontecer?
+
+433
+00:13:01,240 --> 00:13:02,760
+O banco de dados não vai aguentar, cara.
+
+434
+00:13:02,760 --> 00:13:04,639
+Por mais que a gente vá lá, escale
+
+435
+00:13:04,639 --> 00:13:06,760
+verticalmente o nosso banco de dados, ou
+
+436
+00:13:06,760 --> 00:13:08,760
+seja, adicione poder computacional,
+
+437
+00:13:08,760 --> 00:13:10,399
+adicione memória RAM, adicione poder de
+
+438
+00:13:10,399 --> 00:13:12,320
+processamento, não vai dar conta. Por
+
+439
+00:13:12,320 --> 00:13:14,000
+quê? Porque vai chegar um momento que a
+
+440
+00:13:14,000 --> 00:13:15,440
+gente vai atingir um limite. E aqui a
+
+441
+00:13:15,440 --> 00:13:17,920
+gente tá falando de milhões de usuários.
+
+442
+00:13:17,920 --> 00:13:19,360
+1 milhão. Vamos botar 1 milhão de
+
+443
+00:13:19,360 --> 00:13:21,160
+usuários, cara. Então, a gente precisa
+
+444
+00:13:21,160 --> 00:13:22,959
+de alguma estratégia. Para quê? para
+
+445
+00:13:22,959 --> 00:13:24,920
+evitar que o nosso banco de dados se
+
+446
+00:13:24,920 --> 00:13:26,760
+torne um ponto único de falha, para que
+
+447
+00:13:26,760 --> 00:13:28,399
+a gente consiga garantir a
+
+448
+00:13:28,399 --> 00:13:30,279
+disponibilidade dos nossos dados ali,
+
+449
+00:13:30,279 --> 00:13:32,079
+para que a gente consiga garantir também
+
+450
+00:13:32,079 --> 00:13:33,839
+a confiabilidade, ou seja, para que a
+
+451
+00:13:33,839 --> 00:13:35,240
+gente não perca nenhum tipo de dado.
+
+452
+00:13:35,240 --> 00:13:36,800
+Porque tu imagina, a gente tem um único
+
+453
+00:13:36,800 --> 00:13:38,560
+servidor de banco de dados. Se acontecer
+
+454
+00:13:38,560 --> 00:13:40,360
+alguma coisa com esse servidor de banco
+
+455
+00:13:40,360 --> 00:13:41,920
+de dados e a gente não tiver um backup,
+
+456
+00:13:41,920 --> 00:13:43,600
+uma redundância, alguma coisa do tipo,
+
+457
+00:13:43,600 --> 00:13:45,079
+cara, a gente vai perder os dados.
+
+458
+00:13:45,079 --> 00:13:46,920
+Então, não faz sentido manter essa
+
+459
+00:13:46,920 --> 00:13:48,480
+arquitetura pra volumetria que a gente
+
+460
+00:13:48,480 --> 00:13:50,240
+espera. Então, qual que é a técnica que
+
+461
+00:13:50,240 --> 00:13:51,600
+a gente vai utilizar agora? a gente vai
+
+462
+00:13:51,600 --> 00:13:54,279
+utilizar uma técnica chamada de database
+
+463
+00:13:54,279 --> 00:13:56,680
+replication. Isso aqui à primeira vista
+
+464
+00:13:56,680 --> 00:13:59,040
+eu sei que pode parecer meio cabuloso
+
+465
+00:13:59,040 --> 00:14:00,720
+assim de você perceber esse diagrama e
+
+466
+00:14:00,720 --> 00:14:02,320
+tudo mais. Parece complexo, complicado,
+
+467
+00:14:02,320 --> 00:14:03,480
+não é? Isso aqui é bem simples.
+
+468
+00:14:03,480 --> 00:14:05,160
+Inclusive no próximo diagrama vai ficar
+
+469
+00:14:05,160 --> 00:14:06,399
+um pouquinho mais fácil, tá? Mas o que
+
+470
+00:14:06,399 --> 00:14:07,759
+que eu quero que você entenda aqui? Qual
+
+471
+00:14:07,759 --> 00:14:09,880
+que é a técnica de replicação de banco
+
+472
+00:14:09,880 --> 00:14:11,600
+de dados? Vamos lá. A gente vai pegar o
+
+473
+00:14:11,600 --> 00:14:13,519
+nosso banco de dados principal e ele vai
+
+474
+00:14:13,519 --> 00:14:15,199
+ser o banco master, tá? Essa arquitetura
+
+475
+00:14:15,199 --> 00:14:16,680
+aqui também é conhecida como master
+
+476
+00:14:16,680 --> 00:14:19,079
+slave, tá? Então, a gente vai tornar o
+
+477
+00:14:19,079 --> 00:14:20,639
+nosso banco de dados principal como
+
+478
+00:14:20,639 --> 00:14:22,440
+banco de dados master e a gente vai
+
+479
+00:14:22,440 --> 00:14:24,639
+criar réplicas desse banco, ou seja,
+
+480
+00:14:24,639 --> 00:14:26,240
+cópias dele. A gente vai clonar o nosso
+
+481
+00:14:26,240 --> 00:14:27,320
+banco. E aí, o que que a gente vai
+
+482
+00:14:27,320 --> 00:14:29,160
+fazer? A gente vai colocar eles como
+
+483
+00:14:29,160 --> 00:14:31,480
+slave. E como que funciona a operação,
+
+484
+00:14:31,480 --> 00:14:32,759
+tá? Eu sei que você deve estar essa hora
+
+485
+00:14:32,759 --> 00:14:34,360
+aí agora com a cabeça dando um nó aí,
+
+486
+00:14:34,360 --> 00:14:36,240
+tipo, cara, como é que eu vou conectar o
+
+487
+00:14:36,240 --> 00:14:38,160
+a minha aplicação, o meu código ali do
+
+488
+00:14:38,160 --> 00:14:39,480
+framework, como que ele vai saber qual é
+
+489
+00:14:39,480 --> 00:14:40,519
+o banco de dados que ele tem que
+
+490
+00:14:40,519 --> 00:14:41,800
+conectar e tal. Calma que eu vou te
+
+491
+00:14:41,800 --> 00:14:43,040
+mostrar também um trechinho de código
+
+492
+00:14:43,040 --> 00:14:44,040
+para você entender como é que isso aqui
+
+493
+00:14:44,040 --> 00:14:46,240
+é simples, tá? Mas vamos lá. A meta aqui
+
+494
+00:14:46,240 --> 00:14:49,160
+é a gente redirecionar todas as escritas
+
+495
+00:14:49,160 --> 00:14:51,480
+da nossa aplicação. Update, insert no
+
+496
+00:14:51,480 --> 00:14:53,040
+banco de dados, delete no banco de
+
+497
+00:14:53,040 --> 00:14:54,480
+dados. Toda escrita vai ser
+
+498
+00:14:54,480 --> 00:14:56,480
+redirecionada pro nosso banco master. E
+
+499
+00:14:56,480 --> 00:14:58,759
+as leituras, ou seja, os selects, a
+
+500
+00:14:58,759 --> 00:15:00,920
+gente vai fazer nos bancos slave, tá?
+
+501
+00:15:00,920 --> 00:15:03,560
+Nas cópias. Inclusive, se você não sabe,
+
+502
+00:15:03,560 --> 00:15:06,600
+boa parte das aplicações, a volumetria
+
+503
+00:15:06,600 --> 00:15:08,440
+de leitura é muito maior do que a de
+
+504
+00:15:08,440 --> 00:15:09,920
+escrita. Então, por isso que a gente
+
+505
+00:15:09,920 --> 00:15:11,880
+cria aqui os slaves aqui e a gente pode
+
+506
+00:15:11,880 --> 00:15:13,680
+replicar quantos slaves a gente quiser.
+
+507
+00:15:13,680 --> 00:15:14,959
+E aí, tu deve estar se perguntando, tá?
+
+508
+00:15:14,959 --> 00:15:16,360
+Renato, mas como é que eu vou escrever
+
+509
+00:15:16,360 --> 00:15:18,320
+aqui e o dado vai estar disponível aqui?
+
+510
+00:15:18,320 --> 00:15:20,160
+É justamente por conta dessa linhazinha
+
+511
+00:15:20,160 --> 00:15:22,360
+aqui, dessa replicação. Existem diversos
+
+512
+00:15:22,360 --> 00:15:24,160
+mecanismos de replicação que fica aqui
+
+513
+00:15:24,160 --> 00:15:26,040
+no meio, lendo os dados que vão sendo
+
+514
+00:15:26,040 --> 00:15:27,959
+atualizados aqui, inseridos aqui e
+
+515
+00:15:27,959 --> 00:15:29,639
+replicando aqui pras cópias. Tem
+
+516
+00:15:29,639 --> 00:15:31,440
+diversas formas de fazer isso. Uma bem
+
+517
+00:15:31,440 --> 00:15:33,399
+comum é simplesmente pegar as próprias
+
+518
+00:15:33,399 --> 00:15:35,360
+cópias aqui, elas se conectam nesse
+
+519
+00:15:35,360 --> 00:15:36,759
+banco aqui, elas ficam por baixo dos
+
+520
+00:15:36,759 --> 00:15:38,560
+planos lá conectado, ouvindo todas as
+
+521
+00:15:38,560 --> 00:15:40,480
+alterações e vão se atualizando, tá?
+
+522
+00:15:40,480 --> 00:15:42,120
+Isso aqui é bem tranquilo de fazer. Aí
+
+523
+00:15:42,120 --> 00:15:43,160
+tu deve estar assim: "Renato, como é que
+
+524
+00:15:43,160 --> 00:15:44,440
+isso aí vai funcionar, cara? Como é que
+
+525
+00:15:44,440 --> 00:15:45,800
+a minha aplicação vai conectar? Vamos
+
+526
+00:15:45,800 --> 00:15:47,000
+lá. Eu vou abrir aqui, ó, a
+
+527
+00:15:47,000 --> 00:15:48,680
+documentação. Tem uma documentação aqui,
+
+528
+00:15:48,680 --> 00:15:50,040
+ó, que ele abriu aqui no meu monitor
+
+529
+00:15:50,040 --> 00:15:51,519
+secundário aqui. Deixa eu arrastar para
+
+530
+00:15:51,519 --> 00:15:52,839
+cá. Isso aqui é a documentação do
+
+531
+00:15:52,839 --> 00:15:55,600
+Laravel, tá? A maioria dos ORMs, dos
+
+532
+00:15:55,600 --> 00:15:57,680
+frameworks aí já vão te fornecer esse
+
+533
+00:15:57,680 --> 00:15:59,279
+tipo de ferramenta aqui, tá? Esse tipo
+
+534
+00:15:59,279 --> 00:16:00,920
+de possibilidade para você separar
+
+535
+00:16:00,920 --> 00:16:02,440
+escrita e leitura. E aí, ó, como é que
+
+536
+00:16:02,440 --> 00:16:04,120
+funciona isso aqui, ó? Arquivin de
+
+537
+00:16:04,120 --> 00:16:05,959
+configuração lá do teu laravel da vida,
+
+538
+00:16:05,959 --> 00:16:07,199
+tá? Isso aqui vai funcionar para outros
+
+539
+00:16:07,199 --> 00:16:08,519
+RMs, tá? É porque eu achei mais fácil
+
+540
+00:16:08,519 --> 00:16:09,759
+aqui o do larvel pr você entender.
+
+541
+00:16:09,759 --> 00:16:10,720
+Então, o que que você vai fazer? Você
+
+542
+00:16:10,720 --> 00:16:12,319
+vai configurar um My Sequel da vida,
+
+543
+00:16:12,319 --> 00:16:13,959
+talvez. E aí você bota aqui, ó, o read
+
+544
+00:16:13,959 --> 00:16:15,639
+aqui, ó, o banco de leitura. Qual é o
+
+545
+00:16:15,639 --> 00:16:17,000
+banco de leitura? Aí você bota aqui, ó,
+
+546
+00:16:17,000 --> 00:16:18,920
+os hosts aqui dentro dessa chave aqui. E
+
+547
+00:16:18,920 --> 00:16:20,160
+pronto. Você vai configurando aqui
+
+548
+00:16:20,160 --> 00:16:21,600
+quantas instâncias de leitura você
+
+549
+00:16:21,600 --> 00:16:23,279
+quiser. E pra escrita, pra escrita, eu
+
+550
+00:16:23,279 --> 00:16:25,360
+vou escrever neste cara aqui e tá tudo
+
+551
+00:16:25,360 --> 00:16:27,120
+certo, acabou. Problema resolvido. Você
+
+552
+00:16:27,120 --> 00:16:29,040
+configurou ali, problema resolvido, não
+
+553
+00:16:29,040 --> 00:16:30,880
+vai ter problema nenhum. Todo insert,
+
+554
+00:16:30,880 --> 00:16:32,759
+delete, update que você fizer, ele vai
+
+555
+00:16:32,759 --> 00:16:34,199
+utilizar o banco de escrita. Toda
+
+556
+00:16:34,199 --> 00:16:36,160
+leitura, todo select, ele vai utilizar
+
+557
+00:16:36,160 --> 00:16:38,240
+os bancos de leitura. Inclusive, ele
+
+558
+00:16:38,240 --> 00:16:39,319
+mesmo já vai fazendo aqui o
+
+559
+00:16:39,319 --> 00:16:41,480
+balanceamento, tá? ele vai separando ali
+
+560
+00:16:41,480 --> 00:16:42,720
+as leituras, vai como se fosse um
+
+561
+00:16:42,720 --> 00:16:44,639
+balanceador de carga, tá? Então isso
+
+562
+00:16:44,639 --> 00:16:45,920
+aqui é bem tranquilo. Isso aí depois
+
+563
+00:16:45,920 --> 00:16:47,800
+você dá uma lida no seu ORM favorito aí
+
+564
+00:16:47,800 --> 00:16:48,920
+que você vai encontrar alguma coisa
+
+565
+00:16:48,920 --> 00:16:50,199
+nesse sentido, tá? Uma outra
+
+566
+00:16:50,199 --> 00:16:52,079
+alternativa, se você tiver utilizando o
+
+567
+00:16:52,079 --> 00:16:54,360
+Aurora lá da WS, ele já te fornece um
+
+568
+00:16:54,360 --> 00:16:56,000
+cluster, tá? Ele vai te dar um endereço
+
+569
+00:16:56,000 --> 00:16:57,560
+só para você conectar, como se fosse um
+
+570
+00:16:57,560 --> 00:16:59,560
+único banco de leitura e ele mesmo já se
+
+571
+00:16:59,560 --> 00:17:01,480
+encarrega de fazer o balanceamento de
+
+572
+00:17:01,480 --> 00:17:03,480
+carga aqui entre esses bancos. E com
+
+573
+00:17:03,480 --> 00:17:05,079
+isso, o que que a gente ganhou? a gente
+
+574
+00:17:05,079 --> 00:17:07,160
+ganhou muito mais confiabilidade nos
+
+575
+00:17:07,160 --> 00:17:08,839
+dados, porque se alguém ficar fora do
+
+576
+00:17:08,839 --> 00:17:11,039
+ar, o outro assume o papel. E sem contar
+
+577
+00:17:11,039 --> 00:17:12,280
+que a gente também ganha muito mais
+
+578
+00:17:12,280 --> 00:17:13,760
+desempenho. Por quê? Porque a gente não
+
+579
+00:17:13,760 --> 00:17:15,400
+tem só um único banco de dados, cara.
+
+580
+00:17:15,400 --> 00:17:17,280
+Agora a gente tem vários bancos de dados
+
+581
+00:17:17,280 --> 00:17:19,000
+pronto para lidar com uma volumetria
+
+582
+00:17:19,000 --> 00:17:21,120
+muito maior de requisições. Então agora
+
+583
+00:17:21,120 --> 00:17:22,480
+a gente já tem muito mais
+
+584
+00:17:22,480 --> 00:17:24,520
+disponibilidade, confiabilidade,
+
+585
+00:17:24,520 --> 00:17:26,720
+autodesempenho aqui na nossa camada de
+
+586
+00:17:26,720 --> 00:17:28,240
+dados. Entendido isso aqui, vamos
+
+587
+00:17:28,240 --> 00:17:29,400
+entender como é que ficou a arquitetura,
+
+588
+00:17:29,400 --> 00:17:30,360
+que agora eu acho que vai ficar um
+
+589
+00:17:30,360 --> 00:17:31,600
+pouquinho mais fácil, tá? Se eu peguei
+
+590
+00:17:31,600 --> 00:17:33,360
+pesado contigo no diagrama anterior,
+
+591
+00:17:33,360 --> 00:17:34,679
+agora tu vai conseguir ficar mais
+
+592
+00:17:34,679 --> 00:17:36,000
+tranquilo, que é o seguinte, aqui é a
+
+593
+00:17:36,000 --> 00:17:37,679
+nossa arquitetura atual, tá? Camada do
+
+594
+00:17:37,679 --> 00:17:40,000
+front end vem, bate no DNS, retorna o
+
+595
+00:17:40,000 --> 00:17:41,640
+IP, bate no load balancer aqui,
+
+596
+00:17:41,640 --> 00:17:43,120
+distribui a carga e agora o que que
+
+597
+00:17:43,120 --> 00:17:44,880
+acontece? Todos os dois servidores aqui
+
+598
+00:17:44,880 --> 00:17:46,520
+direcionam escritas para um lado,
+
+599
+00:17:46,520 --> 00:17:48,160
+leitura pro outro e a gente tem o nosso
+
+600
+00:17:48,160 --> 00:17:50,039
+mecanismozinho aqui que fica replicando
+
+601
+00:17:50,039 --> 00:17:52,039
+os dados de um lado pro outro, beleza? É
+
+602
+00:17:52,039 --> 00:17:54,039
+simples, direto ao ponto e muito bem
+
+603
+00:17:54,039 --> 00:17:56,360
+objetivo, tá? Só que aí nós temos também
+
+604
+00:17:56,360 --> 00:17:58,919
+algumas outras ponderações a fazer aqui,
+
+605
+00:17:58,919 --> 00:18:00,600
+por nós vamos ter que lidar com
+
+606
+00:18:00,600 --> 00:18:03,559
+consistência eventual, dependendo da
+
+607
+00:18:03,559 --> 00:18:05,200
+forma como a gente for fazer isso aqui.
+
+608
+00:18:05,200 --> 00:18:06,840
+Por vamos lá, eu não vou entrar muito a
+
+609
+00:18:06,840 --> 00:18:08,240
+fundo nesse lance de consistência, até
+
+610
+00:18:08,240 --> 00:18:09,600
+porque a gente teria que falar de uma
+
+611
+00:18:09,600 --> 00:18:11,600
+coisa chamada teorema CAP. A gente teria
+
+612
+00:18:11,600 --> 00:18:13,960
+que falar um pouco mais profundamente
+
+613
+00:18:13,960 --> 00:18:15,600
+sobre essa camada de dados, tá? Mas
+
+614
+00:18:15,600 --> 00:18:16,840
+deixa eu te dar um exemplo aqui, ó.
+
+615
+00:18:16,840 --> 00:18:18,440
+Imagina que aqui no navegador ou no
+
+616
+00:18:18,440 --> 00:18:20,520
+mobile aqui, o cara foi lá, inseriu um
+
+617
+00:18:20,520 --> 00:18:22,120
+novo produto, cadastrou um produto.
+
+618
+00:18:22,120 --> 00:18:23,440
+Então beleza, ele foi lá, pá,
+
+619
+00:18:23,440 --> 00:18:24,880
+requisição, bateu no Load Balancer,
+
+620
+00:18:24,880 --> 00:18:26,440
+bateu aqui num servidorzinho aqui e a
+
+621
+00:18:26,440 --> 00:18:28,080
+gente escreveu, né? Ele inseriu. Então,
+
+622
+00:18:28,080 --> 00:18:29,960
+a gente vai escrever no Banco Master.
+
+623
+00:18:29,960 --> 00:18:32,000
+Show de bola. Imagina que nesse exato
+
+624
+00:18:32,000 --> 00:18:33,640
+momento algum outro carinha aqui que tá
+
+625
+00:18:33,640 --> 00:18:35,240
+logado na aplicação também fez uma
+
+626
+00:18:35,240 --> 00:18:37,520
+requisição para ler todos os produtos, a
+
+627
+00:18:37,520 --> 00:18:38,720
+lista de produtos que a gente tem
+
+628
+00:18:38,720 --> 00:18:40,400
+cadastrado. Se no momento que ele fizer
+
+629
+00:18:40,400 --> 00:18:41,960
+essa requisição e chegar aqui no banco
+
+630
+00:18:41,960 --> 00:18:43,880
+de dados e esse dado que foi inserido
+
+631
+00:18:43,880 --> 00:18:45,720
+aqui, ainda não deu tempo dele chegar
+
+632
+00:18:45,720 --> 00:18:47,280
+até aqui, porque isso aqui leva alguns
+
+633
+00:18:47,280 --> 00:18:49,039
+milissegundos, às vezes leva segundos,
+
+634
+00:18:49,039 --> 00:18:50,960
+às vezes minutos, às vezes horas e às
+
+635
+00:18:50,960 --> 00:18:52,799
+vezes dias, depende da arquitetura. Que
+
+636
+00:18:52,799 --> 00:18:54,240
+que acontece? O nome disso é
+
+637
+00:18:54,240 --> 00:18:55,960
+consistência eventual, porque quando ele
+
+638
+00:18:55,960 --> 00:18:58,440
+lê a tabela lá, a lista de de produtos
+
+639
+00:18:58,440 --> 00:19:00,400
+que foram cadastrados, ele não vai
+
+640
+00:19:00,400 --> 00:19:01,880
+conseguir encontrar o produto que acabou
+
+641
+00:19:01,880 --> 00:19:04,400
+de ser cadastrado. Dependendo do tipo de
+
+642
+00:19:04,400 --> 00:19:06,320
+dado, isso pode ser um problema. Então,
+
+643
+00:19:06,320 --> 00:19:07,880
+a gente teria que lidar aqui com isso
+
+644
+00:19:07,880 --> 00:19:09,520
+que a gente chama de consistência
+
+645
+00:19:09,520 --> 00:19:11,640
+eventual. Não vou entrar nesse assunto
+
+646
+00:19:11,640 --> 00:19:13,240
+aqui agora. Se você deixar nos
+
+647
+00:19:13,240 --> 00:19:14,679
+comentários, eu gravo um vídeo sobre
+
+648
+00:19:14,679 --> 00:19:16,520
+isso, porque é um tema um pouco extenso,
+
+649
+00:19:16,520 --> 00:19:19,159
+mas daria pra gente mitigar isso se a
+
+650
+00:19:19,159 --> 00:19:20,640
+gente fizesse uma estratégia de lock,
+
+651
+00:19:20,640 --> 00:19:22,120
+por exemplo. Então, no ato de eu
+
+652
+00:19:22,120 --> 00:19:24,679
+inserir, eu só posso devolver aqui a
+
+653
+00:19:24,679 --> 00:19:26,640
+resposta aqui, OK? Aqui o banco de dados
+
+654
+00:19:26,640 --> 00:19:28,760
+largar a requisição depois que inserir
+
+655
+00:19:28,760 --> 00:19:30,720
+também no slave. Só que aí a gente volta
+
+656
+00:19:30,720 --> 00:19:32,360
+para aquele problema de ponto único de
+
+657
+00:19:32,360 --> 00:19:34,120
+falha. Por quê? Porque se o banco slave
+
+658
+00:19:34,120 --> 00:19:35,880
+tiver fora do A, ele não vai conseguir
+
+659
+00:19:35,880 --> 00:19:37,280
+jogar os dados para cá para depois
+
+660
+00:19:37,280 --> 00:19:39,120
+confirmar. Então aí a gente volta a ter
+
+661
+00:19:39,120 --> 00:19:41,400
+que entrar em outras ponderações. Não é
+
+662
+00:19:41,400 --> 00:19:42,520
+isso que a gente vai fazer nesse vídeo
+
+663
+00:19:42,520 --> 00:19:43,960
+daqui, tá? A gente vai passar direto
+
+664
+00:19:43,960 --> 00:19:45,440
+porque tem muita coisa pra gente ver
+
+665
+00:19:45,440 --> 00:19:47,039
+ainda e aí se você deixar nos
+
+666
+00:19:47,039 --> 00:19:48,400
+comentários, eu posso fazer um vídeo
+
+667
+00:19:48,400 --> 00:19:50,360
+sobre o teorema CAP e também sobre esse
+
+668
+00:19:50,360 --> 00:19:51,679
+lance de consistência fraca,
+
+669
+00:19:51,679 --> 00:19:53,159
+consistência forte, consistência
+
+670
+00:19:53,159 --> 00:19:54,480
+eventual e mais um monte de outras
+
+671
+00:19:54,480 --> 00:19:56,000
+coisas, beleza? Então vamos seguir
+
+672
+00:19:56,000 --> 00:19:57,760
+adiante com consistência eventual,
+
+673
+00:19:57,760 --> 00:19:59,039
+porque foi assim que a gente escolheu e
+
+674
+00:19:59,039 --> 00:20:00,200
+é assim que a gente quer lidar para
+
+675
+00:20:00,200 --> 00:20:02,039
+chegar com 1 milhão de usuários, tá? Que
+
+676
+00:20:02,039 --> 00:20:03,960
+mais que a gente precisa fazer nessa
+
+677
+00:20:03,960 --> 00:20:05,559
+nossa arquitetura aqui, cara? O que que
+
+678
+00:20:05,559 --> 00:20:07,440
+a gente precisa trabalhar um pouco mais?
+
+679
+00:20:07,440 --> 00:20:08,840
+Porque a nossa arquitetura aqui tá muito
+
+680
+00:20:08,840 --> 00:20:10,400
+robusta, cara. Nossa arquitetura, dá uma
+
+681
+00:20:10,400 --> 00:20:12,240
+olhada, a nossa arquitetura agora ela já
+
+682
+00:20:12,240 --> 00:20:14,320
+suporta uma volumetria muito alta de
+
+683
+00:20:14,320 --> 00:20:15,440
+usuários, tá? Isso aqui não é uma
+
+684
+00:20:15,440 --> 00:20:17,080
+arquitetura mais infantil, não é aquela
+
+685
+00:20:17,080 --> 00:20:18,799
+arquiteturazinha do jardim de infância,
+
+686
+00:20:18,799 --> 00:20:20,400
+isso aqui já é uma arquitetura muito
+
+687
+00:20:20,400 --> 00:20:22,200
+mais robusta, tá? Aqui a gente já
+
+688
+00:20:22,200 --> 00:20:24,440
+suportaria uma volumetria muito alta de
+
+689
+00:20:24,440 --> 00:20:26,640
+usuários. Só que, mais uma vez, a gente
+
+690
+00:20:26,640 --> 00:20:28,840
+precisa sempre ir melhorando, cara. Não
+
+691
+00:20:28,840 --> 00:20:30,919
+é da noite pro dia que você bate ali uma
+
+692
+00:20:30,919 --> 00:20:32,400
+arquitetura capaz de suportar 1 milhão
+
+693
+00:20:32,400 --> 00:20:33,600
+de usuários. Então, a gente tem que ir
+
+694
+00:20:33,600 --> 00:20:35,000
+melhorando. Que mais que a gente pode
+
+695
+00:20:35,000 --> 00:20:36,640
+melhorar nessa arquitetura? a gente pode
+
+696
+00:20:36,640 --> 00:20:38,240
+melhorar simplesmente a própria
+
+697
+00:20:38,240 --> 00:20:40,400
+aplicação em si, o código lá, o teu
+
+698
+00:20:40,400 --> 00:20:42,039
+framework rodando e tudo mais e tal. Que
+
+699
+00:20:42,039 --> 00:20:43,120
+que a gente pode fazer? A gente pode
+
+700
+00:20:43,120 --> 00:20:45,200
+melhorar a performance da aplicação.
+
+701
+00:20:45,200 --> 00:20:46,320
+Porque quando a gente melhora a
+
+702
+00:20:46,320 --> 00:20:48,400
+performance da aplicação, a gente vai
+
+703
+00:20:48,400 --> 00:20:50,240
+melhorar a arquitetura como um todo. E
+
+704
+00:20:50,240 --> 00:20:52,320
+uma das formas da gente melhorar a
+
+705
+00:20:52,320 --> 00:20:54,080
+performance da aplicação é fazendo o
+
+706
+00:20:54,080 --> 00:20:56,480
+quê? é adicionando uma camada de cash. E
+
+707
+00:20:56,480 --> 00:20:58,559
+aí, pra camada de cash é o seguinte, vou
+
+708
+00:20:58,559 --> 00:21:00,400
+deixar um link aqui em cima e também na
+
+709
+00:21:00,400 --> 00:21:01,960
+descrição para você assistir o vídeo
+
+710
+00:21:01,960 --> 00:21:03,880
+passado que eu já gravei te ensinando o
+
+711
+00:21:03,880 --> 00:21:05,360
+tipo de dado que você tem que utilizar,
+
+712
+00:21:05,360 --> 00:21:06,880
+como que você utiliza cash. Te mostrei
+
+713
+00:21:06,880 --> 00:21:08,559
+no código, a gente fez lá o código lá,
+
+714
+00:21:08,559 --> 00:21:10,200
+implementei no código, te mostrei como é
+
+715
+00:21:10,200 --> 00:21:12,240
+que funcionava, utilizamos o redis aqui
+
+716
+00:21:12,240 --> 00:21:14,640
+e tal, mas basicamente o cash, por que
+
+717
+00:21:14,640 --> 00:21:16,120
+cash? Tá, só para você entender, se você
+
+718
+00:21:16,120 --> 00:21:17,360
+não assistiu o vídeo passado, a gente
+
+719
+00:21:17,360 --> 00:21:18,960
+vai criar uma camada de cash. Para quê?
+
+720
+00:21:18,960 --> 00:21:20,880
+Pra gente armazenar os dados que são
+
+721
+00:21:20,880 --> 00:21:23,080
+extremamente requisitados, são muito
+
+722
+00:21:23,080 --> 00:21:24,559
+requisitados. Ou seja, cara, é
+
+723
+00:21:24,559 --> 00:21:26,320
+requisição toda hora buscando os mesmos
+
+724
+00:21:26,320 --> 00:21:28,000
+dados. Então, a gente pega esses dados
+
+725
+00:21:28,000 --> 00:21:30,080
+no banco de dados, armazena numa camada
+
+726
+00:21:30,080 --> 00:21:31,600
+intermediária de cash, ou seja, uma
+
+727
+00:21:31,600 --> 00:21:33,440
+camada que fica no meio ali e que roda
+
+728
+00:21:33,440 --> 00:21:36,000
+na memória RAM. Ou seja, é muito mais
+
+729
+00:21:36,000 --> 00:21:37,919
+rápido você buscar dado na memória RAM
+
+730
+00:21:37,919 --> 00:21:39,440
+do que na camada persistente, que é a
+
+731
+00:21:39,440 --> 00:21:41,720
+camada de banco de dados. E tudo isso eu
+
+732
+00:21:41,720 --> 00:21:43,360
+te falei no vídeo passado quando eu te
+
+733
+00:21:43,360 --> 00:21:45,760
+ensinei aqui sobre o cash Aside pattern,
+
+734
+00:21:45,760 --> 00:21:47,760
+tá? Isso aqui é um padrão de cash, cara,
+
+735
+00:21:47,760 --> 00:21:49,520
+assim, ó, sensacional. Então, aqui eu
+
+736
+00:21:49,520 --> 00:21:51,120
+deixei até os dois diagramas aqui, tá?
+
+737
+00:21:51,120 --> 00:21:52,840
+Então, ele vai bater aqui, ó. O usuário
+
+738
+00:21:52,840 --> 00:21:54,279
+bate aqui, ó, no nosso servidor, ele
+
+739
+00:21:54,279 --> 00:21:55,640
+espanca o banco de dados e o banco de
+
+740
+00:21:55,640 --> 00:21:57,000
+dados abre o bico. Então, que que a
+
+741
+00:21:57,000 --> 00:21:58,559
+gente faz? A gente implementa o cash
+
+742
+00:21:58,559 --> 00:22:01,120
+Asside Patter, que existem também outros
+
+743
+00:22:01,120 --> 00:22:02,799
+padrões de cash que eu posso trazer
+
+744
+00:22:02,799 --> 00:22:04,120
+também nos vídeos futuros, mas
+
+745
+00:22:04,120 --> 00:22:06,440
+basicamente bate no servidor, busca
+
+746
+00:22:06,440 --> 00:22:07,880
+primeiro no cash que é muito mais
+
+747
+00:22:07,880 --> 00:22:10,320
+rápido. Existe esse dado no cash? Não.
+
+748
+00:22:10,320 --> 00:22:12,120
+Se não existe dado no cash, busco no
+
+749
+00:22:12,120 --> 00:22:14,320
+banco de dados, atualizo o cash e
+
+750
+00:22:14,320 --> 00:22:15,880
+retorno pro usuário. Beleza? Próxima
+
+751
+00:22:15,880 --> 00:22:17,880
+requisição. Chegou, busco no cash,
+
+752
+00:22:17,880 --> 00:22:19,480
+existe no cash, devolve pro usuário, nem
+
+753
+00:22:19,480 --> 00:22:21,000
+bate no banco de dados. Então, com isso
+
+754
+00:22:21,000 --> 00:22:23,200
+aqui, a gente consegue aliviar e muito a
+
+755
+00:22:23,200 --> 00:22:24,760
+nossa camada de persistência. Nosso
+
+756
+00:22:24,760 --> 00:22:26,880
+banco de dados deixa de ser extremamente
+
+757
+00:22:26,880 --> 00:22:28,640
+requisitado para alguns tipos de dados,
+
+758
+00:22:28,640 --> 00:22:30,279
+tá? Isso aí é você que tem que avaliar.
+
+759
+00:22:30,279 --> 00:22:31,840
+Então, dá uma olhada no vídeo passado
+
+760
+00:22:31,840 --> 00:22:33,679
+onde eu te ensino esse padrão aqui, esse
+
+761
+00:22:33,679 --> 00:22:35,720
+Cash side pattern. Esse padrão aqui,
+
+762
+00:22:35,720 --> 00:22:38,240
+cara, é excelente e melhore muito a
+
+763
+00:22:38,240 --> 00:22:40,039
+performance da tua aplicação. Outra
+
+764
+00:22:40,039 --> 00:22:42,279
+coisa que também é excelente e aumente
+
+765
+00:22:42,279 --> 00:22:45,200
+muito a tua performance são as techs da
+
+766
+00:22:45,200 --> 00:22:47,799
+Insider, a patrocinadora oficial desse
+
+767
+00:22:47,799 --> 00:22:49,240
+canal. Se você é um programador que
+
+768
+00:22:49,240 --> 00:22:52,960
+passa 10, 12, 14, 16 horas por dia na
+
+769
+00:22:52,960 --> 00:22:54,919
+frente do computador, você precisa
+
+770
+00:22:54,919 --> 00:22:56,760
+conhecer as camisetas da Inside,
+
+771
+00:22:56,760 --> 00:22:58,720
+principalmente a Tech T Shirt, que é que
+
+772
+00:22:58,720 --> 00:23:00,600
+eu tô utilizando nesse exato momento.
+
+773
+00:23:00,600 --> 00:23:02,960
+São camisetas antiodor que desamassam no
+
+774
+00:23:02,960 --> 00:23:05,240
+corpo, não desbota nem a pau e que te
+
+775
+00:23:05,240 --> 00:23:07,760
+fornece o maior conforto e elegância
+
+776
+00:23:07,760 --> 00:23:09,600
+para você que tá vestindo. Além disso,
+
+777
+00:23:09,600 --> 00:23:11,559
+são extremamente versáteis, servindo
+
+778
+00:23:11,559 --> 00:23:14,000
+para diversas ocasiões. Numa dessas
+
+779
+00:23:14,000 --> 00:23:16,159
+ocasiões para você vestir as roupas da
+
+780
+00:23:16,159 --> 00:23:17,799
+Insider é quando tu for para aquela
+
+781
+00:23:17,799 --> 00:23:19,760
+entrevista técnica apresentar os
+
+782
+00:23:19,760 --> 00:23:21,320
+conceitos e fundamentos que eu tô te
+
+783
+00:23:21,320 --> 00:23:23,520
+ensinando nessa aula daqui. Porque só de
+
+784
+00:23:23,520 --> 00:23:25,440
+você tá muito bem vestido e
+
+785
+00:23:25,440 --> 00:23:27,279
+apresentável, tu já ganha aquele ponto
+
+786
+00:23:27,279 --> 00:23:29,279
+com recrutador. E para você que é
+
+787
+00:23:29,279 --> 00:23:31,480
+inscrito aqui do canal, eu já desenrolei
+
+788
+00:23:31,480 --> 00:23:33,400
+aquele desconto na faixa para você.
+
+789
+00:23:33,400 --> 00:23:35,120
+Então basta utilizar o cupom Renato
+
+790
+00:23:35,120 --> 00:23:36,919
+Augusto, que eu vou deixar na descrição,
+
+791
+00:23:36,919 --> 00:23:38,600
+para garantir aquele desconto especial e
+
+792
+00:23:38,600 --> 00:23:40,799
+andar muito bem vestido por aí. O que eu
+
+793
+00:23:40,799 --> 00:23:42,840
+uso e recomendo a Insider e recomendo
+
+794
+00:23:42,840 --> 00:23:44,520
+para você que é meu inscrito aqui do
+
+795
+00:23:44,520 --> 00:23:46,279
+canal, beleza? Vou deixar o link na
+
+796
+00:23:46,279 --> 00:23:48,080
+descrição, então dá uma olhada aí e
+
+797
+00:23:48,080 --> 00:23:49,960
+agora vamos voltar pra aula. Bora lá.
+
+798
+00:23:49,960 --> 00:23:51,720
+Entendido isso aqui? Vamos voltar aqui,
+
+799
+00:23:51,720 --> 00:23:53,279
+ó. Eu deixei até um código aqui, ó, para
+
+800
+00:23:53,279 --> 00:23:54,640
+você entender como que é fácil, cara,
+
+801
+00:23:54,640 --> 00:23:56,000
+trabalhar com cash. Como que é fácil
+
+802
+00:23:56,000 --> 00:23:57,760
+aqui você setar um dado no cash, você
+
+803
+00:23:57,760 --> 00:23:59,600
+coloca uma chave, eu coloquei esse X, Y,
+
+804
+00:23:59,600 --> 00:24:01,200
+Z aqui para simular um conteúdo, você
+
+805
+00:24:01,200 --> 00:24:02,679
+coloca o time aqui que você quer que ele
+
+806
+00:24:02,679 --> 00:24:04,520
+expire depois de determinado tempo. E
+
+807
+00:24:04,520 --> 00:24:06,039
+para buscar aqui, você só daria um get,
+
+808
+00:24:06,039 --> 00:24:07,600
+tá? Toda a linguagem de programação que
+
+809
+00:24:07,600 --> 00:24:09,159
+se prez já tem biblioteca pronta para
+
+810
+00:24:09,159 --> 00:24:10,760
+lidar com cash, cara. Cash é uma coisa
+
+811
+00:24:10,760 --> 00:24:12,559
+extremamente simples de fazer, mas é
+
+812
+00:24:12,559 --> 00:24:14,279
+muito poderoso. Como eu já mencionei,
+
+813
+00:24:14,279 --> 00:24:15,760
+isso aqui aumenta e muito a performance
+
+814
+00:24:15,760 --> 00:24:17,520
+da tua aplicação. Então, mais uma vez,
+
+815
+00:24:17,520 --> 00:24:18,760
+dá uma olhada no vídeo que eu gravei
+
+816
+00:24:18,760 --> 00:24:20,600
+sobre casash, tá? Vamos continuar. O que
+
+817
+00:24:20,600 --> 00:24:22,240
+que a gente tem aqui nesse exato
+
+818
+00:24:22,240 --> 00:24:23,200
+momento? Como é que ficou a nossa
+
+819
+00:24:23,200 --> 00:24:24,679
+arquitetura? Nossa arquitetura ficou
+
+820
+00:24:24,679 --> 00:24:26,240
+dessa maneira aqui, cara. Nós temos
+
+821
+00:24:26,240 --> 00:24:27,640
+aqui, ó, aquela mesma arquitetura
+
+822
+00:24:27,640 --> 00:24:29,600
+anterior, só que agora nós temos aqui o
+
+823
+00:24:29,600 --> 00:24:31,960
+nosso cash, tá? Um servidor de cash. E
+
+824
+00:24:31,960 --> 00:24:33,960
+aí, ó, se você tá prestando atenção na
+
+825
+00:24:33,960 --> 00:24:35,440
+aula, que que acontece? A gente vai
+
+826
+00:24:35,440 --> 00:24:37,559
+acabar caindo de novo naquele lance do
+
+827
+00:24:37,559 --> 00:24:39,600
+ponto único de falha. Por quê? Porque se
+
+828
+00:24:39,600 --> 00:24:41,440
+a gente provisionar um servidorzinho de
+
+829
+00:24:41,440 --> 00:24:44,320
+cash só e ele ficar fora do A e a nossa
+
+830
+00:24:44,320 --> 00:24:46,240
+aplicação tentar conectar nesse cara e
+
+831
+00:24:46,240 --> 00:24:48,039
+não conseguir, a gente vai derrubar
+
+832
+00:24:48,039 --> 00:24:49,880
+muito provavelmente a nossa arquitetura.
+
+833
+00:24:49,880 --> 00:24:51,840
+Então é interessante que a gente
+
+834
+00:24:51,840 --> 00:24:54,120
+provisione mais de um servidor de cash
+
+835
+00:24:54,120 --> 00:24:55,600
+mais uma vez pra gente falar de
+
+836
+00:24:55,600 --> 00:24:57,840
+failover, de redundância, pra gente ter
+
+837
+00:24:57,840 --> 00:24:59,919
+alta disponibilidade, tá? E aí já tem
+
+838
+00:24:59,919 --> 00:25:01,679
+alguns serviços que fazem isso por você.
+
+839
+00:25:01,679 --> 00:25:03,720
+Por exemplo, o ElastCast lá da WS
+
+840
+00:25:03,720 --> 00:25:05,320
+consegue fazer isso. Tem alguns serviços
+
+841
+00:25:05,320 --> 00:25:07,000
+que você consegue criar um cluster, tá?
+
+842
+00:25:07,000 --> 00:25:08,960
+um clusterzinho de vários servidores e
+
+843
+00:25:08,960 --> 00:25:10,320
+mais uma vez você vai ter o endereço de
+
+844
+00:25:10,320 --> 00:25:12,240
+um único servidor e por baixo dos panos
+
+845
+00:25:12,240 --> 00:25:14,039
+ele fica fazendo lá aquele lance do
+
+846
+00:25:14,039 --> 00:25:16,000
+balanceamento de carga entre os
+
+847
+00:25:16,000 --> 00:25:17,840
+servidores de cash, tá? Então, cara,
+
+848
+00:25:17,840 --> 00:25:19,760
+isso aqui é tudo automatizável, tá? Isso
+
+849
+00:25:19,760 --> 00:25:21,279
+aqui é tranquilo de ser implementado, é
+
+850
+00:25:21,279 --> 00:25:23,399
+tranquilo de fazer. Beleza? Até aqui,
+
+851
+00:25:23,399 --> 00:25:24,640
+espero que você já tenha entendido a
+
+852
+00:25:24,640 --> 00:25:26,159
+questão do load balancer, espero que
+
+853
+00:25:26,159 --> 00:25:27,200
+você tenha entendido a questão da
+
+854
+00:25:27,200 --> 00:25:29,480
+escalabilidade vertical e a horizontal.
+
+855
+00:25:29,480 --> 00:25:30,760
+Isso, cara, isso aqui é interessante
+
+856
+00:25:30,760 --> 00:25:32,360
+demais você mencionar na entrevista,
+
+857
+00:25:32,360 --> 00:25:33,880
+porque mostra que você entende. Você
+
+858
+00:25:33,880 --> 00:25:34,960
+pode chegar lá e falar: "Não, cara, a
+
+859
+00:25:34,960 --> 00:25:36,520
+gente poderia escalar verticalmente, mas
+
+860
+00:25:36,520 --> 00:25:38,120
+aí tem que ver se a nossa aplicação
+
+861
+00:25:38,120 --> 00:25:39,880
+depende de disponibilidade. Ela tem que
+
+862
+00:25:39,880 --> 00:25:41,720
+est altamente disponível, porque a gente
+
+863
+00:25:41,720 --> 00:25:43,520
+pode tratar com redundância. A gente usa
+
+864
+00:25:43,520 --> 00:25:45,200
+escalabilidade horizontal, a gente pode
+
+865
+00:25:45,200 --> 00:25:46,760
+colocar um load balancerzinho ali para
+
+866
+00:25:46,760 --> 00:25:48,320
+balancear a carga e tudo mais.
+
+867
+00:25:48,320 --> 00:25:50,360
+Servidorzinho de cash aqui, replicação
+
+868
+00:25:50,360 --> 00:25:52,120
+do banco de dados para não fazer todas
+
+869
+00:25:52,120 --> 00:25:53,760
+as réplicas da nossa aplicação ficar
+
+870
+00:25:53,760 --> 00:25:55,679
+apontando pro mesmo banco de dados.
+
+871
+00:25:55,679 --> 00:25:57,159
+Então, cara, assim, ó, isso aqui é o
+
+872
+00:25:57,159 --> 00:25:58,720
+ouro, velho. Isso aqui é o ouro. Isso
+
+873
+00:25:58,720 --> 00:26:00,720
+aqui você vai tirar aquela bronca na
+
+874
+00:26:00,720 --> 00:26:02,919
+entrevista técnica. Beleza? Então, essa
+
+875
+00:26:02,919 --> 00:26:05,120
+daqui é a nossa arquitetura atual. E aí,
+
+876
+00:26:05,120 --> 00:26:06,760
+para onde que a gente vai agora, cara?
+
+877
+00:26:06,760 --> 00:26:08,679
+Qual que é o nosso próximo passo? Por qu
+
+878
+00:26:08,679 --> 00:26:10,559
+nossa arquitetura aqui agora tomou
+
+879
+00:26:10,559 --> 00:26:12,279
+forma, hein? O negócio agora tá maneiro,
+
+880
+00:26:12,279 --> 00:26:14,480
+tá elegante, tá robusta a aplicação, a
+
+881
+00:26:14,480 --> 00:26:15,840
+arquitetura como um todo. Isso aqui,
+
+882
+00:26:15,840 --> 00:26:18,559
+cara, já suporta uma volumetria muito
+
+883
+00:26:18,559 --> 00:26:20,799
+alta de usuários, tá? Só que como nem
+
+884
+00:26:20,799 --> 00:26:22,960
+tudo são flores, que que acontece? Vamos
+
+885
+00:26:22,960 --> 00:26:24,600
+imaginar um cenário aqui para essa nossa
+
+886
+00:26:24,600 --> 00:26:26,240
+arquitetura. Vamos imaginar, tá vindo
+
+887
+00:26:26,240 --> 00:26:27,600
+uma Black Friday aí, vamos imaginar que
+
+888
+00:26:27,600 --> 00:26:29,360
+a nossa API aqui é uma API que cuida de
+
+889
+00:26:29,360 --> 00:26:31,000
+alguma parte do nosso e-commerce, alguma
+
+890
+00:26:31,000 --> 00:26:32,320
+coisa do tipo ali. E aí que que
+
+891
+00:26:32,320 --> 00:26:33,799
+acontece? Tá vindo uma Black Friday,
+
+892
+00:26:33,799 --> 00:26:35,880
+cara. Então o tráfego vai ser massivo,
+
+893
+00:26:35,880 --> 00:26:37,919
+vai ser muito alto, vai ser muito forte.
+
+894
+00:26:37,919 --> 00:26:39,480
+Então o que que acontece? Você teria que
+
+895
+00:26:39,480 --> 00:26:42,039
+vir aqui na mão e fica provisionando na
+
+896
+00:26:42,039 --> 00:26:44,200
+mão as instâncias. E você não quer ficar
+
+897
+00:26:44,200 --> 00:26:46,080
+sofrendo, indo lá provisionar na mão
+
+898
+00:26:46,080 --> 00:26:47,760
+toda hora e provisiona um, daqui a pouco
+
+899
+00:26:47,760 --> 00:26:49,720
+desprovisiona. Ou então provisionou mais
+
+900
+00:26:49,720 --> 00:26:51,640
+instância, esqueceu, ligado lá, acabou,
+
+901
+00:26:51,640 --> 00:26:53,399
+pô, comendo dinheiro, né? que é pago
+
+902
+00:26:53,399 --> 00:26:54,799
+pelo uso. Então, cara, que que a gente
+
+903
+00:26:54,799 --> 00:26:56,520
+pode adicionar nessa nossa arquitetura
+
+904
+00:26:56,520 --> 00:26:58,520
+aqui para ela ficar muito mais elegante,
+
+905
+00:26:58,520 --> 00:26:59,840
+muito mais robusta? A gente pode
+
+906
+00:26:59,840 --> 00:27:01,679
+adicionar elasticidade, que é um
+
+907
+00:27:01,679 --> 00:27:04,000
+conceito bem simples, tá? é tornar a
+
+908
+00:27:04,000 --> 00:27:05,840
+escala aqui, a nossa escala horizontal
+
+909
+00:27:05,840 --> 00:27:07,320
+de maneira automática, de maneira
+
+910
+00:27:07,320 --> 00:27:09,520
+elástica, ou seja, de acordo com o
+
+911
+00:27:09,520 --> 00:27:11,880
+tráfego que estiver chegando, a própria
+
+912
+00:27:11,880 --> 00:27:14,200
+provedora de cloud, uma da vida, por
+
+913
+00:27:14,200 --> 00:27:16,559
+exemplo, já configura novas instâncias
+
+914
+00:27:16,559 --> 00:27:17,760
+pra gente. Então, a gente deixa
+
+915
+00:27:17,760 --> 00:27:19,679
+parametrizado lá, por exemplo, olha, o
+
+916
+00:27:19,679 --> 00:27:21,200
+número mínimo de instâncias da minha
+
+917
+00:27:21,200 --> 00:27:23,399
+aplicação no dia a dia é dois e o número
+
+918
+00:27:23,399 --> 00:27:25,200
+máximo, tá? A grosso modo, tá? O número
+
+919
+00:27:25,200 --> 00:27:27,320
+máximo é sete. Beleza? Então, o que que
+
+920
+00:27:27,320 --> 00:27:29,120
+acontece? Vai ficar lá duas instâncias
+
+921
+00:27:29,120 --> 00:27:31,200
+rodando. O tráfego aumentou, tá chegando
+
+922
+00:27:31,200 --> 00:27:33,080
+mais requisições. A WS vai lá e sobe
+
+923
+00:27:33,080 --> 00:27:35,039
+mais uma. Beleza? Três. Subiu mais um
+
+924
+00:27:35,039 --> 00:27:37,320
+pouquinho, beleza. Quatro, até chegar no
+
+925
+00:27:37,320 --> 00:27:39,039
+sete. Chegou no sete, não tá dando
+
+926
+00:27:39,039 --> 00:27:40,480
+conta. Aí vai disparar alarme, vai
+
+927
+00:27:40,480 --> 00:27:42,120
+disparar alerta lá para você poder ir lá
+
+928
+00:27:42,120 --> 00:27:44,159
+e fazer a intervenção manual. Ou então o
+
+929
+00:27:44,159 --> 00:27:45,799
+que que acontece? Chegou no quatro,
+
+930
+00:27:45,799 --> 00:27:47,760
+chegou no cinco, pô, o tráfego começou a
+
+931
+00:27:47,760 --> 00:27:50,039
+cair, vai baixando automaticamente. Ou
+
+932
+00:27:50,039 --> 00:27:51,880
+seja, a nossa arquitetura começou a se
+
+933
+00:27:51,880 --> 00:27:54,120
+tornar elástica, é tudo automático
+
+934
+00:27:54,120 --> 00:27:56,320
+agora. Então você vai pagar exatamente
+
+935
+00:27:56,320 --> 00:27:57,960
+por aquilo que você utilizou. Sua
+
+936
+00:27:57,960 --> 00:27:59,799
+arquitetura não vai ficar rodando lá 10
+
+937
+00:27:59,799 --> 00:28:01,960
+instâncias lá infinitamente sem tráfego
+
+938
+00:28:01,960 --> 00:28:04,039
+nenhum para isso. Então é tudo agora
+
+939
+00:28:04,039 --> 00:28:06,039
+automático e é aí que a gente chama aqui
+
+940
+00:28:06,039 --> 00:28:08,760
+o nosso outscale, tá? Inclusive na AWS,
+
+941
+00:28:08,760 --> 00:28:10,320
+tá? Tem um serviço que é chamado de
+
+942
+00:28:10,320 --> 00:28:12,480
+outcaling group, tá? Que inclusive você
+
+943
+00:28:12,480 --> 00:28:14,799
+consegue combar o load balancer deles
+
+944
+00:28:14,799 --> 00:28:17,480
+com o auto scaling group e com o SC2,
+
+945
+00:28:17,480 --> 00:28:19,440
+que é as instâncias lá são as máquinas
+
+946
+00:28:19,440 --> 00:28:21,760
+virtuais da WS. Então você com uma
+
+947
+00:28:21,760 --> 00:28:23,440
+configuração já consegue provisionar
+
+948
+00:28:23,440 --> 00:28:25,200
+tudo isso aqui, tanto a escalabilidade
+
+949
+00:28:25,200 --> 00:28:27,200
+horizontal quanto o outcaling, ou seja,
+
+950
+00:28:27,200 --> 00:28:29,240
+a elasticidade e também o nosso querido
+
+951
+00:28:29,240 --> 00:28:31,120
+e amado load balancer, tá? E aí, ó,
+
+952
+00:28:31,120 --> 00:28:32,760
+nosso banquinho master tá aqui, duas
+
+953
+00:28:32,760 --> 00:28:34,840
+réplicazinhas slave aqui, as replicações
+
+954
+00:28:34,840 --> 00:28:36,919
+acontecendo e a nossa camadinha de cash
+
+955
+00:28:36,919 --> 00:28:39,279
+aqui 100%, cara, que arquitetura
+
+956
+00:28:39,279 --> 00:28:41,880
+fenomenal. Aqui já suporta uma
+
+957
+00:28:41,880 --> 00:28:43,480
+volumetria muito maior, cara. Volumetria
+
+958
+00:28:43,480 --> 00:28:45,200
+de Black Friday, tá? Volumetria muito
+
+959
+00:28:45,200 --> 00:28:46,960
+maior. Lógico que dá para melhorar,
+
+960
+00:28:46,960 --> 00:28:48,960
+cara. Sempre dá para melhorar. E aí, o
+
+961
+00:28:48,960 --> 00:28:50,960
+que que a gente pode fazer para melhorar
+
+962
+00:28:50,960 --> 00:28:53,120
+ainda mais essa nossa arquitetura aqui?
+
+963
+00:28:53,120 --> 00:28:54,600
+Vamos pensar o seguinte. Essa nossa
+
+964
+00:28:54,600 --> 00:28:56,679
+arquitetura aqui, a gente provisionou
+
+965
+00:28:56,679 --> 00:28:58,679
+ela aonde? Dentro de um data center.
+
+966
+00:28:58,679 --> 00:29:00,360
+Então, a gente foi lá na WS mais uma
+
+967
+00:29:00,360 --> 00:29:01,720
+vez, que é o que eu tô mencionando aqui,
+
+968
+00:29:01,720 --> 00:29:03,039
+e provisionou toda essa nossa
+
+969
+00:29:03,039 --> 00:29:04,840
+arquitetura aqui, o nosso load balancer
+
+970
+00:29:04,840 --> 00:29:06,360
+aqui, os nossos servidores aqui, a
+
+971
+00:29:06,360 --> 00:29:08,399
+camada de cash, os bancos no data center
+
+972
+00:29:08,399 --> 00:29:10,240
+de São Paulo, tá? Eles tm um data center
+
+973
+00:29:10,240 --> 00:29:11,600
+aqui em São Paulo, então provisionamos
+
+974
+00:29:11,600 --> 00:29:13,360
+lá em São Paulo. Show de bola. Agora
+
+975
+00:29:13,360 --> 00:29:15,840
+imagina se acontece um desastre natural,
+
+976
+00:29:15,840 --> 00:29:17,559
+um furacão, um tufão, alguma coisa
+
+977
+00:29:17,559 --> 00:29:19,320
+aconteceu, um terremoto, um incêndio,
+
+978
+00:29:19,320 --> 00:29:21,679
+alguma coisa aconteceu com o data center
+
+979
+00:29:21,679 --> 00:29:23,320
+lá em São Paulo. Aconteceu alguma coisa,
+
+980
+00:29:23,320 --> 00:29:25,559
+algum desastre natural que atingiu esse
+
+981
+00:29:25,559 --> 00:29:27,399
+data center. Cara, tua aplicação vai
+
+982
+00:29:27,399 --> 00:29:29,600
+ficar fora do ar. E mais uma vez, agora
+
+983
+00:29:29,600 --> 00:29:31,480
+a gente começa a olhar pro ponto único
+
+984
+00:29:31,480 --> 00:29:33,760
+de falha, tá? De um alto nível, tá? De
+
+985
+00:29:33,760 --> 00:29:35,799
+um nível muito maior, que é o quê, cara?
+
+986
+00:29:35,799 --> 00:29:37,760
+toda a nossa aplicação ficaria fora do
+
+987
+00:29:37,760 --> 00:29:39,960
+ar se acontecesse alguma coisa com o
+
+988
+00:29:39,960 --> 00:29:42,159
+data center em São Paulo. Então, aonde a
+
+989
+00:29:42,159 --> 00:29:43,919
+gente precisa voltar? Lá naquele
+
+990
+00:29:43,919 --> 00:29:45,559
+conceito que eu te ensinei no começo do
+
+991
+00:29:45,559 --> 00:29:47,240
+vídeo. Ponto único de falha, a gente vai
+
+992
+00:29:47,240 --> 00:29:49,360
+tratando com failover, com redundância.
+
+993
+00:29:49,360 --> 00:29:50,960
+Ou seja, redundância, cara, que que a
+
+994
+00:29:50,960 --> 00:29:52,840
+gente precisa aqui, ó? Vamos lá, data
+
+995
+00:29:52,840 --> 00:29:54,399
+center. Vamos trabalhar com data center,
+
+996
+00:29:54,399 --> 00:29:56,240
+que é o quê? a gente provisiona toda
+
+997
+00:29:56,240 --> 00:29:57,799
+aquela nossa arquitetura, ou seja, os
+
+998
+00:29:57,799 --> 00:29:59,720
+servidores web, nossos banquinhos lá
+
+999
+00:29:59,720 --> 00:30:01,720
+replicados, vários servidorezinhos de
+
+1000
+00:30:01,720 --> 00:30:03,200
+cash, como eu te falei, ó, tudo no
+
+1001
+00:30:03,200 --> 00:30:05,240
+servidor lá no data center, na verdade,
+
+1002
+00:30:05,240 --> 00:30:06,720
+de São Paulo. Vamos imaginar que isso
+
+1003
+00:30:06,720 --> 00:30:08,519
+aqui é o data center de São Paulo. Show
+
+1004
+00:30:08,519 --> 00:30:10,360
+de bola. A gente pode pegar toda a nossa
+
+1005
+00:30:10,360 --> 00:30:12,440
+arquitetura e provisionar tudo também
+
+1006
+00:30:12,440 --> 00:30:14,760
+num data center lá na Virgínia, lá onde
+
+1007
+00:30:14,760 --> 00:30:16,360
+a gente quiser, em outro país, cara, não
+
+1008
+00:30:16,360 --> 00:30:18,320
+tem problema. Por quê? Porque fazendo
+
+1009
+00:30:18,320 --> 00:30:20,840
+isso, a gente evita o problema que é
+
+1010
+00:30:20,840 --> 00:30:23,360
+isso aqui, ó. Se ficar fora do ar, o
+
+1011
+00:30:23,360 --> 00:30:25,960
+nosso load balancer vai direcionar 100%
+
+1012
+00:30:25,960 --> 00:30:28,039
+do tráfego pro outro data center. Só que
+
+1013
+00:30:28,039 --> 00:30:29,840
+aqui tem vários outros conceitos, tá?
+
+1014
+00:30:29,840 --> 00:30:31,559
+Vamos lá. Lembra que eu te falei que nem
+
+1015
+00:30:31,559 --> 00:30:33,440
+tudo são flores, nem tudo é mil
+
+1016
+00:30:33,440 --> 00:30:35,519
+maravilhas e que todo tipo de coisa que
+
+1017
+00:30:35,519 --> 00:30:37,320
+a gente adiciona na nossa arquitetura e
+
+1018
+00:30:37,320 --> 00:30:39,000
+ela vai evoluindo, a gente também tem
+
+1019
+00:30:39,000 --> 00:30:40,960
+que fazer escolhas, tradeoffs ou a gente
+
+1020
+00:30:40,960 --> 00:30:42,919
+vai ter algum desafio para lidar? Pois
+
+1021
+00:30:42,919 --> 00:30:44,919
+bem, vamos lá. Imagina que algum usuário
+
+1022
+00:30:44,919 --> 00:30:47,039
+aqui fez uma requisição para inserir um
+
+1023
+00:30:47,039 --> 00:30:48,679
+dado qualquer. Ele foi lá, atualizou,
+
+1024
+00:30:48,679 --> 00:30:50,399
+então criou um dado novo lá numa tabela
+
+1025
+00:30:50,399 --> 00:30:51,960
+do banco, inseriu algum registro,
+
+1026
+00:30:51,960 --> 00:30:53,799
+beleza? Então ele veio e caiu nesse data
+
+1027
+00:30:53,799 --> 00:30:55,799
+center aqui e o dado foi inserido aqui
+
+1028
+00:30:55,799 --> 00:30:57,760
+nesse nosso banco. Que que acontece?
+
+1029
+00:30:57,760 --> 00:31:00,159
+Esses bancos aqui estão em data centers
+
+1030
+00:31:00,159 --> 00:31:02,360
+diferentes desses bancos daqui. Então a
+
+1031
+00:31:02,360 --> 00:31:04,519
+gente vai precisar de algum tipo de
+
+1032
+00:31:04,519 --> 00:31:06,840
+mecanismo, de ferramenta, de algum tipo
+
+1033
+00:31:06,840 --> 00:31:09,200
+de coisa para poder fazer replicação de
+
+1034
+00:31:09,200 --> 00:31:12,039
+dados entre data centri. Ou seja, isso
+
+1035
+00:31:12,039 --> 00:31:13,880
+aqui já começa a trazer um pouquinho
+
+1036
+00:31:13,880 --> 00:31:15,919
+mais de complexidade e tudo mais. A
+
+1037
+00:31:15,919 --> 00:31:18,120
+gente tá falando de coisas em países
+
+1038
+00:31:18,120 --> 00:31:20,159
+diferentes, em data centers diferentes,
+
+1039
+00:31:20,159 --> 00:31:22,120
+então a coisa vai complicando um pouco
+
+1040
+00:31:22,120 --> 00:31:24,080
+mais. Então a gente também precisa aqui
+
+1041
+00:31:24,080 --> 00:31:25,760
+replicar esses dados de um lado pro
+
+1042
+00:31:25,760 --> 00:31:28,000
+outro, manter essa sincronia. Inclusive
+
+1043
+00:31:28,000 --> 00:31:30,039
+a própria Netflix passou por essa
+
+1044
+00:31:30,039 --> 00:31:31,960
+situação aqui, tá lá descrito no blog
+
+1045
+00:31:31,960 --> 00:31:33,360
+deles. Depois tu pode dar uma olhada no
+
+1046
+00:31:33,360 --> 00:31:35,200
+blog de arquitetura lá da Netflix. Eles
+
+1047
+00:31:35,200 --> 00:31:36,840
+explicam como que eles fizeram para
+
+1048
+00:31:36,840 --> 00:31:38,559
+lidar com esse problema de replicação
+
+1049
+00:31:38,559 --> 00:31:40,039
+aqui em data centers diferente, tá?
+
+1050
+00:31:40,039 --> 00:31:41,639
+Então recomendo fortemente a leitura,
+
+1051
+00:31:41,639 --> 00:31:43,399
+beleza? E aí vamos lá. O que que a gente
+
+1052
+00:31:43,399 --> 00:31:45,200
+tem aqui nesse exato momento? Nesse
+
+1053
+00:31:45,200 --> 00:31:46,279
+exato momento a gente já tem
+
+1054
+00:31:46,279 --> 00:31:48,240
+redundância, failover, já eliminamos o
+
+1055
+00:31:48,240 --> 00:31:49,960
+nosso ponto único de falha. Aqui a gente
+
+1056
+00:31:49,960 --> 00:31:52,039
+já tem aqui, ó, a nossa segurança aqui,
+
+1057
+00:31:52,039 --> 00:31:53,639
+ó, na nossa aplicação, que se falhar de
+
+1058
+00:31:53,639 --> 00:31:55,519
+um lado, a gente tem do outro. Aqui 100%
+
+1059
+00:31:55,519 --> 00:31:57,519
+do tráfego vem para cá. Nossa aplicação
+
+1060
+00:31:57,519 --> 00:31:58,960
+tá muito mais robusta, a nossa
+
+1061
+00:31:58,960 --> 00:32:00,639
+arquitetura, né, como um todo. Já te
+
+1062
+00:32:00,639 --> 00:32:02,240
+ensinei diversos tópicos que a gente vai
+
+1063
+00:32:02,240 --> 00:32:04,039
+voltar ali, vamos bater um papo, só que
+
+1064
+00:32:04,039 --> 00:32:06,279
+o que mais que dá pra gente adicionar?
+
+1065
+00:32:06,279 --> 00:32:08,120
+Porque como eu disse, cara, sempre dá
+
+1066
+00:32:08,120 --> 00:32:10,000
+pra gente dar um passo além, sempre dá
+
+1067
+00:32:10,000 --> 00:32:11,960
+pra gente melhorar, refinar um pouquinho
+
+1068
+00:32:11,960 --> 00:32:14,320
+mais pra gente conseguir alcançar uma
+
+1069
+00:32:14,320 --> 00:32:15,919
+volumetria maior de usuários. Vamos lá.
+
+1070
+00:32:15,919 --> 00:32:17,639
+Qual que é o próximo passo? É a nossa
+
+1071
+00:32:17,639 --> 00:32:20,399
+querida mensageria. E aqui mensageria,
+
+1072
+00:32:20,399 --> 00:32:22,080
+nesse nosso caso, vai ser o seguinte,
+
+1073
+00:32:22,080 --> 00:32:23,720
+tá? Isso aqui tem diversas formas de
+
+1074
+00:32:23,720 --> 00:32:25,159
+utilizar, tá? Mensageria dá paraa gente
+
+1075
+00:32:25,159 --> 00:32:27,000
+utilizar como mecanismo de comunicação
+
+1076
+00:32:27,000 --> 00:32:28,559
+entre microsserviços, dá pra gente
+
+1077
+00:32:28,559 --> 00:32:30,120
+utilizar lá com event driven
+
+1078
+00:32:30,120 --> 00:32:31,480
+architecture, que é arquitetura
+
+1079
+00:32:31,480 --> 00:32:33,159
+orientada a eventos, dá pra gente
+
+1080
+00:32:33,159 --> 00:32:35,000
+utilizar para fazer processamento de
+
+1081
+00:32:35,000 --> 00:32:36,880
+trabalho pesado em background, ou seja,
+
+1082
+00:32:36,880 --> 00:32:38,760
+os jobs assíncronos, que é exatamente o
+
+1083
+00:32:38,760 --> 00:32:40,080
+que a gente vai fazer aqui. Então,
+
+1084
+00:32:40,080 --> 00:32:42,159
+mensageria não se resume só ao que eu
+
+1085
+00:32:42,159 --> 00:32:43,840
+vou te mostrar aqui. Mensageria serve
+
+1086
+00:32:43,840 --> 00:32:46,120
+para n coisas, beleza? Só que no nosso
+
+1087
+00:32:46,120 --> 00:32:47,720
+caso, o que que a gente pode fazer? A
+
+1088
+00:32:47,720 --> 00:32:49,519
+gente pode ir na nossa aplicação, ou
+
+1089
+00:32:49,519 --> 00:32:51,399
+seja, lá no nosso código mais uma vez e
+
+1090
+00:32:51,399 --> 00:32:52,720
+ver o que mais que dá pra gente
+
+1091
+00:32:52,720 --> 00:32:54,360
+melhorar. Então, por exemplo, aqui no
+
+1092
+00:32:54,360 --> 00:32:56,200
+livro ele vai te dar um exemplo de foto,
+
+1093
+00:32:56,200 --> 00:32:57,600
+tá? Eu já vou falar sobre o livro, sobre
+
+1094
+00:32:57,600 --> 00:32:59,039
+o autor, tá? Só que ele te dá um exemplo
+
+1095
+00:32:59,039 --> 00:33:00,960
+de foto, de processar uma foto lá que
+
+1096
+00:33:00,960 --> 00:33:02,200
+você mandou uma foto pro servidor
+
+1097
+00:33:02,200 --> 00:33:03,760
+tentando processar essa foto e que
+
+1098
+00:33:03,760 --> 00:33:05,320
+demorava o trabalho e tal. Eu vou fazer
+
+1099
+00:33:05,320 --> 00:33:06,519
+um pouquinho diferente. Vamos lá. Eu
+
+1100
+00:33:06,519 --> 00:33:08,159
+desenhei esses dois diagramas aqui, ó,
+
+1101
+00:33:08,159 --> 00:33:09,840
+que vai ser o seguinte. Vamos imaginar o
+
+1102
+00:33:09,840 --> 00:33:11,159
+seguinte. Vamos imaginar que a tua
+
+1103
+00:33:11,159 --> 00:33:13,320
+aplicação ela precisa processar algum
+
+1104
+00:33:13,320 --> 00:33:14,840
+relatório muito pesado, tá? Vamos
+
+1105
+00:33:14,840 --> 00:33:16,320
+imaginar que os nossos clientes aqui,
+
+1106
+00:33:16,320 --> 00:33:17,960
+nossos usuários estão fazendo
+
+1107
+00:33:17,960 --> 00:33:19,840
+requisições aqui para quê? Para gerar um
+
+1108
+00:33:19,840 --> 00:33:21,760
+relatório. E aí toda requisição que é
+
+1109
+00:33:21,760 --> 00:33:23,360
+feita, o servidor precisa chamar o
+
+1110
+00:33:23,360 --> 00:33:24,880
+controller, o service, gerar o
+
+1111
+00:33:24,880 --> 00:33:26,679
+relatório, bate no banco, busca de uma
+
+1112
+00:33:26,679 --> 00:33:28,679
+tabela, de um avio, aí vai montando o
+
+1113
+00:33:28,679 --> 00:33:30,480
+dado e aquilo demora. Enquanto isso,
+
+1114
+00:33:30,480 --> 00:33:32,840
+fica aquele load infinito na tela lá e o
+
+1115
+00:33:32,840 --> 00:33:34,880
+usuário agarrado. Inclusive, isso vai
+
+1116
+00:33:34,880 --> 00:33:37,200
+consumindo o recurso do servidor em si e
+
+1117
+00:33:37,200 --> 00:33:38,919
+aí começa a competir recurso, vai
+
+1118
+00:33:38,919 --> 00:33:40,760
+chegando mais requisições e tal. Então,
+
+1119
+00:33:40,760 --> 00:33:42,639
+nunca é bom a gente ficar agarrando o
+
+1120
+00:33:42,639 --> 00:33:44,799
+processo demorado na requisição que veio
+
+1121
+00:33:44,799 --> 00:33:45,919
+do usuário. Então, o que que a gente
+
+1122
+00:33:45,919 --> 00:33:47,240
+faz? A gente joga isso para
+
+1123
+00:33:47,240 --> 00:33:48,799
+processamento assíncrono. Como é que
+
+1124
+00:33:48,799 --> 00:33:50,279
+funcionaria? Basicamente a gente
+
+1125
+00:33:50,279 --> 00:33:52,080
+receberia a requisição do nosso usuário,
+
+1126
+00:33:52,080 --> 00:33:53,720
+já dispara uma mensagem para um
+
+1127
+00:33:53,720 --> 00:33:55,600
+mecanismo de mensageria, seja um Rabbit
+
+1128
+00:33:55,600 --> 00:33:58,120
+MQ, uma PASCAF, com SQS da vida, tanto
+
+1129
+00:33:58,120 --> 00:34:00,440
+faz. E aí um código, tá? O códigozinho,
+
+1130
+00:34:00,440 --> 00:34:01,919
+sua classe, vamos botar lá, sua classe
+
+1131
+00:34:01,919 --> 00:34:03,639
+de serviço que você gosta de utilizar,
+
+1132
+00:34:03,639 --> 00:34:05,679
+vai ficar em background lá em outro
+
+1133
+00:34:05,679 --> 00:34:07,320
+servidor, muito provavelmente nessa
+
+1134
+00:34:07,320 --> 00:34:08,720
+nossa arquitetura. Até dá para colocar
+
+1135
+00:34:08,720 --> 00:34:10,359
+no mesmo servidor, tá? Mas nessa nossa
+
+1136
+00:34:10,359 --> 00:34:11,800
+arquitetura, a gente vai separar isso em
+
+1137
+00:34:11,800 --> 00:34:13,240
+outros servidores. E aí o que que vai
+
+1138
+00:34:13,240 --> 00:34:14,839
+acontecer? Esse teu código vai ficar
+
+1139
+00:34:14,839 --> 00:34:16,200
+dentro de algo que a gente chama de
+
+1140
+00:34:16,200 --> 00:34:18,320
+consumer, tá? Ou worker, tá? Que vai
+
+1141
+00:34:18,320 --> 00:34:20,320
+ficar lá lendo essa fila de mensageria.
+
+1142
+00:34:20,320 --> 00:34:22,480
+Chegou uma mensagem, ele vai processar.
+
+1143
+00:34:22,480 --> 00:34:23,960
+Então o fluxo é mais ou menos assim para
+
+1144
+00:34:23,960 --> 00:34:25,720
+você entender, tá? Chegou a requisição,
+
+1145
+00:34:25,720 --> 00:34:27,440
+manda mensagem pra fila e já retorna o
+
+1146
+00:34:27,440 --> 00:34:29,280
+OK pro usuário. Olha, recebi seu pedido
+
+1147
+00:34:29,280 --> 00:34:30,839
+aqui para gerar o relatório. Assim que
+
+1148
+00:34:30,839 --> 00:34:32,760
+tiver pronto eu te aviso. Show de bola.
+
+1149
+00:34:32,760 --> 00:34:34,200
+Qual é a próxima requisição aqui? Me dá
+
+1150
+00:34:34,200 --> 00:34:35,399
+aqui. Pronto, acabou. É assim que
+
+1151
+00:34:35,399 --> 00:34:37,359
+funciona. Ele não vai processar o
+
+1152
+00:34:37,359 --> 00:34:39,359
+relatório. Ele não vai gerar o relatório
+
+1153
+00:34:39,359 --> 00:34:41,200
+e devolver pro usuário e agarrar a
+
+1154
+00:34:41,200 --> 00:34:43,000
+requisição. Não. Ele dispara pra fila e
+
+1155
+00:34:43,000 --> 00:34:44,560
+já tô pronto para receber a próxima. E
+
+1156
+00:34:44,560 --> 00:34:46,399
+aí quando tiver pronto, aí tu manda o
+
+1157
+00:34:46,399 --> 00:34:47,879
+e-mail lá pro usuário. Vai depender
+
+1158
+00:34:47,879 --> 00:34:49,359
+muito da regra de negócio que você tiver
+
+1159
+00:34:49,359 --> 00:34:50,879
+utilizando. Então cara, é assim que
+
+1160
+00:34:50,879 --> 00:34:52,960
+funciona esse mecanismo de mensageria,
+
+1161
+00:34:52,960 --> 00:34:54,720
+tá? Mas para ficar um pouquinho mais
+
+1162
+00:34:54,720 --> 00:34:56,159
+claro para você, você muito
+
+1163
+00:34:56,159 --> 00:34:57,760
+provavelmente já deve ter lidado com
+
+1164
+00:34:57,760 --> 00:34:59,560
+aqueles marketplace ou e-commerce que
+
+1165
+00:34:59,560 --> 00:35:01,400
+você tentou comprar alguma coisa, aí
+
+1166
+00:35:01,400 --> 00:35:03,240
+você foi lá, montou teu carrinho, botou
+
+1167
+00:35:03,240 --> 00:35:05,240
+os dados do cartão e clicou em pagar.
+
+1168
+00:35:05,240 --> 00:35:06,839
+Quando você clicou em pagar, ele não
+
+1169
+00:35:06,839 --> 00:35:08,640
+agarrou a tua requisição lá e ficou lá
+
+1170
+00:35:08,640 --> 00:35:10,720
+tentando processar o pagamento, bateu no
+
+1171
+00:35:10,720 --> 00:35:12,640
+gate de pagamento, válido dado de
+
+1172
+00:35:12,640 --> 00:35:14,599
+cartão, não. Ele simplesmente te dá um
+
+1173
+00:35:14,599 --> 00:35:16,880
+OK dizendo que olha, recebi o seu pedido
+
+1174
+00:35:16,880 --> 00:35:18,520
+aqui, assim que tiver tudo OK eu
+
+1175
+00:35:18,520 --> 00:35:20,320
+confirmo para você. Show de bola. Já
+
+1176
+00:35:20,320 --> 00:35:21,680
+devolve a requisição pro usuário e
+
+1177
+00:35:21,680 --> 00:35:23,839
+acabou. fim de papo. E aí o código lá em
+
+1178
+00:35:23,839 --> 00:35:26,440
+background, em outro processo distante
+
+1179
+00:35:26,440 --> 00:35:29,079
+da tradução ali das requisições, ele vai
+
+1180
+00:35:29,079 --> 00:35:31,320
+processar ali o pagamento, vai fazer e
+
+1181
+00:35:31,320 --> 00:35:33,359
+quando tiver tudo OK, aí sim ele vai te
+
+1182
+00:35:33,359 --> 00:35:35,280
+informar lá no aplicativo, no e-mail,
+
+1183
+00:35:35,280 --> 00:35:36,880
+alguma coisa assim que a tua compra foi
+
+1184
+00:35:36,880 --> 00:35:38,240
+processada. Você não vai ficar com um
+
+1185
+00:35:38,240 --> 00:35:40,800
+load infinito lá agarrado, esperando,
+
+1186
+00:35:40,800 --> 00:35:42,560
+esperando, esperando. Isso aí acaba
+
+1187
+00:35:42,560 --> 00:35:44,560
+trazendo muito prejuízo, principalmente
+
+1188
+00:35:44,560 --> 00:35:46,240
+pra performance da nossa aplicação.
+
+1189
+00:35:46,240 --> 00:35:47,920
+Então aqui é assim que a gente utiliza.
+
+1190
+00:35:47,920 --> 00:35:49,119
+Beleza? E aí o que que a gente vai
+
+1191
+00:35:49,119 --> 00:35:50,400
+chegar aqui? E a gente vai chegar na
+
+1192
+00:35:50,400 --> 00:35:52,040
+nossa arquitetura final, cara. A gente
+
+1193
+00:35:52,040 --> 00:35:54,040
+vai ter aqui uma arquitetura pronta para
+
+1194
+00:35:54,040 --> 00:35:56,520
+lidar com 1 milhão ou mais de usuários.
+
+1195
+00:35:56,520 --> 00:35:57,640
+Isso aqui é para milhões de usuários,
+
+1196
+00:35:57,640 --> 00:35:59,040
+tá? Isso aqui não é para 1 milhão de
+
+1197
+00:35:59,040 --> 00:36:00,560
+usuários, 1 milhão específico, não dá.
+
+1198
+00:36:00,560 --> 00:36:02,000
+Isso aqui é para milhões de usuários.
+
+1199
+00:36:02,000 --> 00:36:03,720
+Por quê? Aqui você tá vendo só um data
+
+1200
+00:36:03,720 --> 00:36:05,240
+center, tá? Você tá vendo só um data
+
+1201
+00:36:05,240 --> 00:36:06,640
+center aqui. Logicamente que isso aqui é
+
+1202
+00:36:06,640 --> 00:36:08,480
+para abstrair a imagem, mas esse load
+
+1203
+00:36:08,480 --> 00:36:10,160
+balancer aqui estaria direcionando para
+
+1204
+00:36:10,160 --> 00:36:12,000
+vários data centers, tá? E aqui a gente
+
+1205
+00:36:12,000 --> 00:36:13,640
+teria os nossos servidores, nossos
+
+1206
+00:36:13,640 --> 00:36:15,480
+bancos de dados, nossos servidores de
+
+1207
+00:36:15,480 --> 00:36:17,119
+cash, a gente teria nosso mecanismo de
+
+1208
+00:36:17,119 --> 00:36:18,599
+mensageria e aqui a gente teria
+
+1209
+00:36:18,599 --> 00:36:20,880
+servidores de consumo de mensagem lá da
+
+1210
+00:36:20,880 --> 00:36:22,560
+fila. É quem vai ficar processando em
+
+1211
+00:36:22,560 --> 00:36:24,079
+background, ou seja, de forma
+
+1212
+00:36:24,079 --> 00:36:25,839
+assíncrona, toda aquela nossa demanda
+
+1213
+00:36:25,839 --> 00:36:27,280
+pesada. Então, toda vez que você tiver
+
+1214
+00:36:27,280 --> 00:36:29,440
+alguma demanda muito pesada, que demanda
+
+1215
+00:36:29,440 --> 00:36:31,240
+muito recurso ali, cara, joga isso para
+
+1216
+00:36:31,240 --> 00:36:32,880
+processamento assíncrono, beleza? Se
+
+1217
+00:36:32,880 --> 00:36:34,319
+quiser, eu gravo um vídeo sobre isso
+
+1218
+00:36:34,319 --> 00:36:35,960
+aqui. E aí, por fim, que que você faz?
+
+1219
+00:36:35,960 --> 00:36:38,319
+você adiciona log, métrica, automação e
+
+1220
+00:36:38,319 --> 00:36:40,800
+monitoramento, porque precisa disso, por
+
+1221
+00:36:40,800 --> 00:36:42,640
+principalmente a parte de automação,
+
+1222
+00:36:42,640 --> 00:36:44,599
+você imagina que você atualizou lá agora
+
+1223
+00:36:44,599 --> 00:36:46,599
+lá o código no GitHub e agora você
+
+1224
+00:36:46,599 --> 00:36:48,119
+precisa atualizar e fazer deploy de
+
+1225
+00:36:48,119 --> 00:36:50,359
+tudo. Você faria deploy na mão de cada
+
+1226
+00:36:50,359 --> 00:36:52,119
+servidorzinho desse aqui? É lógico que
+
+1227
+00:36:52,119 --> 00:36:53,800
+não, né? Então você precisa de pipeline
+
+1228
+00:36:53,800 --> 00:36:55,640
+de CCD, você precisa de um monte de
+
+1229
+00:36:55,640 --> 00:36:57,400
+automação, ferramenta de log, de
+
+1230
+00:36:57,400 --> 00:36:59,119
+monitoramento, para saber como que tá a
+
+1231
+00:36:59,119 --> 00:37:01,000
+saúde do teu data center, dos teus
+
+1232
+00:37:01,000 --> 00:37:03,040
+bancos de dados, dos teus servidores. Em
+
+1233
+00:37:03,040 --> 00:37:04,680
+cima disso você vai fazendo a sua
+
+1234
+00:37:04,680 --> 00:37:07,240
+análise e evoluindo a sua arquitetura.
+
+1235
+00:37:07,240 --> 00:37:09,520
+Inclusive, nesse exato momento aqui,
+
+1236
+00:37:09,520 --> 00:37:10,760
+cara, a gente já falou de diversas
+
+1237
+00:37:10,760 --> 00:37:12,400
+coisas. Você já aprendeu aqui a separar
+
+1238
+00:37:12,400 --> 00:37:14,079
+o banco do servidor e por que a gente
+
+1239
+00:37:14,079 --> 00:37:15,480
+faz isso? Você já entendeu o que que é
+
+1240
+00:37:15,480 --> 00:37:17,240
+escalabilidade vertical da horizontal?
+
+1241
+00:37:17,240 --> 00:37:18,680
+Já te expliquei as limitações,
+
+1242
+00:37:18,680 --> 00:37:20,520
+principalmente da vertical aqui, e como
+
+1243
+00:37:20,520 --> 00:37:22,319
+que a gente utiliza a escala horizontal
+
+1244
+00:37:22,319 --> 00:37:24,599
+para ter failover, redundância. Já te
+
+1245
+00:37:24,599 --> 00:37:25,880
+expliquei aqui a questão do load
+
+1246
+00:37:25,880 --> 00:37:27,440
+balancer. Então tu vai conseguir na
+
+1247
+00:37:27,440 --> 00:37:29,480
+entrevista explicar, olha cara aqui, ó,
+
+1248
+00:37:29,480 --> 00:37:31,599
+se a gente tiver aqui a necessidade de
+
+1249
+00:37:31,599 --> 00:37:33,240
+redundância e tudo mais, a gente pode
+
+1250
+00:37:33,240 --> 00:37:35,000
+utilizar escalabilidade horizontal, a
+
+1251
+00:37:35,000 --> 00:37:36,440
+gente pode adicionar réplicas da nossa
+
+1252
+00:37:36,440 --> 00:37:38,440
+instância ali, da nossa API e aí em cima
+
+1253
+00:37:38,440 --> 00:37:40,359
+disso coloca um load balancer na ponta.
+
+1254
+00:37:40,359 --> 00:37:42,079
+A gente faz a replicação dos bancos de
+
+1255
+00:37:42,079 --> 00:37:44,079
+dados aqui, aí separa um paraa escrita e
+
+1256
+00:37:44,079 --> 00:37:45,800
+as réplicas pra leitura. E aí já te
+
+1257
+00:37:45,800 --> 00:37:47,119
+mostrei também um pouquinho do código
+
+1258
+00:37:47,119 --> 00:37:48,640
+para você entender aqui também. Depois a
+
+1259
+00:37:48,640 --> 00:37:50,119
+gente adicionou uma camada de cast que
+
+1260
+00:37:50,119 --> 00:37:51,599
+eu também já gravei vídeo, já falei para
+
+1261
+00:37:51,599 --> 00:37:53,400
+você dar uma consumida lá no vídeo, te
+
+1262
+00:37:53,400 --> 00:37:55,079
+falei do ponto único de falha pra gente
+
+1263
+00:37:55,079 --> 00:37:56,839
+não ter um único ponto de falha na nossa
+
+1264
+00:37:56,839 --> 00:37:58,440
+aplicação. Te falei também sobre
+
+1265
+00:37:58,440 --> 00:38:00,839
+outaling aqui, ou seja, elasticidade.
+
+1266
+00:38:00,839 --> 00:38:02,160
+Cara, tu chegar na entrevista e
+
+1267
+00:38:02,160 --> 00:38:03,520
+mencionar isso aqui, não, cara, a gente
+
+1268
+00:38:03,520 --> 00:38:05,280
+pode trabalhar com elasticidade, falar
+
+1269
+00:38:05,280 --> 00:38:06,720
+de custos também, porque, por exemplo,
+
+1270
+00:38:06,720 --> 00:38:07,720
+pô, a gente pode trabalhar com
+
+1271
+00:38:07,720 --> 00:38:09,319
+elasticidade por quê? pra gente pagar só
+
+1272
+00:38:09,319 --> 00:38:11,119
+pelo que usa. Configura lá um rangezinho
+
+1273
+00:38:11,119 --> 00:38:12,800
+lá de instâncias mínimas, instâncias
+
+1274
+00:38:12,800 --> 00:38:14,079
+máximas, em cima disso tu vai
+
+1275
+00:38:14,079 --> 00:38:15,480
+trabalhando e aí a gente vai pagando só
+
+1276
+00:38:15,480 --> 00:38:17,040
+pelo que usar. E aí falamos de data
+
+1277
+00:38:17,040 --> 00:38:18,640
+center e a questão da replicação dos
+
+1278
+00:38:18,640 --> 00:38:20,119
+dados que eu te falei também. Então
+
+1279
+00:38:20,119 --> 00:38:22,319
+todos os desafios estão aqui e se você
+
+1280
+00:38:22,319 --> 00:38:23,960
+quiser aprender um pouquinho mais sobre
+
+1281
+00:38:23,960 --> 00:38:25,839
+isso aqui, você vai ler o livro System
+
+1282
+00:38:25,839 --> 00:38:27,680
+Design Interview. É um livro que eu
+
+1283
+00:38:27,680 --> 00:38:29,560
+super recomendo, foi um dos melhores
+
+1284
+00:38:29,560 --> 00:38:31,480
+livros na área de tecnologia que eu já
+
+1285
+00:38:31,480 --> 00:38:34,319
+li. Não é um livro barato, não tem esse
+
+1286
+00:38:34,319 --> 00:38:35,960
+livro em português, mas é um livro que
+
+1287
+00:38:35,960 --> 00:38:37,640
+eu recomendo fortemente que você leia.
+
+1288
+00:38:37,640 --> 00:38:39,359
+Beleza? Vou deixar o link na descrição.
+
+1289
+00:38:39,359 --> 00:38:41,000
+Bom, e agora que tu aprendeu todas as
+
+1290
+00:38:41,000 --> 00:38:43,040
+técnicas, conceitos e fundamentos pra
+
+1291
+00:38:43,040 --> 00:38:44,800
+gente pegar uma arquitetura do absoluto
+
+1292
+00:38:44,800 --> 00:38:46,520
+zero e transformar ela num arquitetura
+
+1293
+00:38:46,520 --> 00:38:48,480
+altamente disponível, resiliente,
+
+1294
+00:38:48,480 --> 00:38:50,440
+tolerante a falhas, com redundância,
+
+1295
+00:38:50,440 --> 00:38:52,920
+escalabilidade e que suporte 1 milhão de
+
+1296
+00:38:52,920 --> 00:38:55,119
+usuários ou mais, deixa teu like aí, se
+
+1297
+00:38:55,119 --> 00:38:56,440
+inscreve no canal, ativa o sininho para
+
+1298
+00:38:56,440 --> 00:38:58,440
+tu não perder nenhuma notificação. Se
+
+1299
+00:38:58,440 --> 00:39:00,079
+esse vídeo te ajudou de alguma forma,
+
+1300
+00:39:00,079 --> 00:39:02,160
+considere se tornar um membro oficial
+
+1301
+00:39:02,160 --> 00:39:04,079
+aqui do canal e apoiar essa produção de
+
+1302
+00:39:04,079 --> 00:39:05,839
+conteúdos exclusivaça que eu trago para
+
+1303
+00:39:05,839 --> 00:39:07,920
+você semanalmente. Se ficou qualquer
+
+1304
+00:39:07,920 --> 00:39:09,760
+dúvida, deixa nos comentários abaixo que
+
+1305
+00:39:09,760 --> 00:39:11,240
+eu prometo que eu tire um tempo para te
+
+1306
+00:39:11,240 --> 00:39:13,119
+responder. Por fim, eu vou ficando por
+
+1307
+00:39:13,119 --> 00:39:15,760
+aqui. Um forte abraço para você e nos
+
+1308
+00:39:15,760 --> 00:39:18,400
+vemos em breve.

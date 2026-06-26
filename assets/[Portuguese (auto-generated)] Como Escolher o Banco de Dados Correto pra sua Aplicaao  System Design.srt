@@ -1,0 +1,5739 @@
+1
+00:00:00,040 --> 00:00:01,839
+Uma das perguntas que mais aparecem nas
+
+2
+00:00:01,839 --> 00:00:04,120
+entrevistas para programador é se você
+
+3
+00:00:04,120 --> 00:00:05,960
+sabe escolher o banco de dados correto
+
+4
+00:00:05,960 --> 00:00:07,799
+para uma aplicação. E se você é daqueles
+
+5
+00:00:07,799 --> 00:00:09,240
+que responde essa pergunta dizendo que
+
+6
+00:00:09,240 --> 00:00:11,040
+quando os dados precisam se relacionar e
+
+7
+00:00:11,040 --> 00:00:12,559
+ter algum tipo de estrutura, a gente usa
+
+8
+00:00:12,559 --> 00:00:14,759
+bancos relacionais como Post Gre e My
+
+9
+00:00:14,759 --> 00:00:16,440
+Cicle. E quando os dados não tm tanta
+
+10
+00:00:16,440 --> 00:00:18,039
+necessidade assim de relacionamento e
+
+11
+00:00:18,039 --> 00:00:19,560
+precisam de mais performance, a gente
+
+12
+00:00:19,560 --> 00:00:21,560
+usa bancos não relacionais como Mongo DB
+
+13
+00:00:21,560 --> 00:00:24,080
+ou Cassandra, você pode ter certeza que
+
+14
+00:00:24,080 --> 00:00:25,840
+vai se dar mal na entrevista. No vídeo
+
+15
+00:00:25,840 --> 00:00:27,160
+de hoje, eu vou te mostrar porque que
+
+16
+00:00:27,160 --> 00:00:29,199
+esse tipo de resposta é completamente
+
+17
+00:00:29,199 --> 00:00:31,240
+superficial e sem sentido e quais as
+
+18
+00:00:31,240 --> 00:00:33,239
+verdadeiras compensações que você
+
+19
+00:00:33,239 --> 00:00:35,320
+precisa fazer e as técnicas que você
+
+20
+00:00:35,320 --> 00:00:37,120
+precisa utilizar para definir
+
+21
+00:00:37,120 --> 00:00:39,680
+corretamente o teu banco de dados. Fala
+
+22
+00:00:39,680 --> 00:00:41,440
+pessoal, Renato Augusto aqui de novo e
+
+23
+00:00:41,440 --> 00:00:43,160
+dessa vez para falar sobre system
+
+24
+00:00:43,160 --> 00:00:44,920
+design, arquitetura de software e
+
+25
+00:00:44,920 --> 00:00:47,360
+sistemas distribuídos. Tudo isso no
+
+26
+00:00:47,360 --> 00:00:49,320
+contexto dos bancos de dados, porque se
+
+27
+00:00:49,320 --> 00:00:51,120
+tem uma coisa que muito programador
+
+28
+00:00:51,120 --> 00:00:53,320
+ainda peca nos dias de hoje é achar que
+
+29
+00:00:53,320 --> 00:00:55,280
+bancos de dados se resumem somente a
+
+30
+00:00:55,280 --> 00:00:57,840
+Pôst, Gri, My Cicle, Mongo, DB ou até
+
+31
+00:00:57,840 --> 00:00:59,879
+pior, que acreditar que bancos de dados
+
+32
+00:00:59,879 --> 00:01:02,000
+são escolhidos somente pelo tipo de
+
+33
+00:01:02,000 --> 00:01:03,719
+dados que vão ser armazenados pela
+
+34
+00:01:03,719 --> 00:01:05,799
+aplicação. Isso, além de te prejudicar
+
+35
+00:01:05,799 --> 00:01:07,600
+durante uma entrevista, vai acabar
+
+36
+00:01:07,600 --> 00:01:09,360
+fazendo você tomar decisões
+
+37
+00:01:09,360 --> 00:01:11,560
+arquiteturais erradas durante um projeto
+
+38
+00:01:11,560 --> 00:01:13,759
+da vida real e que com certeza vai
+
+39
+00:01:13,759 --> 00:01:16,560
+custar muito caro lá na frente. Então,
+
+40
+00:01:16,560 --> 00:01:18,400
+para tu nunca mais errar na escolha do
+
+41
+00:01:18,400 --> 00:01:19,920
+banco de dados e nem ficar passando
+
+42
+00:01:19,920 --> 00:01:21,920
+aperto nas entrevistas, vem pra telinha
+
+43
+00:01:21,920 --> 00:01:23,720
+comigo, porque tem muita coisa pra gente
+
+44
+00:01:23,720 --> 00:01:25,439
+ver e com toda a certeza tu vai sair
+
+45
+00:01:25,439 --> 00:01:27,200
+daqui hoje com todas as informações que
+
+46
+00:01:27,200 --> 00:01:29,040
+você precisa para tomar as melhores
+
+47
+00:01:29,040 --> 00:01:31,040
+decisões arquiteturais quando o assunto
+
+48
+00:01:31,040 --> 00:01:33,399
+for bancos de dados. Bora lá. Bom, então
+
+49
+00:01:33,399 --> 00:01:34,600
+vamos lá. Vamos direto ao ponto aqui.
+
+50
+00:01:34,600 --> 00:01:35,640
+Vamos direto ao que interessa, porque
+
+51
+00:01:35,640 --> 00:01:37,520
+tem muita coisa pra gente ver. E a
+
+52
+00:01:37,520 --> 00:01:39,079
+primeira coisa que a gente vai precisar
+
+53
+00:01:39,079 --> 00:01:41,479
+aqui é chegar no conceito de um sistema
+
+54
+00:01:41,479 --> 00:01:43,520
+distribuído, tá? Por quê? Porque tudo
+
+55
+00:01:43,520 --> 00:01:44,960
+que eu vou te mostrar aqui tá
+
+56
+00:01:44,960 --> 00:01:46,759
+relacionado diretamente a sistemas
+
+57
+00:01:46,759 --> 00:01:48,600
+distribuídos, grandes aplicações,
+
+58
+00:01:48,600 --> 00:01:50,759
+grandes arquiteturas, system design.
+
+59
+00:01:50,759 --> 00:01:52,479
+Isso aqui que eu vou te mostrar não tem
+
+60
+00:01:52,479 --> 00:01:54,360
+a ver com sisteminha de padaria, com
+
+61
+00:01:54,360 --> 00:01:56,159
+sisteminha da farmácia, do mercadinho,
+
+62
+00:01:56,159 --> 00:01:57,840
+sisteminha monolítico. Isso aqui tem a
+
+63
+00:01:57,840 --> 00:01:59,759
+ver com grandes arquiteturas, beleza?
+
+64
+00:01:59,759 --> 00:02:01,560
+Sistemas distribuídos, tá? E o que que
+
+65
+00:02:01,560 --> 00:02:02,799
+eu vou fazer pra gente chegar nesse
+
+66
+00:02:02,799 --> 00:02:04,479
+sistema distribuído? Eu vou só dar uma
+
+67
+00:02:04,479 --> 00:02:06,360
+repassada aqui bem de leve nesses
+
+68
+00:02:06,360 --> 00:02:08,720
+diagramas iniciais que a gente já viu lá
+
+69
+00:02:08,720 --> 00:02:11,520
+no vídeo escalando uma aplicação do zero
+
+70
+00:02:11,520 --> 00:02:13,520
+até 1 milhão de usuários, tá? Eu não vou
+
+71
+00:02:13,520 --> 00:02:14,959
+revisitar todo o diagrama, a gente vai
+
+72
+00:02:14,959 --> 00:02:16,519
+parar bem por aqui até chegar na parte
+
+73
+00:02:16,519 --> 00:02:17,800
+dos bancos de dados e aí a gente vai
+
+74
+00:02:17,800 --> 00:02:19,120
+falar de consistência eventual,
+
+75
+00:02:19,120 --> 00:02:20,560
+disponibilidade, a gente vai falar de um
+
+76
+00:02:20,560 --> 00:02:21,959
+monte de coisas, tá? Incluindo as
+
+77
+00:02:21,959 --> 00:02:23,640
+técnicas, conceitos, fundamentos e
+
+78
+00:02:23,640 --> 00:02:25,080
+ferramentas para você escolher
+
+79
+00:02:25,080 --> 00:02:26,920
+corretamente o seu banco de dados. Então
+
+80
+00:02:26,920 --> 00:02:28,200
+que que eu vou fazer? Eu vou começar
+
+81
+00:02:28,200 --> 00:02:29,800
+aqui partindo bem do zero pra gente
+
+82
+00:02:29,800 --> 00:02:31,560
+poder recapitular algumas coisas e
+
+83
+00:02:31,560 --> 00:02:32,800
+chegar no conceito de um sistema
+
+84
+00:02:32,800 --> 00:02:34,800
+distribuído. Então, como é que começa
+
+85
+00:02:34,800 --> 00:02:36,640
+uma aplicação geralmente na vida real,
+
+86
+00:02:36,640 --> 00:02:37,959
+tá? A aplicação começa mais ou menos
+
+87
+00:02:37,959 --> 00:02:39,480
+assim, ó. A gente tem a nossa camada de
+
+88
+00:02:39,480 --> 00:02:41,120
+front end, ou seja, o nosso aplicativo
+
+89
+00:02:41,120 --> 00:02:43,080
+mobile lá, o nosso front end, a nossa
+
+90
+00:02:43,080 --> 00:02:45,080
+aplicação web em si, rodando em Angular,
+
+91
+00:02:45,080 --> 00:02:47,400
+ViewJS, React e por aí vai. Então, a
+
+92
+00:02:47,400 --> 00:02:48,680
+gente tem o nosso front end e a gente
+
+93
+00:02:48,680 --> 00:02:50,480
+vai ter também a nossa API, tá? o nosso
+
+94
+00:02:50,480 --> 00:02:53,040
+servidorzinho back endar lá armazenado,
+
+95
+00:02:53,040 --> 00:02:54,840
+hospedado numa hospedagem qualquer que
+
+96
+00:02:54,840 --> 00:02:56,120
+você escolher e vai est dentro de um
+
+97
+00:02:56,120 --> 00:02:57,239
+servidor. E aí, como é que tudo
+
+98
+00:02:57,239 --> 00:02:59,040
+funciona? A gente tem aqui o nosso DNS,
+
+99
+00:02:59,040 --> 00:03:01,120
+o nosso API.meite.com
+
+100
+00:03:01,120 --> 00:03:02,920
+e a gente cadastra isso apontando pro
+
+101
+00:03:02,920 --> 00:03:05,159
+nosso IP, tá? Pro IP do nosso servidor.
+
+102
+00:03:05,159 --> 00:03:06,760
+Então, toda a requisição que o nosso
+
+103
+00:03:06,760 --> 00:03:08,920
+frontend fizer para esse API.meite.com,
+
+104
+00:03:08,920 --> 00:03:11,360
+meusite.com. O DNS, que é o domain
+
+105
+00:03:11,360 --> 00:03:13,040
+nameistem, que é o sistema de nome de
+
+106
+00:03:13,040 --> 00:03:15,159
+domínio, vai fazer a conversão desse
+
+107
+00:03:15,159 --> 00:03:17,760
+api.meusite.com pro endereço IP e a
+
+108
+00:03:17,760 --> 00:03:19,920
+requisição vai seguir até chegar no
+
+109
+00:03:19,920 --> 00:03:21,239
+nosso servidor, tá? E aí o nosso
+
+110
+00:03:21,239 --> 00:03:22,840
+servidorzinho vai responder aqui um Jon,
+
+111
+00:03:22,840 --> 00:03:24,360
+tanto faz, tá? O importante é que você
+
+112
+00:03:24,360 --> 00:03:25,560
+entenda que isso aqui é o nosso servidor
+
+113
+00:03:25,560 --> 00:03:27,239
+que vai est o nosso código lá rodando,
+
+114
+00:03:27,239 --> 00:03:29,400
+seja em Java, se PHP, tanto faz. Isso
+
+115
+00:03:29,400 --> 00:03:31,280
+aqui eu falo com muito mais detalhes lá
+
+116
+00:03:31,280 --> 00:03:32,560
+no vídeo, escalando uma aplicação.
+
+117
+00:03:32,560 --> 00:03:34,640
+Inclusive, esse vídeo não tem nada a ver
+
+118
+00:03:34,640 --> 00:03:36,319
+com o vídeo de lá, tá? Você pode muito
+
+119
+00:03:36,319 --> 00:03:37,920
+bem assistir esse vídeo aqui, porque a
+
+120
+00:03:37,920 --> 00:03:39,400
+gente vai falar de bancos de dados, tá?
+
+121
+00:03:39,400 --> 00:03:41,080
+Eu só tô revisitando esses conceitos
+
+122
+00:03:41,080 --> 00:03:42,439
+aqui pra gente chegar num sistema
+
+123
+00:03:42,439 --> 00:03:44,319
+distribuído e eu te mostrar como é que
+
+124
+00:03:44,319 --> 00:03:46,280
+funciona a escolha correta de um banco
+
+125
+00:03:46,280 --> 00:03:47,560
+de dados, beleza? Então, dando
+
+126
+00:03:47,560 --> 00:03:49,200
+continuidade aqui, qual é a primeira
+
+127
+00:03:49,200 --> 00:03:50,879
+coisa que a gente faz, tá? Qual que é a
+
+128
+00:03:50,879 --> 00:03:53,319
+evolução natural de um sistema que nasce
+
+129
+00:03:53,319 --> 00:03:55,120
+dessa forma aqui, tá? Com um único
+
+130
+00:03:55,120 --> 00:03:56,599
+servidorzinho ali para fazer tudo.
+
+131
+00:03:56,599 --> 00:03:58,239
+Inclusive, o banco de dados vai estar
+
+132
+00:03:58,239 --> 00:03:59,840
+instalado aqui dentro, tá? Tanto o
+
+133
+00:03:59,840 --> 00:04:01,280
+código, o banco de dados, tudo que você
+
+134
+00:04:01,280 --> 00:04:02,599
+precisar vai estar dentro desse único
+
+135
+00:04:02,599 --> 00:04:03,840
+servidor. E aí, como é que a gente
+
+136
+00:04:03,840 --> 00:04:05,519
+evolui, tá? Vamos imaginar que o número
+
+137
+00:04:05,519 --> 00:04:06,920
+de usuários tá crescendo e
+
+138
+00:04:06,920 --> 00:04:09,040
+consequentemente o número de requisições
+
+139
+00:04:09,040 --> 00:04:11,000
+vai aumentar paraa nossa aplicação e com
+
+140
+00:04:11,000 --> 00:04:12,760
+isso a gente precisa começar a escalar a
+
+141
+00:04:12,760 --> 00:04:14,319
+nossa aplicação. E qual é o primeiro
+
+142
+00:04:14,319 --> 00:04:15,640
+passo, tá? Qual que é a evolução
+
+143
+00:04:15,640 --> 00:04:17,400
+natural? É basicamente a gente separar o
+
+144
+00:04:17,400 --> 00:04:19,359
+nosso banco de dados do nosso servidor,
+
+145
+00:04:19,359 --> 00:04:21,479
+ou seja, a gente vai separar eles, tá?
+
+146
+00:04:21,479 --> 00:04:23,160
+Eu vou criar, eu vou instalar o meu
+
+147
+00:04:23,160 --> 00:04:24,960
+banco de dados em um outro servidor e a
+
+148
+00:04:24,960 --> 00:04:26,520
+gente vai ter o nosso servidor pra
+
+149
+00:04:26,520 --> 00:04:28,160
+aplicação e um servidor pro banco de
+
+150
+00:04:28,160 --> 00:04:29,720
+dados. Por quê? porque a gente consegue
+
+151
+00:04:29,720 --> 00:04:31,960
+dimensionar eles de formas diferentes, a
+
+152
+00:04:31,960 --> 00:04:33,800
+gente consegue escalar cada um de forma
+
+153
+00:04:33,800 --> 00:04:35,560
+diferente. Então, a gente vai separar
+
+154
+00:04:35,560 --> 00:04:37,800
+eles dois e aí toda escrita, leitura,
+
+155
+00:04:37,800 --> 00:04:39,919
+update, delete, a nossa API vai
+
+156
+00:04:39,919 --> 00:04:41,639
+requisitar o servidor de banco de dados
+
+157
+00:04:41,639 --> 00:04:42,919
+e ele vai retornar os dados e
+
+158
+00:04:42,919 --> 00:04:44,360
+consequentemente a nossa API vai
+
+159
+00:04:44,360 --> 00:04:46,320
+retornar os dados pro front end, beleza?
+
+160
+00:04:46,320 --> 00:04:48,000
+Mistério nenhum. Mais uma vez dá uma
+
+161
+00:04:48,000 --> 00:04:49,360
+olhada lá depois. Eu vou deixar o link
+
+162
+00:04:49,360 --> 00:04:50,600
+do vídeo na descrição, vou deixar um
+
+163
+00:04:50,600 --> 00:04:52,000
+card aqui em cima também para tu poder
+
+164
+00:04:52,000 --> 00:04:53,360
+dar uma olhada depois. Beleza? Vamos
+
+165
+00:04:53,360 --> 00:04:55,360
+adiante aqui. Qual que é o próximo passo
+
+166
+00:04:55,360 --> 00:04:57,400
+da nossa escalada aqui da nossa
+
+167
+00:04:57,400 --> 00:04:58,880
+aplicação, tá? Próximo passo é a gente
+
+168
+00:04:58,880 --> 00:05:00,039
+escolher se a gente vai escalar
+
+169
+00:05:00,039 --> 00:05:02,080
+verticalmente ou horizontalmente. O que
+
+170
+00:05:02,080 --> 00:05:03,600
+que é escalar verticalmente? É a gente
+
+171
+00:05:03,600 --> 00:05:05,520
+adicionar mais poder computacional, mais
+
+172
+00:05:05,520 --> 00:05:07,199
+recursos, mais armazenamento, mais
+
+173
+00:05:07,199 --> 00:05:09,280
+memória RAM na nossa máquina, no nosso
+
+174
+00:05:09,280 --> 00:05:11,160
+servidor, tá? na nossa instância aqui.
+
+175
+00:05:11,160 --> 00:05:12,840
+Ou seja, fazendo isso, a gente vai ter
+
+176
+00:05:12,840 --> 00:05:15,039
+um servidor muito mais parrudo, que vai
+
+177
+00:05:15,039 --> 00:05:16,440
+conseguir lidar com um número muito
+
+178
+00:05:16,440 --> 00:05:18,360
+maior de requisições. Porém, se
+
+179
+00:05:18,360 --> 00:05:20,520
+acontecer alguma coisa com o servidor, a
+
+180
+00:05:20,520 --> 00:05:22,039
+gente vai perder a nossa aplicação, a
+
+181
+00:05:22,039 --> 00:05:23,720
+gente vai perder a disponibilidade da
+
+182
+00:05:23,720 --> 00:05:25,000
+nossa aplicação e com isso a nossa
+
+183
+00:05:25,000 --> 00:05:26,680
+aplicação vai ficar fora do ar. E não é
+
+184
+00:05:26,680 --> 00:05:28,400
+isso que a gente quer. Então, geralmente
+
+185
+00:05:28,400 --> 00:05:30,960
+para grandes aplicações a gente escala
+
+186
+00:05:30,960 --> 00:05:32,680
+horizontalmente. Não é que a escala
+
+187
+00:05:32,680 --> 00:05:34,120
+vertical seja ruim, tá? A escala
+
+188
+00:05:34,120 --> 00:05:36,000
+vertical é muito boa, dependendo do
+
+189
+00:05:36,000 --> 00:05:37,720
+número de usuários, da quantidade de
+
+190
+00:05:37,720 --> 00:05:39,680
+requisições. Então, vai depender, mas no
+
+191
+00:05:39,680 --> 00:05:41,000
+nosso caso, a gente vai escalar
+
+192
+00:05:41,000 --> 00:05:42,600
+horizontalmente. E o que que é escalar
+
+193
+00:05:42,600 --> 00:05:44,600
+horizontalmente? É você criar réplicas
+
+194
+00:05:44,600 --> 00:05:46,520
+da sua instância lá do seu servidor, do
+
+195
+00:05:46,520 --> 00:05:48,520
+código da sua aplicação e subir isso em
+
+196
+00:05:48,520 --> 00:05:50,560
+vários outros servidores separados. Ou
+
+197
+00:05:50,560 --> 00:05:52,600
+seja, a gente vai ter várias máquinas
+
+198
+00:05:52,600 --> 00:05:54,800
+para lidar com a volumetria massiva de
+
+199
+00:05:54,800 --> 00:05:56,520
+requisições que vai chegando. E qual é a
+
+200
+00:05:56,520 --> 00:05:58,120
+ferramenta que a gente usa para escalar
+
+201
+00:05:58,120 --> 00:05:59,840
+horizontalmente? É o nosso querido e
+
+202
+00:05:59,840 --> 00:06:01,800
+amado load balancer. Então o nosso load
+
+203
+00:06:01,800 --> 00:06:03,280
+balancer, que traduzindo seria
+
+204
+00:06:03,280 --> 00:06:05,240
+balanceador de carga, ele é quem vai
+
+205
+00:06:05,240 --> 00:06:07,120
+ficar na frente aqui das nossas
+
+206
+00:06:07,120 --> 00:06:09,319
+instâncias, recebendo toda a enchurrada
+
+207
+00:06:09,319 --> 00:06:11,039
+de requisições e ele é quem vai
+
+208
+00:06:11,039 --> 00:06:13,520
+distribuir essa carga entre as nossas
+
+209
+00:06:13,520 --> 00:06:14,840
+instâncias, tá? Então vamos imaginar que
+
+210
+00:06:14,840 --> 00:06:16,560
+a gente tem 10 instâncias aqui da nossa
+
+211
+00:06:16,560 --> 00:06:18,720
+aplicação. O Load Balancer vai receber
+
+212
+00:06:18,720 --> 00:06:20,720
+todas as requisições, inclusive a gente
+
+213
+00:06:20,720 --> 00:06:23,039
+configura o nosso DNS agora apontando
+
+214
+00:06:23,039 --> 00:06:25,039
+pro IP do Load Balancer. a gente não vai
+
+215
+00:06:25,039 --> 00:06:26,880
+apontar mais pro IP da máquina, a gente
+
+216
+00:06:26,880 --> 00:06:28,960
+aponta pro IP do Load Balancer e todas
+
+217
+00:06:28,960 --> 00:06:30,560
+as requisições vão ser direcionadas para
+
+218
+00:06:30,560 --> 00:06:32,599
+ele e é ele quem vai fazer a
+
+219
+00:06:32,599 --> 00:06:34,759
+distribuição de carga entre as várias
+
+220
+00:06:34,759 --> 00:06:36,599
+instâncias. Beleza? Só que aqui a gente
+
+221
+00:06:36,599 --> 00:06:38,599
+já começa a ter os primeiros problemas.
+
+222
+00:06:38,599 --> 00:06:40,080
+Por quê? Porque só escalar
+
+223
+00:06:40,080 --> 00:06:41,960
+horizontalmente a nossa aplicação, ou
+
+224
+00:06:41,960 --> 00:06:43,960
+seja, criar várias réplicas, não resolve
+
+225
+00:06:43,960 --> 00:06:45,759
+o problema como um todo. Por quê? Porque
+
+226
+00:06:45,759 --> 00:06:47,520
+conforme a requisição for chegando em
+
+227
+00:06:47,520 --> 00:06:50,160
+todas elas, todas elas estão conectadas
+
+228
+00:06:50,160 --> 00:06:52,280
+ainda no mesmo banco de dados. Ou seja,
+
+229
+00:06:52,280 --> 00:06:54,039
+isso vai criar um gargalo no nosso
+
+230
+00:06:54,039 --> 00:06:55,680
+banco. Por quê? Porque ele vai ter que
+
+231
+00:06:55,680 --> 00:06:57,599
+lidar com tudo sozinho. Então, a gente
+
+232
+00:06:57,599 --> 00:07:00,039
+precisa dar um jeito de escalar também o
+
+233
+00:07:00,039 --> 00:07:02,080
+nosso banco de dados e não somente a
+
+234
+00:07:02,080 --> 00:07:03,720
+nossa aplicação, porque vai ficar fora
+
+235
+00:07:03,720 --> 00:07:05,440
+do ar. Não adianta. Você pode botar 20
+
+236
+00:07:05,440 --> 00:07:07,440
+réplicas aqui, todas elas apontando pro
+
+237
+00:07:07,440 --> 00:07:09,120
+mesmo banco, o banco vai chorar, vai
+
+238
+00:07:09,120 --> 00:07:10,520
+abrir o bico, não vai aguentar essa
+
+239
+00:07:10,520 --> 00:07:12,440
+volumetria de requisições. Então, qual
+
+240
+00:07:12,440 --> 00:07:15,039
+que é a técnica que a gente utiliza para
+
+241
+00:07:15,039 --> 00:07:17,360
+poder escalar o nosso banco de dados? A
+
+242
+00:07:17,360 --> 00:07:18,960
+gente chama isso de database
+
+243
+00:07:18,960 --> 00:07:20,840
+replication, tá? Isso partindo do
+
+244
+00:07:20,840 --> 00:07:22,520
+princípio que a gente tá utilizando um
+
+245
+00:07:22,520 --> 00:07:25,080
+post da vida, um mycle, tanto faz, tá?
+
+246
+00:07:25,080 --> 00:07:26,680
+Um banquinho relacional. Então, partindo
+
+247
+00:07:26,680 --> 00:07:28,960
+do princípio que essa nossa aplicação
+
+248
+00:07:28,960 --> 00:07:30,960
+aqui, esse nosso banco de dados é um
+
+249
+00:07:30,960 --> 00:07:32,680
+post, tá? Que vai facilitar muito o
+
+250
+00:07:32,680 --> 00:07:34,080
+exemplo aqui, que é o que a maioria
+
+251
+00:07:34,080 --> 00:07:35,759
+acaba escolhendo na vida real, que que
+
+252
+00:07:35,759 --> 00:07:37,599
+vai acontecer? A gente usa essa técnica
+
+253
+00:07:37,599 --> 00:07:39,960
+chamada de database replication ou read
+
+254
+00:07:39,960 --> 00:07:41,000
+réplica, tá? Isso aqui também é
+
+255
+00:07:41,000 --> 00:07:42,440
+conhecido como read réplica. E como é
+
+256
+00:07:42,440 --> 00:07:43,879
+que isso aqui funciona na vida real?
+
+257
+00:07:43,879 --> 00:07:45,759
+Basicamente, a gente vai pegar o nosso
+
+258
+00:07:45,759 --> 00:07:47,840
+banco de dados que já funciona, ou seja,
+
+259
+00:07:47,840 --> 00:07:49,360
+esse banquinho aqui, a gente vai pegar
+
+260
+00:07:49,360 --> 00:07:51,720
+ele e vai transformar ele num banco
+
+261
+00:07:51,720 --> 00:07:53,560
+master, tá? Num banco principal, num
+
+262
+00:07:53,560 --> 00:07:55,599
+banco de escrita dos dados. E a gente
+
+263
+00:07:55,599 --> 00:07:57,759
+vai criar réplicas desse banco e
+
+264
+00:07:57,759 --> 00:07:59,639
+configurar elas para que elas sejam as
+
+265
+00:07:59,639 --> 00:08:02,280
+réplicas de leitura. Ou seja, todas as
+
+266
+00:08:02,280 --> 00:08:04,319
+nossas instâncias dos nossos servidores
+
+267
+00:08:04,319 --> 00:08:06,360
+aqui, as nossas aplicações, as cópias
+
+268
+00:08:06,360 --> 00:08:07,919
+delas que estão lá rodando, elas vão
+
+269
+00:08:07,919 --> 00:08:10,400
+direcionar a escrita para um lado e a
+
+270
+00:08:10,400 --> 00:08:12,800
+leitura para outro. Por quê? Porque numa
+
+271
+00:08:12,800 --> 00:08:14,840
+aplicação da vida real, a escrita
+
+272
+00:08:14,840 --> 00:08:16,599
+geralmente é menor do que a leitura.
+
+273
+00:08:16,599 --> 00:08:18,120
+Então, geralmente a gente escala a
+
+274
+00:08:18,120 --> 00:08:20,159
+leitura primeiro, tá? Não são todas as
+
+275
+00:08:20,159 --> 00:08:21,840
+aplicações, logicamente que tem
+
+276
+00:08:21,840 --> 00:08:23,520
+aplicações que recebem muito mais
+
+277
+00:08:23,520 --> 00:08:25,360
+escrita do que leitura, mas nesse nosso
+
+278
+00:08:25,360 --> 00:08:27,159
+cenário aqui, nos cenários da vida real,
+
+279
+00:08:27,159 --> 00:08:28,759
+na maioria das vezes, você vai ter um
+
+280
+00:08:28,759 --> 00:08:31,039
+volume muito maior de leitura dos dados
+
+281
+00:08:31,039 --> 00:08:32,959
+do que a de escrita. Porque cada refresh
+
+282
+00:08:32,959 --> 00:08:34,440
+que você dá na página, muit das vezes
+
+283
+00:08:34,440 --> 00:08:36,039
+tem que ir no banco buscar dados, dado
+
+284
+00:08:36,039 --> 00:08:37,680
+que na maioria das vezes são estáticos
+
+285
+00:08:37,680 --> 00:08:39,919
+também. Então, cara, leitura é o
+
+286
+00:08:39,919 --> 00:08:41,200
+primeiro gargalo que você vai ter que
+
+287
+00:08:41,200 --> 00:08:42,599
+lhe dar. E partindo do princípio que
+
+288
+00:08:42,599 --> 00:08:44,120
+isso aqui é um postgre, isso funciona
+
+289
+00:08:44,120 --> 00:08:45,880
+dessa forma, database replication. Você
+
+290
+00:08:45,880 --> 00:08:47,720
+cria um para escrita e cria vários para
+
+291
+00:08:47,720 --> 00:08:49,360
+leitura. Ah, Renato, como é que a minha
+
+292
+00:08:49,360 --> 00:08:51,360
+aplicação vai se conectar em vários
+
+293
+00:08:51,360 --> 00:08:53,040
+bancos ao mesmo tempo? Eu sei que muita
+
+294
+00:08:53,040 --> 00:08:54,519
+gente tem essa dúvida, eu falei sobre
+
+295
+00:08:54,519 --> 00:08:56,040
+isso no vídeo lá, então, mais uma vez,
+
+296
+00:08:56,040 --> 00:08:57,600
+não deixa de assistir. Mas para você que
+
+297
+00:08:57,600 --> 00:08:59,240
+é curioso, tá aqui um exemplo bem
+
+298
+00:08:59,240 --> 00:09:00,800
+simples feito em Laravel, tá? Isso aqui
+
+299
+00:09:00,800 --> 00:09:02,720
+é o arquivo de configuração do Laravel e
+
+300
+00:09:02,720 --> 00:09:04,200
+basicamente você configura aqui uma
+
+301
+00:09:04,200 --> 00:09:06,320
+chave chamada My Ciccle. Você aponta
+
+302
+00:09:06,320 --> 00:09:08,320
+todas as réplicas aqui, o IP no caso,
+
+303
+00:09:08,320 --> 00:09:10,320
+né, de todas as réplicas de leitura e
+
+304
+00:09:10,320 --> 00:09:12,240
+aponta um pra escrita. E depois você
+
+305
+00:09:12,240 --> 00:09:13,760
+bota aqui o nome do banco de dados,
+
+306
+00:09:13,760 --> 00:09:15,839
+usuário, a senha e por aí vai. Então é
+
+307
+00:09:15,839 --> 00:09:17,720
+muito simples fazer isso aqui. O teu
+
+308
+00:09:17,720 --> 00:09:20,320
+próprio ORM já consegue se encarregar de
+
+309
+00:09:20,320 --> 00:09:21,680
+fazer isso aqui. É ele quem vai
+
+310
+00:09:21,680 --> 00:09:24,000
+distribuindo ali as leituras, né? Qual
+
+311
+00:09:24,000 --> 00:09:25,399
+ele escolhe qual que é que ele vai usar
+
+312
+00:09:25,399 --> 00:09:26,880
+aqui para fazer a leitura. E aí como é
+
+313
+00:09:26,880 --> 00:09:28,640
+que funciona na vida real? Vamos lá.
+
+314
+00:09:28,640 --> 00:09:29,959
+Vamos imaginar que isso aqui é uma
+
+315
+00:09:29,959 --> 00:09:31,480
+aplicação bancária, tá? Isso aqui é uma
+
+316
+00:09:31,480 --> 00:09:33,120
+aplicação bancária, tá? Um banquinho,
+
+317
+00:09:33,120 --> 00:09:35,640
+uma fintec ali da vida. E aí você tem o
+
+318
+00:09:35,640 --> 00:09:37,600
+saldo da sua conta. E no saldo da sua
+
+319
+00:09:37,600 --> 00:09:39,519
+conta você tem R$ 1.000. Vou imaginar
+
+320
+00:09:39,519 --> 00:09:41,040
+que você tem R$ 1000 lá no saldo da sua
+
+321
+00:09:41,040 --> 00:09:42,720
+conta. E você vai fazer um Pix, tá? Você
+
+322
+00:09:42,720 --> 00:09:44,399
+vai fazer uma transferência bancária de
+
+323
+00:09:44,399 --> 00:09:46,320
+R$ 500. Você fez um Pix para alguém, fez
+
+324
+00:09:46,320 --> 00:09:48,000
+uma transferência, pagou uma conta,
+
+325
+00:09:48,000 --> 00:09:50,360
+então você vai subtrair R$ 500 da sua
+
+326
+00:09:50,360 --> 00:09:51,680
+conta. Beleza? Então o que que vai
+
+327
+00:09:51,680 --> 00:09:53,560
+acontecer? Se você tem R$ 1.000 e essa
+
+328
+00:09:53,560 --> 00:09:55,120
+informação já tá armazenada no banco
+
+329
+00:09:55,120 --> 00:09:56,680
+aqui, tanto nos bancos de leitura, o que
+
+330
+00:09:56,680 --> 00:09:58,279
+que vai acontecer? Você vai fazer a
+
+331
+00:09:58,279 --> 00:09:59,839
+transferência. Quando essa transferência
+
+332
+00:09:59,839 --> 00:10:02,120
+for confirmada, a transação vai vir aqui
+
+333
+00:10:02,120 --> 00:10:03,920
+nesse banco de escrita e vai escrever
+
+334
+00:10:03,920 --> 00:10:05,959
+ela no banco, vai atualizar aquele dado
+
+335
+00:10:05,959 --> 00:10:08,440
+no banco de 1000 para R$ 500. Beleza?
+
+336
+00:10:08,440 --> 00:10:10,760
+Nesse ato de transformar esses 1000 em
+
+337
+00:10:10,760 --> 00:10:13,120
+R$ 500, esse dado vai ser replicado para
+
+338
+00:10:13,120 --> 00:10:15,800
+cá, para cá e para cá. Show de bola. Até
+
+339
+00:10:15,800 --> 00:10:17,720
+aqui problema nenhum. Só que agora você
+
+340
+00:10:17,720 --> 00:10:19,320
+imagina o seguinte, imagina que
+
+341
+00:10:19,320 --> 00:10:22,000
+aconteceu algo que sempre vai acontecer
+
+342
+00:10:22,000 --> 00:10:23,959
+em aplicações distribuídas, em sistemas
+
+343
+00:10:23,959 --> 00:10:25,680
+de grande porte e você tem que est
+
+344
+00:10:25,680 --> 00:10:27,760
+preparado para isso. É uma coisa chamada
+
+345
+00:10:27,760 --> 00:10:30,959
+partição de rede, ou seja, imagina que
+
+346
+00:10:30,959 --> 00:10:33,600
+no ato de você fazer a sua transação
+
+347
+00:10:33,600 --> 00:10:35,720
+bancária, a sua aplicação vai escrever
+
+348
+00:10:35,720 --> 00:10:37,920
+nesse banco aqui, a vai subtrair os R$
+
+349
+00:10:37,920 --> 00:10:40,160
+500 daqueles 1000 e aí o teu banco, ele
+
+350
+00:10:40,160 --> 00:10:41,720
+vai ter que replicar o dado para cá,
+
+351
+00:10:41,720 --> 00:10:43,560
+para cá e para cá. E aí ele replicou o
+
+352
+00:10:43,560 --> 00:10:45,480
+dado, só que quando chegou nesse banco
+
+353
+00:10:45,480 --> 00:10:47,519
+aqui, ele não conseguiu. Por quê? Porque
+
+354
+00:10:47,519 --> 00:10:50,079
+houve uma partição de rede. E o que que
+
+355
+00:10:50,079 --> 00:10:51,760
+é uma partição de rede? Primeiro, eu
+
+356
+00:10:51,760 --> 00:10:53,480
+quero que você entenda que tudo isso
+
+357
+00:10:53,480 --> 00:10:55,800
+aqui é conectado via rede. Não tem como
+
+358
+00:10:55,800 --> 00:10:58,320
+se conectar se não for via rede. Então,
+
+359
+00:10:58,320 --> 00:11:00,639
+todas essas linhas aqui são conexões de
+
+360
+00:11:00,639 --> 00:11:02,320
+rede. Então, quando você insere um dado
+
+361
+00:11:02,320 --> 00:11:04,079
+no banco, você tá fazendo uma conexão de
+
+362
+00:11:04,079 --> 00:11:05,839
+rede com o banco de dados. Quando você
+
+363
+00:11:05,839 --> 00:11:07,240
+replica um dado, ou seja, quando esse
+
+364
+00:11:07,240 --> 00:11:08,720
+banco tem que pegar esse dado e jogar
+
+365
+00:11:08,720 --> 00:11:10,600
+para cá, essa comunicação é feita via
+
+366
+00:11:10,600 --> 00:11:12,440
+rede, todas essas comunicações e a
+
+367
+00:11:12,440 --> 00:11:15,480
+leitura também, só que não é o banco que
+
+368
+00:11:15,480 --> 00:11:17,440
+está fora do ar. O que aconteceu foi que
+
+369
+00:11:17,440 --> 00:11:19,680
+houve uma partição de rede, ou seja, a
+
+370
+00:11:19,680 --> 00:11:22,200
+rede caiu, aconteceu alguma coisa, o o
+
+371
+00:11:22,200 --> 00:11:24,639
+cabo de fibra ótica rompeu, o cabo lá no
+
+372
+00:11:24,639 --> 00:11:26,399
+fundo do mar arrebentou, aconteceu
+
+373
+00:11:26,399 --> 00:11:28,600
+alguma coisa e esse banco não está
+
+374
+00:11:28,600 --> 00:11:30,600
+conseguindo enxergar esse banco aqui. Ou
+
+375
+00:11:30,600 --> 00:11:32,800
+seja, essa rede rompeu, mas a sua
+
+376
+00:11:32,800 --> 00:11:35,519
+aplicação continua sendo capaz de ler o
+
+377
+00:11:35,519 --> 00:11:37,639
+dado aqui. Olha o que que vai acontecer.
+
+378
+00:11:37,639 --> 00:11:40,399
+No ato de você transferir R$ 500 e
+
+379
+00:11:40,399 --> 00:11:42,160
+subtrair isso da sua conta, essa
+
+380
+00:11:42,160 --> 00:11:43,959
+transação foi confirmada aqui e aí o
+
+381
+00:11:43,959 --> 00:11:45,959
+dado foi replicado para cá, ele foi
+
+382
+00:11:45,959 --> 00:11:47,639
+replicado para cá, mas quando tentou
+
+383
+00:11:47,639 --> 00:11:49,600
+replicar para cá, ele não conseguiu. E
+
+384
+00:11:49,600 --> 00:11:51,440
+aí se nesse exato momento você der um
+
+385
+00:11:51,440 --> 00:11:53,320
+refresh na página e aí agora a tua
+
+386
+00:11:53,320 --> 00:11:54,959
+aplicação vai ter que fazer uma leitura,
+
+387
+00:11:54,959 --> 00:11:56,320
+ou seja, ele tem que buscar o dado de
+
+388
+00:11:56,320 --> 00:11:58,360
+leitura do outro lado e não aqui, porque
+
+389
+00:11:58,360 --> 00:12:00,040
+aqui é só escrita. Quando você der um
+
+390
+00:12:00,040 --> 00:12:01,320
+refresh, ele tem que atualizar seu
+
+391
+00:12:01,320 --> 00:12:03,680
+saldo. Só que imagina que você caiu aqui
+
+392
+00:12:03,680 --> 00:12:05,560
+nesse banco, ou seja, o seu ORM
+
+393
+00:12:05,560 --> 00:12:07,320
+direcionou a leitura para cá. E aqui
+
+394
+00:12:07,320 --> 00:12:08,800
+nesse banco a informação está
+
+395
+00:12:08,800 --> 00:12:10,279
+desatualizada, ou seja, você tem R$
+
+396
+00:12:10,279 --> 00:12:12,279
+1.000 aqui ainda. Que que vai acontecer?
+
+397
+00:12:12,279 --> 00:12:13,880
+Você vai poder fazer transferência de
+
+398
+00:12:13,880 --> 00:12:15,440
+eterno todas as vezes que você cair
+
+399
+00:12:15,440 --> 00:12:18,639
+aqui. Então o nome disso é consistência
+
+400
+00:12:18,639 --> 00:12:21,240
+eventual, ou seja, os seus dados estão
+
+401
+00:12:21,240 --> 00:12:22,959
+inconsistentes, seus dados só são
+
+402
+00:12:22,959 --> 00:12:25,600
+consistentes eventualmente. E isso não
+
+403
+00:12:25,600 --> 00:12:27,600
+necessariamente é um problema. Isso é um
+
+404
+00:12:27,600 --> 00:12:29,160
+problema no contexto de aplicação
+
+405
+00:12:29,160 --> 00:12:31,480
+bancária, onde você precisa de muita
+
+406
+00:12:31,480 --> 00:12:33,639
+consistência. Então, nós temos aqui o
+
+407
+00:12:33,639 --> 00:12:35,480
+grande primeiro desafio. E aí tu deve
+
+408
+00:12:35,480 --> 00:12:36,959
+est pensando, se você é um cara mais pra
+
+409
+00:12:36,959 --> 00:12:38,519
+frente, você já tá entendendo do que eu
+
+410
+00:12:38,519 --> 00:12:39,720
+tô falando aqui, você deve estar
+
+411
+00:12:39,720 --> 00:12:40,920
+pensando assim: "Ah, Renato, mas isso aí
+
+412
+00:12:40,920 --> 00:12:42,720
+é mole de resolver". É só fazer a
+
+413
+00:12:42,720 --> 00:12:45,040
+replicação síncrona e a gente garantir,
+
+414
+00:12:45,040 --> 00:12:46,480
+tá? A gente configurar aqui essa
+
+415
+00:12:46,480 --> 00:12:48,680
+replicação. Para quê? Para que o dado só
+
+416
+00:12:48,680 --> 00:12:50,519
+confirme a transação mesmo ali, ou seja,
+
+417
+00:12:50,519 --> 00:12:52,440
+pro banco confirmar a transação, ele
+
+418
+00:12:52,440 --> 00:12:54,040
+primeiro tem que garantir que o dado foi
+
+419
+00:12:54,040 --> 00:12:55,880
+escrito em todos os outros bancos. Aí
+
+420
+00:12:55,880 --> 00:12:58,320
+sim ele confirma e devolve a resposta
+
+421
+00:12:58,320 --> 00:13:00,560
+aqui pro servidor que chamou. Beleza? Se
+
+422
+00:13:00,560 --> 00:13:01,959
+você acha que isso resolve, eu vou te
+
+423
+00:13:01,959 --> 00:13:03,279
+mostrar que não vai resolver. Porque
+
+424
+00:13:03,279 --> 00:13:05,040
+olha só, no ato de vir aqui e
+
+425
+00:13:05,040 --> 00:13:07,360
+transformar os R$ 1.000 em 500, ou seja,
+
+426
+00:13:07,360 --> 00:13:09,160
+executar uma operação no banco de dados
+
+427
+00:13:09,160 --> 00:13:10,959
+para transitar esse dado de um estado
+
+428
+00:13:10,959 --> 00:13:12,839
+pro outro, que que vai acontecer? Ele
+
+429
+00:13:12,839 --> 00:13:15,560
+vai inserir o dado aqui, ele vai agarrar
+
+430
+00:13:15,560 --> 00:13:17,720
+a requisição, ele vai tentar inserir
+
+431
+00:13:17,720 --> 00:13:19,600
+aqui, vai tentar inserir aqui. E como
+
+432
+00:13:19,600 --> 00:13:21,600
+ele não vai conseguir inserir esse dado,
+
+433
+00:13:21,600 --> 00:13:23,199
+porque nós temos uma partição de rede
+
+434
+00:13:23,199 --> 00:13:25,199
+aqui, que que vai acontecer? Ele não vai
+
+435
+00:13:25,199 --> 00:13:26,480
+conseguir inserir. Como ele não vai
+
+436
+00:13:26,480 --> 00:13:27,920
+conseguir inserir, ele não vai devolver
+
+437
+00:13:27,920 --> 00:13:29,519
+uma resposta, OK, pro servidor que
+
+438
+00:13:29,519 --> 00:13:30,920
+chamou. E o que que isso vai resultar?
+
+439
+00:13:30,920 --> 00:13:32,800
+Vai resultar na sua aplicação fora do
+
+440
+00:13:32,800 --> 00:13:34,800
+ar. Ou seja, a sua aplicação ficou
+
+441
+00:13:34,800 --> 00:13:37,199
+indisponível. Então isso aqui não
+
+442
+00:13:37,199 --> 00:13:39,000
+resolve o problema. Você causou uma
+
+443
+00:13:39,000 --> 00:13:41,040
+indisponibilidade no seu sistema. E aí
+
+444
+00:13:41,040 --> 00:13:42,519
+você percebe que agora a gente tem que
+
+445
+00:13:42,519 --> 00:13:44,720
+escolher entre a consistência dos dados
+
+446
+00:13:44,720 --> 00:13:47,199
+e a disponibilidade. E até pior do que
+
+447
+00:13:47,199 --> 00:13:49,079
+isso, porque imagina só, imagina que não
+
+448
+00:13:49,079 --> 00:13:51,399
+houve uma partição de rede, tá? E aí eu
+
+449
+00:13:51,399 --> 00:13:53,120
+vou remover essa partição. Olha o que
+
+450
+00:13:53,120 --> 00:13:55,040
+que vai acontecer. Se a sua aplicação
+
+451
+00:13:55,040 --> 00:13:57,120
+está funcionando perfeitamente, tá aqui
+
+452
+00:13:57,120 --> 00:13:58,920
+o nosso banquinho tá funcionando, nossa
+
+453
+00:13:58,920 --> 00:14:01,480
+fintec ali e tal, você foi lá e fez uma
+
+454
+00:14:01,480 --> 00:14:03,000
+transação no banco, você foi lá e
+
+455
+00:14:03,000 --> 00:14:04,959
+alterou aqueles R$ 1.000 para 500. E
+
+456
+00:14:04,959 --> 00:14:07,240
+agora não tem partição de rede nenhuma.
+
+457
+00:14:07,240 --> 00:14:09,360
+Você vai precisar ainda assim escolher
+
+458
+00:14:09,360 --> 00:14:11,600
+entre alguns atributos. Por quê? Se esse
+
+459
+00:14:11,600 --> 00:14:14,120
+dado continuar tendo que ser garantido a
+
+460
+00:14:14,120 --> 00:14:15,839
+consistência dele, mesmo sem uma
+
+461
+00:14:15,839 --> 00:14:17,639
+partição, o banco vai vir aqui, vai
+
+462
+00:14:17,639 --> 00:14:20,040
+inserir os 500, vai inserir os 500 aqui,
+
+463
+00:14:20,040 --> 00:14:22,079
+vai inserir os 500 aqui e depois ele vai
+
+464
+00:14:22,079 --> 00:14:23,399
+retornar a resposta. Só que agora tu
+
+465
+00:14:23,399 --> 00:14:24,880
+imaginas que a gente tem aqui, sei lá,
+
+466
+00:14:24,880 --> 00:14:27,920
+10, 15, 20 instâncias de réplica do
+
+467
+00:14:27,920 --> 00:14:29,519
+nosso banco. O que que vai acontecer?
+
+468
+00:14:29,519 --> 00:14:31,680
+Ele vai receber a transação, ele vai
+
+469
+00:14:31,680 --> 00:14:33,600
+replicar para um, para dois, para três,
+
+470
+00:14:33,600 --> 00:14:36,079
+para 5, para 10, para 15, para 20. Cara,
+
+471
+00:14:36,079 --> 00:14:38,680
+isso vai gerar uma latência absurda. Por
+
+472
+00:14:38,680 --> 00:14:40,240
+quê? Porque enquanto ele tá tentando
+
+473
+00:14:40,240 --> 00:14:41,959
+replicar o dado, ele tá aqui agarrando a
+
+474
+00:14:41,959 --> 00:14:43,399
+resposta. Ele ainda não soltou a
+
+475
+00:14:43,399 --> 00:14:44,759
+resposta para quem chamou. Que que vai
+
+476
+00:14:44,759 --> 00:14:47,360
+acontecer? Uma lentidão monstruosa na
+
+477
+00:14:47,360 --> 00:14:49,199
+sua aplicação. E aí, se você tentar ir
+
+478
+00:14:49,199 --> 00:14:50,839
+pelo outro caminho, que é o quê? que é
+
+479
+00:14:50,839 --> 00:14:53,320
+garantir a não sincronicidade dos dados.
+
+480
+00:14:53,320 --> 00:14:54,600
+Ou seja, cara, eu vou fazer essa
+
+481
+00:14:54,600 --> 00:14:56,600
+replicação de maneira assíncrona. Eu não
+
+482
+00:14:56,600 --> 00:14:58,199
+vou fazer ela de maneira síncrona, que é
+
+483
+00:14:58,199 --> 00:14:59,399
+o que a gente tá fazendo aqui. Eu
+
+484
+00:14:59,399 --> 00:15:01,360
+garantir que ela seja sincronizada
+
+485
+00:15:01,360 --> 00:15:02,759
+primeiro para depois eu devolver a
+
+486
+00:15:02,759 --> 00:15:04,560
+resposta. Não, eu vou garantir que ela
+
+487
+00:15:04,560 --> 00:15:06,920
+seja assíncrona. Então, eu vou inserir o
+
+488
+00:15:06,920 --> 00:15:09,440
+dado aqui, eu já retorno a resposta para
+
+489
+00:15:09,440 --> 00:15:11,440
+quem chamou e depois por baixo dos panos
+
+490
+00:15:11,440 --> 00:15:13,240
+eu vou replicando. Você vai voltar pro
+
+491
+00:15:13,240 --> 00:15:14,720
+problema inicial, que era o quê? A
+
+492
+00:15:14,720 --> 00:15:16,519
+consistência eventual. Porque se na hora
+
+493
+00:15:16,519 --> 00:15:18,399
+que chegar uma leitura aqui, esse dado
+
+494
+00:15:18,399 --> 00:15:20,160
+ainda não foi transitado para cá, ele
+
+495
+00:15:20,160 --> 00:15:21,839
+ainda não foi replicado, você vai ter
+
+496
+00:15:21,839 --> 00:15:23,959
+dados desatualizados e num banco. Isso é
+
+497
+00:15:23,959 --> 00:15:26,000
+um verdadeiro problema. Então percebe,
+
+498
+00:15:26,000 --> 00:15:27,920
+nós temos problemas de latência, nós
+
+499
+00:15:27,920 --> 00:15:29,759
+temos problema de disponibilidade da
+
+500
+00:15:29,759 --> 00:15:31,600
+aplicação e nós temos problema de
+
+501
+00:15:31,600 --> 00:15:33,800
+consistência. Então a primeira coisa que
+
+502
+00:15:33,800 --> 00:15:36,000
+eu quero que você entenda aqui é que não
+
+503
+00:15:36,000 --> 00:15:38,480
+existe bala de prata. Não existe isso,
+
+504
+00:15:38,480 --> 00:15:40,319
+cara. Não existe banco perfeito, não
+
+505
+00:15:40,319 --> 00:15:42,720
+existe solução perfeita. Você tem que
+
+506
+00:15:42,720 --> 00:15:44,759
+fazer escolhas. E é em cima disso aqui
+
+507
+00:15:44,759 --> 00:15:46,279
+que você vai fazer a escolha correta do
+
+508
+00:15:46,279 --> 00:15:47,639
+banco de dados. E por que que eu tô
+
+509
+00:15:47,639 --> 00:15:49,600
+dizendo isso? Porque existem teoremas,
+
+510
+00:15:49,600 --> 00:15:51,759
+ferramentas, conceitos que já foram
+
+511
+00:15:51,759 --> 00:15:54,399
+amplamente estudados desde os anos 2000
+
+512
+00:15:54,399 --> 00:15:56,440
+até os dias de hoje, que mostram que
+
+513
+00:15:56,440 --> 00:15:58,519
+isso aqui é um problema natural. Isso é
+
+514
+00:15:58,519 --> 00:16:00,360
+um problema matemático. Na verdade, isso
+
+515
+00:16:00,360 --> 00:16:01,880
+aqui nada mais é do que um problema
+
+516
+00:16:01,880 --> 00:16:04,000
+matemático. E quem tá por trás disso são
+
+517
+00:16:04,000 --> 00:16:06,480
+dois teoremas, tá? Primeiro teorema é
+
+518
+00:16:06,480 --> 00:16:09,800
+conhecido como teorema CAP. Esse C aqui
+
+519
+00:16:09,800 --> 00:16:11,920
+vem de consistência. Esse A vem de
+
+520
+00:16:11,920 --> 00:16:14,319
+availability, que é disponibilidade, e o
+
+521
+00:16:14,319 --> 00:16:16,120
+P vem de partition tolerance, que é
+
+522
+00:16:16,120 --> 00:16:18,040
+tolerância e partição. Esse teorema foi
+
+523
+00:16:18,040 --> 00:16:20,120
+criado nos anos 2000 por Eric Brewer e
+
+524
+00:16:20,120 --> 00:16:23,160
+ele diz que num sistema distribuído é
+
+525
+00:16:23,160 --> 00:16:25,680
+impossível, é matematicamente impossível
+
+526
+00:16:25,680 --> 00:16:27,880
+você ter os três atributos no seu
+
+527
+00:16:27,880 --> 00:16:29,839
+servidor. Não tem como, não dá. Na sua
+
+528
+00:16:29,839 --> 00:16:31,279
+aplicação é impossível você ter
+
+529
+00:16:31,279 --> 00:16:32,560
+consistência, disponibilidade,
+
+530
+00:16:32,560 --> 00:16:34,639
+tolerância, partição. Só que ainda assim
+
+531
+00:16:34,639 --> 00:16:36,120
+esse teorema dizia que você tinha que
+
+532
+00:16:36,120 --> 00:16:38,600
+escolher duas entre as três. Só que isso
+
+533
+00:16:38,600 --> 00:16:40,480
+aqui se mostrou falho ao longo do tempo.
+
+534
+00:16:40,480 --> 00:16:42,680
+Por quê? Porque é impossível, na verdade
+
+535
+00:16:42,680 --> 00:16:44,639
+não é ter os três. O impossível é num
+
+536
+00:16:44,639 --> 00:16:46,199
+sistema distribuído você ter
+
+537
+00:16:46,199 --> 00:16:48,519
+consistência e disponibilidade, que foi
+
+538
+00:16:48,519 --> 00:16:50,000
+exatamente aquilo que eu te mostrei. Se
+
+539
+00:16:50,000 --> 00:16:52,040
+você replicar de maneira síncrona, você
+
+540
+00:16:52,040 --> 00:16:54,199
+vai ter indisponibilidade. Se você
+
+541
+00:16:54,199 --> 00:16:56,040
+replicar de maneira assíncrona, você vai
+
+542
+00:16:56,040 --> 00:16:57,839
+cair na consistência eventual. Então
+
+543
+00:16:57,839 --> 00:17:00,040
+você precisa fazer a escolha, dependendo
+
+544
+00:17:00,040 --> 00:17:01,880
+logicamente da sua aplicação. Então como
+
+545
+00:17:01,880 --> 00:17:03,680
+esse teorema se mostrou falho ao longo
+
+546
+00:17:03,680 --> 00:17:06,959
+do tempo, em 2012 Daniel Abadi, que foi
+
+547
+00:17:06,959 --> 00:17:09,280
+o mesmo criador do Radup DB, ele criou
+
+548
+00:17:09,280 --> 00:17:11,720
+esse teorema chamado Passelk, que nada
+
+549
+00:17:11,720 --> 00:17:13,679
+mais é do que uma extensão do teorema
+
+550
+00:17:13,679 --> 00:17:16,199
+CAP, tá? Ele não anula o teorema CAP,
+
+551
+00:17:16,199 --> 00:17:18,280
+ele é uma extensão do teorema CAP. E o
+
+552
+00:17:18,280 --> 00:17:19,799
+que que esse teorema diz? Ele diz
+
+553
+00:17:19,799 --> 00:17:21,600
+basicamente o seguinte: "Se o nosso
+
+554
+00:17:21,600 --> 00:17:23,919
+sistema, se a nossa aplicação estiver
+
+555
+00:17:23,919 --> 00:17:26,199
+diante de uma partição, tá, tudo parte
+
+556
+00:17:26,199 --> 00:17:28,199
+desse princípio aqui, tá? Da partição de
+
+557
+00:17:28,199 --> 00:17:30,720
+rede." Então, existe uma partição de
+
+558
+00:17:30,720 --> 00:17:33,559
+rede na nossa aplicação? Se sim, eu sou
+
+559
+00:17:33,559 --> 00:17:35,080
+obrigado a escolher entre
+
+560
+00:17:35,080 --> 00:17:37,640
+disponibilidade ou consistência. Isso
+
+561
+00:17:37,640 --> 00:17:39,760
+aqui é o antigo teorema CAP. Se não
+
+562
+00:17:39,760 --> 00:17:41,440
+houver uma partição de rede e a minha
+
+563
+00:17:41,440 --> 00:17:43,400
+aplicação tá funcionando perfeitamente,
+
+564
+00:17:43,400 --> 00:17:45,240
+todos os nós estão se comunicando, tá
+
+565
+00:17:45,240 --> 00:17:47,039
+tudo funcionando legal, então eu sou
+
+566
+00:17:47,039 --> 00:17:49,520
+obrigado a escolher entre latência ou
+
+567
+00:17:49,520 --> 00:17:51,840
+consistência. E por que, Passelk? Porque
+
+568
+00:17:51,840 --> 00:17:54,200
+o P vem de partition, o A vem de
+
+569
+00:17:54,200 --> 00:17:57,080
+availability, o C vem de consistência. A
+
+570
+00:17:57,080 --> 00:17:59,320
+letrinha E vem da palavra else, que em
+
+571
+00:17:59,320 --> 00:18:01,200
+inglês significa seão. É o mesmo else
+
+572
+00:18:01,200 --> 00:18:02,600
+que você usa lá no código, lá na hora de
+
+573
+00:18:02,600 --> 00:18:04,640
+você escrever código, tá? é o sinão. E o
+
+574
+00:18:04,640 --> 00:18:06,520
+sinão a gente tem que escolher entre o
+
+575
+00:18:06,520 --> 00:18:09,039
+L, que vem de latência, e o C vem de
+
+576
+00:18:09,039 --> 00:18:12,039
+consistência. Então esse teorema aqui é
+
+577
+00:18:12,039 --> 00:18:14,360
+ele quem vai nortear a sua escolha do
+
+578
+00:18:14,360 --> 00:18:15,960
+banco de dados. Não tem como você
+
+579
+00:18:15,960 --> 00:18:17,320
+escolher um banco de dados para uma
+
+580
+00:18:17,320 --> 00:18:19,080
+aplicação de grande porte sem passar
+
+581
+00:18:19,080 --> 00:18:21,080
+pelo teorema parcial, que não tem como,
+
+582
+00:18:21,080 --> 00:18:22,600
+é impossível, você vai escolher o banco
+
+583
+00:18:22,600 --> 00:18:24,320
+errado. Se você foi nessa de escolher o
+
+584
+00:18:24,320 --> 00:18:26,760
+banco, ah, eu quero sequel ou no sequel,
+
+585
+00:18:26,760 --> 00:18:28,600
+vou de relacional ou não relacionar,
+
+586
+00:18:28,600 --> 00:18:30,080
+cara, não existe isso. A escolha do
+
+587
+00:18:30,080 --> 00:18:31,440
+banco de dados tem que ser feita de
+
+588
+00:18:31,440 --> 00:18:33,400
+acordo com o atributo que você tá
+
+589
+00:18:33,400 --> 00:18:35,000
+querendo que o seu sistema tenha. Então,
+
+590
+00:18:35,000 --> 00:18:37,360
+por exemplo, aqui no nosso caso do banco
+
+591
+00:18:37,360 --> 00:18:39,200
+aqui, dessa nossa replicação, usando
+
+592
+00:18:39,200 --> 00:18:40,679
+posters e tudo mais, que eu já vou te
+
+593
+00:18:40,679 --> 00:18:42,360
+mostrar que até a escolha do Pegger não
+
+594
+00:18:42,360 --> 00:18:44,280
+faz sentido nesse nosso contexto aqui.
+
+595
+00:18:44,280 --> 00:18:45,799
+Vamos lá. Imagina que ao invés de um
+
+596
+00:18:45,799 --> 00:18:47,559
+banco, isso aqui é uma rede social.
+
+597
+00:18:47,559 --> 00:18:48,440
+Vamos imaginar que isso aqui é uma rede
+
+598
+00:18:48,440 --> 00:18:50,320
+social, tá? E aqui nos nossos servidores
+
+599
+00:18:50,320 --> 00:18:51,880
+de banco de dados aqui, vamos imaginar
+
+600
+00:18:51,880 --> 00:18:53,600
+que isso aqui é o módulo que cuida da
+
+601
+00:18:53,600 --> 00:18:55,360
+parte de like, de comentário e tudo
+
+602
+00:18:55,360 --> 00:18:56,080
+mais, tá? Vamos imaginar uma
+
+603
+00:18:56,080 --> 00:18:57,480
+aplicaçãozinha de microsserviço. Então
+
+604
+00:18:57,480 --> 00:18:59,360
+isso aqui é o microsserviço que cuida do
+
+605
+00:18:59,360 --> 00:19:01,280
+like, dos comentários e tal. Então o que
+
+606
+00:19:01,280 --> 00:19:02,880
+que acontece? Se no momento que eu der
+
+607
+00:19:02,880 --> 00:19:04,840
+um like na foto de alguém ou num vídeo
+
+608
+00:19:04,840 --> 00:19:06,600
+ou alguma coisa do tipo, essa informação
+
+609
+00:19:06,600 --> 00:19:08,760
+vai ser gravada nesse banco aqui e ele
+
+610
+00:19:08,760 --> 00:19:10,640
+vai replicar. O que que é melhor numa
+
+611
+00:19:10,640 --> 00:19:12,280
+rede social? você garantir a
+
+612
+00:19:12,280 --> 00:19:14,679
+disponibilidade ou a consistência dos
+
+613
+00:19:14,679 --> 00:19:16,720
+dados. Então, deixa eu botar a parti de
+
+614
+00:19:16,720 --> 00:19:18,280
+rede aqui novamente, você entender do
+
+615
+00:19:18,280 --> 00:19:19,360
+que eu tô falando. Então, vamos lá.
+
+616
+00:19:19,360 --> 00:19:20,679
+Partindo do princípio que a gente tem
+
+617
+00:19:20,679 --> 00:19:22,440
+uma partição de rede, que que eu preciso
+
+618
+00:19:22,440 --> 00:19:24,480
+fazer? Eu inseri o like aqui. Eu dei um
+
+619
+00:19:24,480 --> 00:19:26,400
+like lá na foto, beleza? Então, o like
+
+620
+00:19:26,400 --> 00:19:28,280
+tá aqui. Eu preciso replicar esse dado
+
+621
+00:19:28,280 --> 00:19:30,120
+agora. Aí eu te pergunto, o que que é
+
+622
+00:19:30,120 --> 00:19:31,840
+melhor? Eu preciso realmente garantir
+
+623
+00:19:31,840 --> 00:19:34,120
+que esse like seja consistente? Eu
+
+624
+00:19:34,120 --> 00:19:36,320
+preciso que todo mundo veja esse like.
+
+625
+00:19:36,320 --> 00:19:38,280
+No ato de eu dar um like ali na foto ou
+
+626
+00:19:38,280 --> 00:19:39,760
+num vídeo ou fazer um comentário,
+
+627
+00:19:39,760 --> 00:19:41,320
+escrever um comentário num vídeo, é
+
+628
+00:19:41,320 --> 00:19:43,720
+lógico que não. Por quê? Porque é melhor
+
+629
+00:19:43,720 --> 00:19:45,840
+que a minha aplicação esteja disponível
+
+630
+00:19:45,840 --> 00:19:47,760
+do que consistente. Porque o cara, o
+
+631
+00:19:47,760 --> 00:19:49,440
+usuário que tá do outro lado, esse
+
+632
+00:19:49,440 --> 00:19:50,919
+comentário pode chegar para ele 2
+
+633
+00:19:50,919 --> 00:19:53,159
+minutos depois, 2 segundos, 1 segundo,
+
+634
+00:19:53,159 --> 00:19:55,200
+uma hora depois, tanto faz. Não precisa
+
+635
+00:19:55,200 --> 00:19:57,159
+ter tanta consistência assim. Por quê?
+
+636
+00:19:57,159 --> 00:19:58,679
+Porque a disponibilidade numa rede
+
+637
+00:19:58,679 --> 00:20:00,120
+social é mais crítico do que a
+
+638
+00:20:00,120 --> 00:20:01,760
+consistência. Porque se a minha rede
+
+639
+00:20:01,760 --> 00:20:04,000
+social fica fora do ar, os meus
+
+640
+00:20:04,000 --> 00:20:05,960
+usuários, os meus clientes vão embora,
+
+641
+00:20:05,960 --> 00:20:08,120
+eles vão para outra rede social. Então a
+
+642
+00:20:08,120 --> 00:20:09,880
+disponibilidade para uma rede social é
+
+643
+00:20:09,880 --> 00:20:11,720
+muito mais importante do que a
+
+644
+00:20:11,720 --> 00:20:13,440
+consistência do dado. Logicamente que
+
+645
+00:20:13,440 --> 00:20:15,200
+dependendo do tipo de dado aqui, eu tô
+
+646
+00:20:15,200 --> 00:20:17,840
+falando de like, comentário, dados que
+
+647
+00:20:17,840 --> 00:20:19,960
+não são sensíveis, não são críticos. Eu
+
+648
+00:20:19,960 --> 00:20:21,840
+posso dar um like numa foto agora e esse
+
+649
+00:20:21,840 --> 00:20:23,960
+like pode aparecer pro usuário da o dono
+
+650
+00:20:23,960 --> 00:20:26,080
+da foto ou pros outros usuários daqui 2
+
+651
+00:20:26,080 --> 00:20:28,000
+segundos, 5 segundos, 10 segundos, tanto
+
+652
+00:20:28,000 --> 00:20:30,080
+faz. Então, diante de uma partição de
+
+653
+00:20:30,080 --> 00:20:33,039
+rede numa rede social, eu preciso
+
+654
+00:20:33,039 --> 00:20:35,320
+garantir o quê? Eu preciso garantir a
+
+655
+00:20:35,320 --> 00:20:37,559
+minha disponibilidade. Então, a minha
+
+656
+00:20:37,559 --> 00:20:39,320
+replicação de dados vai ser feita de
+
+657
+00:20:39,320 --> 00:20:41,440
+forma assíncrona. Eu vou receber a
+
+658
+00:20:41,440 --> 00:20:43,720
+requisição, vou armazenar esse like no
+
+659
+00:20:43,720 --> 00:20:45,280
+banco primário e já vou devolver a
+
+660
+00:20:45,280 --> 00:20:47,039
+resposta. E depois, por baixo dos panos,
+
+661
+00:20:47,039 --> 00:20:48,559
+ele vai tentando replicar aqui. Ou então
+
+662
+00:20:48,559 --> 00:20:50,400
+ele replica aqui, replica aqui e não
+
+663
+00:20:50,400 --> 00:20:52,080
+precisa garantir que replicou aqui, tá
+
+664
+00:20:52,080 --> 00:20:53,679
+tudo bem. Quando esse banco voltar, o
+
+665
+00:20:53,679 --> 00:20:55,039
+dado vai ser atualizado nele
+
+666
+00:20:55,039 --> 00:20:56,960
+automaticamente. Então não tem problema
+
+667
+00:20:56,960 --> 00:20:59,200
+o dado estar inconsistente numa rede
+
+668
+00:20:59,200 --> 00:21:00,600
+social é melhor que você tenha
+
+669
+00:21:00,600 --> 00:21:02,280
+consistência eventual. E aí vamos lá.
+
+670
+00:21:02,280 --> 00:21:03,840
+Agora, partindo do princípio que a gente
+
+671
+00:21:03,840 --> 00:21:05,640
+não tem uma partição de rede, ou seja, a
+
+672
+00:21:05,640 --> 00:21:07,799
+minha aplicação, minha rede social, ela
+
+673
+00:21:07,799 --> 00:21:09,200
+não tem partição de rede, tá tudo
+
+674
+00:21:09,200 --> 00:21:11,279
+funcionando perfeitamente e todos os nós
+
+675
+00:21:11,279 --> 00:21:12,880
+estão se comunicando. O que que eu
+
+676
+00:21:12,880 --> 00:21:14,880
+preciso garantir? Eu preciso cair aqui
+
+677
+00:21:14,880 --> 00:21:17,520
+no não do Passelk, ou seja, no ELS. Não
+
+678
+00:21:17,520 --> 00:21:19,480
+existe uma partição, então eu preciso
+
+679
+00:21:19,480 --> 00:21:21,960
+fazer um tradeoff agora entre latência
+
+680
+00:21:21,960 --> 00:21:24,320
+ou consistência. Vamos voltar lá. Então
+
+681
+00:21:24,320 --> 00:21:26,159
+aqui, olha só, chegou o dado, eu
+
+682
+00:21:26,159 --> 00:21:28,000
+armazenei o like e eu devolvo a
+
+683
+00:21:28,000 --> 00:21:29,679
+resposta, eu tô garantindo
+
+684
+00:21:29,679 --> 00:21:31,840
+disponibilidade e baixa latência, porque
+
+685
+00:21:31,840 --> 00:21:33,600
+ele só inseriu o dado no nó e já
+
+686
+00:21:33,600 --> 00:21:35,039
+devolveu a resposta. Eu não tô
+
+687
+00:21:35,039 --> 00:21:37,200
+garantindo que ele seja consistente.
+
+688
+00:21:37,200 --> 00:21:39,159
+Então, se eu quiser que o dado seja
+
+689
+00:21:39,159 --> 00:21:40,880
+consistente quando estiver tudo bem,
+
+690
+00:21:40,880 --> 00:21:42,400
+cara, aí eu vou ter que inserir aqui,
+
+691
+00:21:42,400 --> 00:21:44,120
+vou ter que garantir que inseriu aqui,
+
+692
+00:21:44,120 --> 00:21:46,080
+aqui em todos os nós. Que que vai
+
+693
+00:21:46,080 --> 00:21:47,960
+acontecer? você vai ter muita latência.
+
+694
+00:21:47,960 --> 00:21:49,480
+A latência vai ser muito alta. Você vai
+
+695
+00:21:49,480 --> 00:21:50,880
+dar um like, vai ficar lá esperando,
+
+696
+00:21:50,880 --> 00:21:52,480
+cara, um negócio horrível. Então você
+
+697
+00:21:52,480 --> 00:21:55,080
+vai travar a aplicação. Isso vai causar
+
+698
+00:21:55,080 --> 00:21:57,000
+alta latência e vai emputecer os
+
+699
+00:21:57,000 --> 00:21:59,080
+usuários. Então você precisa garantir
+
+700
+00:21:59,080 --> 00:22:00,640
+que numa rede social tenha baixa
+
+701
+00:22:00,640 --> 00:22:02,799
+latência e alta disponibilidade. E aí
+
+702
+00:22:02,799 --> 00:22:05,039
+num banco, por exemplo, numa numa fintec
+
+703
+00:22:05,039 --> 00:22:07,200
+ou transações bancárias, você tem que
+
+704
+00:22:07,200 --> 00:22:09,200
+garantir consistência, porque se o dado
+
+705
+00:22:09,200 --> 00:22:11,200
+tiver inconsistente, o cara vai fazer
+
+706
+00:22:11,200 --> 00:22:14,159
+pix de eterno com dados errados. Então é
+
+707
+00:22:14,159 --> 00:22:16,400
+isso que você precisa saber na hora de
+
+708
+00:22:16,400 --> 00:22:18,159
+escolher um banco de dados. Então esses
+
+709
+00:22:18,159 --> 00:22:20,840
+dois teoremas aqui eles vão te nortear
+
+710
+00:22:20,840 --> 00:22:22,960
+na escolha do banco. Não tem como
+
+711
+00:22:22,960 --> 00:22:24,600
+escolher banco se não for baseado no
+
+712
+00:22:24,600 --> 00:22:26,760
+teorema. E em cima disso tudo, o que que
+
+713
+00:22:26,760 --> 00:22:28,360
+a gente vai ter? Eu preparei para você
+
+714
+00:22:28,360 --> 00:22:30,760
+aqui uma listinha completa com vários
+
+715
+00:22:30,760 --> 00:22:32,120
+bancos de dados aqui que eu vou usar
+
+716
+00:22:32,120 --> 00:22:33,279
+como exemplo. Vou até falar do
+
+717
+00:22:33,279 --> 00:22:34,640
+funcionamento de alguns deles aqui para
+
+718
+00:22:34,640 --> 00:22:36,279
+você entender que a escolha do banco de
+
+719
+00:22:36,279 --> 00:22:37,960
+dados se dá através disso aqui, ó. Vamos
+
+720
+00:22:37,960 --> 00:22:39,600
+lá. A gente tem o Cassandra, que é um
+
+721
+00:22:39,600 --> 00:22:41,960
+banco fenomenal, é um banco fantástico.
+
+722
+00:22:41,960 --> 00:22:44,039
+E qual que é a classificação dele no
+
+723
+00:22:44,039 --> 00:22:46,279
+Passelc, tá? Todo banco de dados tem
+
+724
+00:22:46,279 --> 00:22:48,279
+essa classificação, tá? No teorema CAP,
+
+725
+00:22:48,279 --> 00:22:50,799
+no Passelk, eles têm essa classificação.
+
+726
+00:22:50,799 --> 00:22:53,039
+O Cassandra, ele nasceu para ser um
+
+727
+00:22:53,039 --> 00:22:55,440
+banco altamente disponível e de baixa
+
+728
+00:22:55,440 --> 00:22:56,799
+latência. Então, como é que você vai
+
+729
+00:22:56,799 --> 00:22:58,480
+interpretar esses dados aqui? Vamos lá.
+
+730
+00:22:58,480 --> 00:23:00,799
+O A significa availability, que é a
+
+731
+00:23:00,799 --> 00:23:03,000
+disponibilidade. E o P, você vai ver o P
+
+732
+00:23:03,000 --> 00:23:04,159
+aqui em todos eles, que o P é de
+
+733
+00:23:04,159 --> 00:23:06,400
+partição. Então ele é um banco que tem a
+
+734
+00:23:06,400 --> 00:23:07,760
+partição, ele vai escolher a
+
+735
+00:23:07,760 --> 00:23:10,200
+disponibilidade. Se caso não houver, ou
+
+736
+00:23:10,200 --> 00:23:11,640
+seja, esse é, você vai ver que ele tá
+
+737
+00:23:11,640 --> 00:23:13,440
+replicado em todas as células daqui para
+
+738
+00:23:13,440 --> 00:23:15,520
+baixo e ele significa o ELCE, tá?
+
+739
+00:23:15,520 --> 00:23:17,320
+Aquelece lá. Ou seja, se não houver uma
+
+740
+00:23:17,320 --> 00:23:19,120
+partição, você vai escolher o quê? O L
+
+741
+00:23:19,120 --> 00:23:21,480
+vem de baixa latência e o C vem de
+
+742
+00:23:21,480 --> 00:23:23,640
+consistência. Então o Cassandra, ele
+
+743
+00:23:23,640 --> 00:23:25,679
+nasceu para ser um banco A, ou seja,
+
+744
+00:23:25,679 --> 00:23:27,360
+availability. Ele prioriza a
+
+745
+00:23:27,360 --> 00:23:29,480
+disponibilidade e o L vem de baixa
+
+746
+00:23:29,480 --> 00:23:31,720
+latência. O Mongo DB, por sua vez, ele é
+
+747
+00:23:31,720 --> 00:23:33,480
+um branco que prioriza diante de uma
+
+748
+00:23:33,480 --> 00:23:34,720
+partição, ele vai priorizar a
+
+749
+00:23:34,720 --> 00:23:36,679
+consistência e se não houver uma
+
+750
+00:23:36,679 --> 00:23:38,520
+partição, ele também vai priorizar a
+
+751
+00:23:38,520 --> 00:23:40,400
+consistência. E muita gente se engana
+
+752
+00:23:40,400 --> 00:23:42,200
+porque acha que o Mongo DB foi feito
+
+753
+00:23:42,200 --> 00:23:44,480
+para ser altamente disponível. Até dá
+
+754
+00:23:44,480 --> 00:23:46,080
+para fazer isso, eu já vou falar sobre
+
+755
+00:23:46,080 --> 00:23:48,360
+isso aqui, mas o Mongo Debil foi feito
+
+756
+00:23:48,360 --> 00:23:50,799
+para garantir consistência. Inclusive
+
+757
+00:23:50,799 --> 00:23:52,480
+tem uma situação que muito pouca gente
+
+758
+00:23:52,480 --> 00:23:54,799
+sabe que o Mongo DB ele ainda garante
+
+759
+00:23:54,799 --> 00:23:56,960
+que as transações estejam de acordo com
+
+760
+00:23:56,960 --> 00:23:59,039
+o AC, ou seja, atomicidade,
+
+761
+00:23:59,039 --> 00:24:00,919
+consistência, isolamento e durabilidade
+
+762
+00:24:00,919 --> 00:24:03,120
+dos dados. E muita gente não sabe disso.
+
+763
+00:24:03,120 --> 00:24:04,480
+Muita gente acha que isso aqui foi feito
+
+764
+00:24:04,480 --> 00:24:06,200
+para alta disponibilidade por aí, velho.
+
+765
+00:24:06,200 --> 00:24:07,919
+Não é assim que funciona. Então, a
+
+766
+00:24:07,919 --> 00:24:09,320
+primeira coisa que você tem que olhar
+
+767
+00:24:09,320 --> 00:24:10,840
+nessa planilhinha aqui, eu vou deixar o
+
+768
+00:24:10,840 --> 00:24:12,440
+link na descrição, tá? Você vai poder
+
+769
+00:24:12,440 --> 00:24:13,799
+baixar essa planilha aqui, você vai
+
+770
+00:24:13,799 --> 00:24:15,640
+poder entrar no diagrama aqui no Miro,
+
+771
+00:24:15,640 --> 00:24:17,480
+você vai conseguir mexer nisso tudo.
+
+772
+00:24:17,480 --> 00:24:19,080
+Inclusive vou deixar também o link do
+
+773
+00:24:19,080 --> 00:24:20,840
+mapa do arquiteto, tá? Dá uma olhada aí,
+
+774
+00:24:20,840 --> 00:24:22,880
+um guia de carreira completo do zero ao
+
+775
+00:24:22,880 --> 00:24:24,360
+absoluto arquiteto do software, tá?
+
+776
+00:24:24,360 --> 00:24:26,200
+Passando pelo júnior, pleno, sior, te
+
+777
+00:24:26,200 --> 00:24:27,919
+mostrando tudo que você precisa saber,
+
+778
+00:24:27,919 --> 00:24:29,240
+te entrego todo o conteúdo que você
+
+779
+00:24:29,240 --> 00:24:30,840
+precisa estudar, fala um pouco mais
+
+780
+00:24:30,840 --> 00:24:32,559
+sobre isso aqui também, teorema cap, por
+
+781
+00:24:32,559 --> 00:24:34,000
+aí vai. Então, dá uma olhada aí, vou
+
+782
+00:24:34,000 --> 00:24:35,720
+deixar o link na descrição também. E aí,
+
+783
+00:24:35,720 --> 00:24:37,679
+voltando aqui, ó, pro nosso Cassandra
+
+784
+00:24:37,679 --> 00:24:39,360
+aqui, vamos começar do Cassandra. Ele é
+
+785
+00:24:39,360 --> 00:24:40,760
+um banco que foi feito para quê? para
+
+786
+00:24:40,760 --> 00:24:42,559
+alta disponibilidade e baixa latência.
+
+787
+00:24:42,559 --> 00:24:44,600
+Qual é o tipo desse banco de dados, tá?
+
+788
+00:24:44,600 --> 00:24:45,640
+Qual é, como é que é a forma que você
+
+789
+00:24:45,640 --> 00:24:47,440
+armazena dado? É de maneira colunar. Ele
+
+790
+00:24:47,440 --> 00:24:49,000
+é um banco colunar. Então você tem que
+
+791
+00:24:49,000 --> 00:24:51,640
+fugir desse lance de banco relacional
+
+792
+00:24:51,640 --> 00:24:53,840
+das tabelinhas e relacionamento e banco
+
+793
+00:24:53,840 --> 00:24:56,000
+não relacional ali, no caso Mongo, né,
+
+794
+00:24:56,000 --> 00:24:57,559
+que muita gente vai de Mongo DB ali, que
+
+795
+00:24:57,559 --> 00:24:59,080
+é um banco orientado a documento. Você
+
+796
+00:24:59,080 --> 00:25:00,159
+tem que entender que existe banco
+
+797
+00:25:00,159 --> 00:25:01,880
+colunar, existe banco chave valor,
+
+798
+00:25:01,880 --> 00:25:03,600
+existe banco relacional distribuído, que
+
+799
+00:25:03,600 --> 00:25:05,120
+a gente vai falar também, mas o ponto é
+
+800
+00:25:05,120 --> 00:25:07,520
+esse. É aqui que você escolhe o estilo
+
+801
+00:25:07,520 --> 00:25:09,360
+do banco de dados. Por qu? De que que
+
+802
+00:25:09,360 --> 00:25:10,960
+adianta eu ter uma rede social e
+
+803
+00:25:10,960 --> 00:25:12,360
+escolher mongo DB para garantir
+
+804
+00:25:12,360 --> 00:25:13,919
+consistência? Aí eu vou ter que
+
+805
+00:25:13,919 --> 00:25:15,880
+modificar a essência do banco, que aí eu
+
+806
+00:25:15,880 --> 00:25:17,440
+vou te mostrar isso aqui, ó. Tem isso
+
+807
+00:25:17,440 --> 00:25:18,640
+aqui. Eu já vou falar sobre essa
+
+808
+00:25:18,640 --> 00:25:20,360
+modificação, porque dá para você
+
+809
+00:25:20,360 --> 00:25:22,360
+modificar em alguns bancos de dados a
+
+810
+00:25:22,360 --> 00:25:24,360
+essência natural, a arquitetura dele.
+
+811
+00:25:24,360 --> 00:25:25,760
+Você consegue com algumas técnicas
+
+812
+00:25:25,760 --> 00:25:27,559
+modificar isso, mas, cara, muit das
+
+813
+00:25:27,559 --> 00:25:29,279
+vezes é melhor que você escolha um banco
+
+814
+00:25:29,279 --> 00:25:31,200
+que já foi projetado para o que você tá
+
+815
+00:25:31,200 --> 00:25:32,720
+tentando fazer. Então, se você tiver
+
+816
+00:25:32,720 --> 00:25:34,399
+diante de um microsserviço, por exemplo,
+
+817
+00:25:34,399 --> 00:25:36,240
+ah, cara, surgiu aqui uma oportunidade
+
+818
+00:25:36,240 --> 00:25:38,320
+na empresa e a gente vai criar um módulo
+
+819
+00:25:38,320 --> 00:25:40,360
+aqui da aplicação. Só que esse módulo
+
+820
+00:25:40,360 --> 00:25:42,320
+tem que ter baixa latência e alta
+
+821
+00:25:42,320 --> 00:25:44,600
+disponibilidade. eu vou de postg,
+
+822
+00:25:44,600 --> 00:25:46,640
+é lógico que não. Ele não foi feito para
+
+823
+00:25:46,640 --> 00:25:47,840
+isso. Inclusive, a gente vai voltar lá,
+
+824
+00:25:47,840 --> 00:25:49,240
+eu vou falar sobre ele, mas ele não foi
+
+825
+00:25:49,240 --> 00:25:50,760
+feito para isso. Na verdade, o postre
+
+826
+00:25:50,760 --> 00:25:51,919
+não foi feito nem para ambiente
+
+827
+00:25:51,919 --> 00:25:53,399
+distribuído. E eu vejo muita gente
+
+828
+00:25:53,399 --> 00:25:56,039
+fazendo isso. Então, é baseado nisso que
+
+829
+00:25:56,039 --> 00:25:57,279
+você vai fazer a escolha do banco de
+
+830
+00:25:57,279 --> 00:25:59,559
+dados. E aí, quais são os casos de uso
+
+831
+00:25:59,559 --> 00:26:00,880
+desse banco aqui, por exemplo, do
+
+832
+00:26:00,880 --> 00:26:03,360
+Cassandra? Rede social, série temporal,
+
+833
+00:26:03,360 --> 00:26:05,520
+catálogo estilo Netflix, catálogo de
+
+834
+00:26:05,520 --> 00:26:07,960
+produto em e-commerce, IoT, assistência
+
+835
+00:26:07,960 --> 00:26:09,679
+médica com os dados de sensores,
+
+836
+00:26:09,679 --> 00:26:12,240
+plataformas que exigem escrita massiva
+
+837
+00:26:12,240 --> 00:26:13,960
+de dados, catálogo de produtos
+
+838
+00:26:13,960 --> 00:26:16,120
+globalmente distribuído, ou seja, cara,
+
+839
+00:26:16,120 --> 00:26:17,480
+eu tenho uma aplicação que é global, é
+
+840
+00:26:17,480 --> 00:26:19,240
+mundial, o Cassandra vai me ajudar
+
+841
+00:26:19,240 --> 00:26:20,960
+nisso. Aplicações também com requisitos
+
+842
+00:26:20,960 --> 00:26:23,480
+de alta disponibilidade 24x7, ou seja,
+
+843
+00:26:23,480 --> 00:26:25,480
+não pode ficar fora do ar. Então você
+
+844
+00:26:25,480 --> 00:26:27,360
+tem que entender também o caso de uso da
+
+845
+00:26:27,360 --> 00:26:28,679
+aplicação, porque de nada adianta você
+
+846
+00:26:28,679 --> 00:26:30,279
+vai escolher um banco que tem caso de
+
+847
+00:26:30,279 --> 00:26:31,799
+uso totalmente diferente do que você tá
+
+848
+00:26:31,799 --> 00:26:33,919
+tentando fazer e ele nem atende a
+
+849
+00:26:33,919 --> 00:26:36,120
+questão aqui da disponibilidade ou baixa
+
+850
+00:26:36,120 --> 00:26:38,200
+latência ou da consistência. Cara, você
+
+851
+00:26:38,200 --> 00:26:39,960
+vai ter dor de cabeça. Então é assim que
+
+852
+00:26:39,960 --> 00:26:41,760
+você escolhe o banco. E aí, ó, ainda
+
+853
+00:26:41,760 --> 00:26:43,520
+falando no banco, a gente tem alguns
+
+854
+00:26:43,520 --> 00:26:45,200
+pontos interessantíssimos aqui, tá?
+
+855
+00:26:45,200 --> 00:26:47,000
+Primeiro deles, o banco pode ser
+
+856
+00:26:47,000 --> 00:26:48,760
+modificado? Essa é a primeira pergunta
+
+857
+00:26:48,760 --> 00:26:49,840
+que você tem que fazer. Eu posso
+
+858
+00:26:49,840 --> 00:26:51,720
+modificar esse banco? E por que diabos
+
+859
+00:26:51,720 --> 00:26:53,480
+alguém iria querer modificar um banco
+
+860
+00:26:53,480 --> 00:26:55,399
+que nasceu para ser altamente disponível
+
+861
+00:26:55,399 --> 00:26:57,279
+de baixa latência? Por quê? Porque pode
+
+862
+00:26:57,279 --> 00:26:59,399
+ter algum atributo nesse banco, ou seja,
+
+863
+00:26:59,399 --> 00:27:01,320
+a forma de inserir o dado com mais
+
+864
+00:27:01,320 --> 00:27:03,360
+algumas coisas ali que eu gostei tanto
+
+865
+00:27:03,360 --> 00:27:05,559
+que eu vou preferir optar aqui por
+
+866
+00:27:05,559 --> 00:27:07,559
+alterar ele e transformar ele em
+
+867
+00:27:07,559 --> 00:27:10,279
+altamente consistente, tá? Tanto na
+
+868
+00:27:10,279 --> 00:27:12,279
+questão de haver uma partição ou não
+
+869
+00:27:12,279 --> 00:27:14,640
+haver, eu quero consistência dos dados e
+
+870
+00:27:14,640 --> 00:27:16,159
+aí ele vai me atender porque ele tem
+
+871
+00:27:16,159 --> 00:27:17,799
+alguns atributos que eu gosto. Beleza?
+
+872
+00:27:17,799 --> 00:27:19,720
+você consegue fazer com alguns bancos e
+
+873
+00:27:19,720 --> 00:27:22,320
+o Cassandra é um deles, tá? Então isso
+
+874
+00:27:22,320 --> 00:27:24,399
+aqui também já vou falar agora qual que
+
+875
+00:27:24,399 --> 00:27:26,520
+é o mecanismo interno, tá? E aqui eu
+
+876
+00:27:26,520 --> 00:27:27,760
+preciso que você preste muita atenção
+
+877
+00:27:27,760 --> 00:27:28,960
+nisso aqui, tá? Para o que você tá
+
+878
+00:27:28,960 --> 00:27:30,480
+fazendo aí, presta atenção nisso aqui. O
+
+879
+00:27:30,480 --> 00:27:32,679
+mecanismo interno são conceitos que você
+
+880
+00:27:32,679 --> 00:27:34,600
+tem que entender ao longo do tempo. Não
+
+881
+00:27:34,600 --> 00:27:36,120
+dá para falar sobre tudo isso aqui em
+
+882
+00:27:36,120 --> 00:27:37,679
+uma única aula. Isso aqui eu demandaria
+
+883
+00:27:37,679 --> 00:27:39,640
+horas falando contigo para te ensinar
+
+884
+00:27:39,640 --> 00:27:41,919
+sobre quórum, raft, a questão do wow
+
+885
+00:27:41,919 --> 00:27:43,279
+aqui que é o redlog, isso aqui é o
+
+886
+00:27:43,279 --> 00:27:46,000
+postgre sentinel, tem aqui o Paxus aqui
+
+887
+00:27:46,000 --> 00:27:47,679
+também. Então assim, isso aqui é um tema
+
+888
+00:27:47,679 --> 00:27:49,559
+para outro vídeo. Se você deixar nos
+
+889
+00:27:49,559 --> 00:27:51,279
+comentários abaixo, eu faço um vídeo
+
+890
+00:27:51,279 --> 00:27:53,399
+sobre isso. E a observação aqui, eu
+
+891
+00:27:53,399 --> 00:27:54,840
+botei aqui, geralmente isso aqui vai ser
+
+892
+00:27:54,840 --> 00:27:56,960
+a forma como ele vai funcionar e como
+
+893
+00:27:56,960 --> 00:27:59,360
+que você vai conseguir modificar esse
+
+894
+00:27:59,360 --> 00:28:00,799
+banco de dados. Então vamos lá, vamos
+
+895
+00:28:00,799 --> 00:28:02,399
+por parte que você vai entender. É
+
+896
+00:28:02,399 --> 00:28:04,320
+simples, mas demanda que você preste
+
+897
+00:28:04,320 --> 00:28:05,640
+atenção. Vamos lá. O que que é o
+
+898
+00:28:05,640 --> 00:28:07,399
+mecanismo interno do Cassandra? Esse
+
+899
+00:28:07,399 --> 00:28:09,360
+cara chamado quórum aqui. Que que é o
+
+900
+00:28:09,360 --> 00:28:11,000
+quórum? Tá, vamos lá. Eu tenho a imagem
+
+901
+00:28:11,000 --> 00:28:12,960
+do Cassandra aqui. O Cassandra ele
+
+902
+00:28:12,960 --> 00:28:15,399
+funciona com um conceito de nó, ou seja,
+
+903
+00:28:15,399 --> 00:28:17,640
+cada bolinha dessa aqui é um nó do
+
+904
+00:28:17,640 --> 00:28:19,039
+Cassandra, tá? Pro usuário é
+
+905
+00:28:19,039 --> 00:28:20,320
+transparente, você vai conectar no
+
+906
+00:28:20,320 --> 00:28:21,960
+Cassandra e ponto final. Por baixo dos
+
+907
+00:28:21,960 --> 00:28:24,279
+panos, você escolhe quantos nós ele vai
+
+908
+00:28:24,279 --> 00:28:26,240
+ter aqui por baixo dos panos e como é
+
+909
+00:28:26,240 --> 00:28:28,200
+que funciona esse conceito de nó, tá?
+
+910
+00:28:28,200 --> 00:28:29,600
+Isso aqui é uma tabela, tá? Uma
+
+911
+00:28:29,600 --> 00:28:31,399
+tabelinha lá no Cassandra. É muito
+
+912
+00:28:31,399 --> 00:28:33,600
+parecido com SQL, é muito parecido com
+
+913
+00:28:33,600 --> 00:28:35,320
+banco relacional e é por isso que eu amo
+
+914
+00:28:35,320 --> 00:28:36,799
+esse banco de dados aqui. É um dos meus
+
+915
+00:28:36,799 --> 00:28:38,200
+bancos favoritos, tá? Esse banco aqui é
+
+916
+00:28:38,200 --> 00:28:40,399
+extremamente poderoso e versátil. A
+
+917
+00:28:40,399 --> 00:28:42,120
+versatilidade dele é de apavorar. Então
+
+918
+00:28:42,120 --> 00:28:43,360
+vamos lá. A gente tem essa tabelinha
+
+919
+00:28:43,360 --> 00:28:45,159
+aqui. Então a gente tem aqui, ó, o país,
+
+920
+00:28:45,159 --> 00:28:47,120
+a cidade e a população. A gente tem aqui
+
+921
+00:28:47,120 --> 00:28:48,399
+Estados Unidos, a gente tem a cidade de
+
+922
+00:28:48,399 --> 00:28:50,279
+Nova York com 8 milhões de habitantes. A
+
+923
+00:28:50,279 --> 00:28:51,640
+gente tem Los Angeles aqui também que tá
+
+924
+00:28:51,640 --> 00:28:53,200
+nos Estados Unidos e tem 4 milhões. A
+
+925
+00:28:53,200 --> 00:28:54,720
+gente tem aqui Paris na França que tem
+
+926
+00:28:54,720 --> 00:28:56,960
+2.230.000. Beleza? Como é que isso aqui
+
+927
+00:28:56,960 --> 00:28:58,760
+funciona no Cassandra? O Cassandra ele
+
+928
+00:28:58,760 --> 00:29:00,799
+utiliza um conceito chamado de charging,
+
+929
+00:29:00,799 --> 00:29:03,720
+tá? Que é o quê? É a fragmentação dos
+
+930
+00:29:03,720 --> 00:29:05,799
+dados. Ou seja, no post, gris, lembra
+
+931
+00:29:05,799 --> 00:29:07,240
+que eu te falei que o dado tinha que ser
+
+932
+00:29:07,240 --> 00:29:09,360
+replicado para todas as réplicas de
+
+933
+00:29:09,360 --> 00:29:11,360
+leitura? Aqui no Cassandra é totalmente
+
+934
+00:29:11,360 --> 00:29:13,840
+diferente. Aqui no Cassandra, cada nó
+
+935
+00:29:13,840 --> 00:29:16,600
+vai armazenar um pedaço dos dados. Então
+
+936
+00:29:16,600 --> 00:29:18,840
+os dados vão ser fragmentados, tá? É
+
+937
+00:29:18,840 --> 00:29:20,480
+como se fosse uma pizza, tá? Imagina uma
+
+938
+00:29:20,480 --> 00:29:23,279
+pizza e cada fatia é um nó e cada fatia
+
+939
+00:29:23,279 --> 00:29:25,159
+tem um dado específico. Então, por
+
+940
+00:29:25,159 --> 00:29:27,120
+exemplo, o primeiro nó aqui em cima, ele
+
+941
+00:29:27,120 --> 00:29:29,360
+tá armazenando esses dois dados aqui, ou
+
+942
+00:29:29,360 --> 00:29:30,960
+seja, a cidade de Nova York, de Los
+
+943
+00:29:30,960 --> 00:29:33,600
+Angeles. Beleza? Aqui no segundo nó, a
+
+944
+00:29:33,600 --> 00:29:35,120
+gente vai ter outros dados que
+
+945
+00:29:35,120 --> 00:29:37,000
+complementam a tabela, no terceiro nó,
+
+946
+00:29:37,000 --> 00:29:38,720
+no quarto nó e assim sucessivamente.
+
+947
+00:29:38,720 --> 00:29:40,200
+Beleza? Só que olha o que que acontece.
+
+948
+00:29:40,200 --> 00:29:42,799
+Todos esses nós aqui juntos eles
+
+949
+00:29:42,799 --> 00:29:45,600
+completam essa tabela e aí por baixo dos
+
+950
+00:29:45,600 --> 00:29:48,159
+panos o Cassandra sabe exatamente aonde
+
+951
+00:29:48,159 --> 00:29:49,840
+tá cada dado. Então se eu fizer um
+
+952
+00:29:49,840 --> 00:29:51,880
+select lá no Cassandra procurando aqui
+
+953
+00:29:51,880 --> 00:29:54,039
+Tóquio, lá no Japão, ele vai saber que
+
+954
+00:29:54,039 --> 00:29:56,320
+esse dado está armazenado nesse nó aqui.
+
+955
+00:29:56,320 --> 00:29:57,880
+Ele não precisa ficar procurando, ele
+
+956
+00:29:57,880 --> 00:29:59,840
+sabe exatamente aonde tá esse nó aqui.
+
+957
+00:29:59,840 --> 00:30:01,200
+Isso aqui é tema mais uma vez para um
+
+958
+00:30:01,200 --> 00:30:02,640
+outro vídeo, eu posso falar melhor. Só
+
+959
+00:30:02,640 --> 00:30:03,640
+que o ponto aqui que eu quero que você
+
+960
+00:30:03,640 --> 00:30:04,640
+entenda é o seguinte: como é que
+
+961
+00:30:04,640 --> 00:30:06,440
+funciona aquele conceito de quórum que
+
+962
+00:30:06,440 --> 00:30:07,919
+eu te mostrei ali? como é que ele faz
+
+963
+00:30:07,919 --> 00:30:09,919
+esse mecanismo ali e como que funciona a
+
+964
+00:30:09,919 --> 00:30:12,039
+consistência dele para você entender a
+
+965
+00:30:12,039 --> 00:30:14,080
+diferença disso aqui para um postigres
+
+966
+00:30:14,080 --> 00:30:15,840
+da vida, tá? Que não foi feito para
+
+967
+00:30:15,840 --> 00:30:17,559
+ambiente distribuído. Vamos lá. No
+
+968
+00:30:17,559 --> 00:30:19,080
+Cassandra a gente tem aqui, vamos
+
+969
+00:30:19,080 --> 00:30:20,600
+imaginar que a gente tem aqui o nosso, a
+
+970
+00:30:20,600 --> 00:30:22,279
+nossa lojinha, nosso e-commerce lá.
+
+971
+00:30:22,279 --> 00:30:24,000
+Então eu vou criar um keyspace aqui, tá?
+
+972
+00:30:24,000 --> 00:30:26,720
+Isso aqui é extremamente igual ao SQL,
+
+973
+00:30:26,720 --> 00:30:28,960
+tanto que no Cassandra é chamado de CQL,
+
+974
+00:30:28,960 --> 00:30:31,600
+que é Cassandra Cury Language. Então é a
+
+975
+00:30:31,600 --> 00:30:33,320
+quase a mesma coisa que o SQL. Então
+
+976
+00:30:33,320 --> 00:30:35,159
+você vai criar um Kspace. O Kpace é como
+
+977
+00:30:35,159 --> 00:30:36,720
+se fosse o esquema do banco de dados lá,
+
+978
+00:30:36,720 --> 00:30:38,480
+tá? o database lá que você cria. Então,
+
+979
+00:30:38,480 --> 00:30:40,000
+a gente vai criar um loja, a gente vai
+
+980
+00:30:40,000 --> 00:30:42,720
+criar aqui o nosso fator de replicação.
+
+981
+00:30:42,720 --> 00:30:43,919
+E eu já vou te falar o que que é isso
+
+982
+00:30:43,919 --> 00:30:44,799
+aqui. Já vou te falar o que que
+
+983
+00:30:44,799 --> 00:30:46,559
+significa esse fator de replicação. E a
+
+984
+00:30:46,559 --> 00:30:48,200
+gente tem aqui um create table. Olha
+
+985
+00:30:48,200 --> 00:30:49,799
+como é que isso aqui é idêntico a SQL.
+
+986
+00:30:49,799 --> 00:30:51,960
+Create table produto. Beleza? A gente
+
+987
+00:30:51,960 --> 00:30:54,399
+tem um produto com ID, nome e preço. E
+
+988
+00:30:54,399 --> 00:30:56,679
+aí, como é que funciona, por exemplo,
+
+989
+00:30:56,679 --> 00:30:58,720
+pra gente inserir um dado no Cassandra?
+
+990
+00:30:58,720 --> 00:31:00,399
+Olha como é que isso aqui é idêntico a
+
+991
+00:31:00,399 --> 00:31:02,000
+SQL. Isso aqui é um código feito em
+
+992
+00:31:02,000 --> 00:31:03,480
+Java, tá? Se tu não conhece Java, fica
+
+993
+00:31:03,480 --> 00:31:04,200
+tranquilo, que isso aqui é muito
+
+994
+00:31:04,200 --> 00:31:05,279
+simples. A gente tem uma classe aqui
+
+995
+00:31:05,279 --> 00:31:07,200
+chamada Cassandra exemplo. Beleza? Única
+
+996
+00:31:07,200 --> 00:31:08,799
+coisa que ele vai tentar fazer aqui é
+
+997
+00:31:08,799 --> 00:31:10,440
+criar uma conexão com o banco e a gente
+
+998
+00:31:10,440 --> 00:31:12,279
+vai inserir dado no banco de dados.
+
+999
+00:31:12,279 --> 00:31:13,519
+Então ele vai dar um insert para você
+
+1000
+00:31:13,519 --> 00:31:15,200
+ver como é que é idêntico a SQL. E aí a
+
+1001
+00:31:15,200 --> 00:31:16,679
+gente vai adicionar os valores. Então
+
+1002
+00:31:16,679 --> 00:31:18,519
+vou armazenar a câmera Sony no valor de
+
+1003
+00:31:18,519 --> 00:31:20,360
+R$ 15.000. Show de bola, problema
+
+1004
+00:31:20,360 --> 00:31:22,440
+nenhum. Onde é que entra a questão do
+
+1005
+00:31:22,440 --> 00:31:24,639
+quórum? E é ele quem vai fazer as
+
+1006
+00:31:24,639 --> 00:31:26,200
+modificações de consistência e
+
+1007
+00:31:26,200 --> 00:31:27,760
+disponibilidade no banco. Ele entra
+
+1008
+00:31:27,760 --> 00:31:29,440
+exatamente aqui, ó. Repara que eu tô
+
+1009
+00:31:29,440 --> 00:31:31,679
+dando um set consistence level, ou seja,
+
+1010
+00:31:31,679 --> 00:31:34,000
+eu estou definindo em tempo de execução
+
+1011
+00:31:34,000 --> 00:31:36,480
+de código o nível de consistência que eu
+
+1012
+00:31:36,480 --> 00:31:38,159
+quero nesse dado aqui que eu estou
+
+1013
+00:31:38,159 --> 00:31:39,960
+inserindo. E aí eu coloquei aqui o
+
+1014
+00:31:39,960 --> 00:31:42,000
+quórum. Que que é quórum? Vamos lá,
+
+1015
+00:31:42,000 --> 00:31:43,519
+vamos voltar aqui no Cassandra para você
+
+1016
+00:31:43,519 --> 00:31:45,360
+entender o que que é o quórum aqui, tá?
+
+1017
+00:31:45,360 --> 00:31:46,919
+Quórum aqui é o seguinte. O mecanismo
+
+1018
+00:31:46,919 --> 00:31:48,760
+interno dele funciona com esse conceito
+
+1019
+00:31:48,760 --> 00:31:51,519
+matemático aqui de RF div por 2 + 1, que
+
+1020
+00:31:51,519 --> 00:31:53,159
+é muito simples, fica tranquilo que isso
+
+1021
+00:31:53,159 --> 00:31:54,360
+aqui você vai sair daqui entendendo o
+
+1022
+00:31:54,360 --> 00:31:56,840
+que que é o RF div por 2 + 1. Lembra do
+
+1023
+00:31:56,840 --> 00:31:58,840
+fator de replicação aqui? que eu
+
+1024
+00:31:58,840 --> 00:32:00,960
+coloquei como 10. Vamos imaginar que
+
+1025
+00:32:00,960 --> 00:32:03,840
+aqui a gente tenha 100 instâncias, tá?
+
+1026
+00:32:03,840 --> 00:32:05,600
+100 nós, tá? Vamos botar aqui 100 nó.
+
+1027
+00:32:05,600 --> 00:32:08,039
+Tem 100 nó nesse banco aqui e tem dado
+
+1028
+00:32:08,039 --> 00:32:09,440
+espalhado para tudo que é lado, fazendo
+
+1029
+00:32:09,440 --> 00:32:11,120
+aquele conceito do charging aqui que se
+
+1030
+00:32:11,120 --> 00:32:12,279
+que eu já te mostrei aqui. Espero que
+
+1031
+00:32:12,279 --> 00:32:13,519
+você tenha entendido. Então vamos lá.
+
+1032
+00:32:13,519 --> 00:32:15,519
+Cada nó contém um pedacinho dos dados.
+
+1033
+00:32:15,519 --> 00:32:17,159
+Show de bola. Qual que é o que que
+
+1034
+00:32:17,159 --> 00:32:18,919
+representa esse RF? Ou seja, esse
+
+1035
+00:32:18,919 --> 00:32:20,960
+replication factor aqui, esse fator de
+
+1036
+00:32:20,960 --> 00:32:22,880
+replicação. Fator de replicação
+
+1037
+00:32:22,880 --> 00:32:24,639
+significa o seguinte: toda vez que eu
+
+1038
+00:32:24,639 --> 00:32:27,080
+inseri um dado no Cassandra, eu quero
+
+1039
+00:32:27,080 --> 00:32:29,639
+garantir o quê? O fator de replicação.
+
+1040
+00:32:29,639 --> 00:32:32,159
+Fator de replicação nada mais é do que
+
+1041
+00:32:32,159 --> 00:32:34,679
+Cassandra, estou inserindo essa câmera
+
+1042
+00:32:34,679 --> 00:32:36,919
+Sony no valor de R$ 15.000 aí. Show de
+
+1043
+00:32:36,919 --> 00:32:39,279
+bola. O fator de replicação que eu quero
+
+1044
+00:32:39,279 --> 00:32:41,799
+no meu esquema chamado loja, em todas as
+
+1045
+00:32:41,799 --> 00:32:43,159
+tabelas, eu quero que o fator de
+
+1046
+00:32:43,159 --> 00:32:45,240
+replicação seja 10. Ou seja, eu quero
+
+1047
+00:32:45,240 --> 00:32:46,720
+que você garanta que você vai inserir
+
+1048
+00:32:46,720 --> 00:32:49,080
+essa câmera Sony com valor de R$ 15.000
+
+1049
+00:32:49,080 --> 00:32:52,120
+em 10 nós. Ou seja, dos 100 nós que a
+
+1050
+00:32:52,120 --> 00:32:53,480
+gente tem, a gente tem cada um desse
+
+1051
+00:32:53,480 --> 00:32:55,240
+aqui é chamado de nó. Cada um é um nó
+
+1052
+00:32:55,240 --> 00:32:57,000
+que compõe um grande cluster. Eu quero
+
+1053
+00:32:57,000 --> 00:32:58,960
+que você insira, que você replique esse
+
+1054
+00:32:58,960 --> 00:33:01,000
+dado para 10 nós. Que que isso
+
+1055
+00:33:01,000 --> 00:33:02,320
+significa? Significa que eu estou
+
+1056
+00:33:02,320 --> 00:33:03,399
+dizendo pro Cassandra: "Olha, Cassandra,
+
+1057
+00:33:03,399 --> 00:33:05,320
+meu fator de replicação é 10 para todas
+
+1058
+00:33:05,320 --> 00:33:06,679
+as tabelas que estiverem dentro do
+
+1059
+00:33:06,679 --> 00:33:08,440
+esquema chamado loja. E eu tô definindo
+
+1060
+00:33:08,440 --> 00:33:10,399
+que é 10 porque eu quero garantir que
+
+1061
+00:33:10,399 --> 00:33:12,840
+tenha réplicas desse dado em vários nós,
+
+1062
+00:33:12,840 --> 00:33:14,600
+porque se porventura um ou outro ficar
+
+1063
+00:33:14,600 --> 00:33:16,519
+fora do A, eu ainda tenho o meu dado ali
+
+1064
+00:33:16,519 --> 00:33:18,240
+salvo e eu não vou perder meu dado. Show
+
+1065
+00:33:18,240 --> 00:33:20,320
+de bola. Beleza? E aí, onde é que entra
+
+1066
+00:33:20,320 --> 00:33:23,760
+esse cálculo do RF div por 2 + 1? Isso
+
+1067
+00:33:23,760 --> 00:33:26,279
+aqui representa a maioria. Ou seja, no
+
+1068
+00:33:26,279 --> 00:33:28,880
+meu conjunto de 10 nós, ou seja, de
+
+1069
+00:33:28,880 --> 00:33:30,679
+fator de replicação, eu tenho 100 nós,
+
+1070
+00:33:30,679 --> 00:33:34,679
+meu fator de replicação é 10. 10/ 2 = 5
+
+1071
+00:33:34,679 --> 00:33:38,240
+e 5 + 1 = 6. O que que representa esse
+
+1072
+00:33:38,240 --> 00:33:40,639
+6? Esse 6 representa que num conjunto de
+
+1073
+00:33:40,639 --> 00:33:43,159
+10 nós, seis é a maioria. É como se
+
+1074
+00:33:43,159 --> 00:33:44,720
+fosse uma eleição, tá? É como se fosse
+
+1075
+00:33:44,720 --> 00:33:46,600
+uma grande votação. Se cinco votar de um
+
+1076
+00:33:46,600 --> 00:33:47,880
+lado e cinco votar do outro, vai dar
+
+1077
+00:33:47,880 --> 00:33:49,840
+empate. Então, qual que é a maioria num
+
+1078
+00:33:49,840 --> 00:33:51,919
+conjunto de 10? É seis. E por que que eu
+
+1079
+00:33:51,919 --> 00:33:54,159
+preciso saber qual que é a maioria no
+
+1080
+00:33:54,159 --> 00:33:56,159
+meu fator de replicação 10? Significa o
+
+1081
+00:33:56,159 --> 00:33:58,320
+quê? Cassandra, insira esse dado da
+
+1082
+00:33:58,320 --> 00:34:01,440
+câmera Sony em 15.000 em 10 nós, mas eu
+
+1083
+00:34:01,440 --> 00:34:03,480
+não quero que você garanta que inseriu
+
+1084
+00:34:03,480 --> 00:34:05,559
+nos 10. Garante que inseriu só em seis,
+
+1085
+00:34:05,559 --> 00:34:07,080
+aí já me devolve a resposta que eu vou
+
+1086
+00:34:07,080 --> 00:34:08,800
+devolver pro usuário. Então isso vai
+
+1087
+00:34:08,800 --> 00:34:10,200
+garantir que além de você ter
+
+1088
+00:34:10,200 --> 00:34:12,040
+consistência, ou seja, porque sempre vai
+
+1089
+00:34:12,040 --> 00:34:14,399
+haver uma interseção entre quem leu e
+
+1090
+00:34:14,399 --> 00:34:15,800
+quem escreveu. Por quê? Porque tem
+
+1091
+00:34:15,800 --> 00:34:18,359
+maioria. E o Cassandra já sabe, ele já
+
+1092
+00:34:18,359 --> 00:34:20,560
+consegue fazer por baixo dos panos, ele
+
+1093
+00:34:20,560 --> 00:34:21,760
+consegue saber qual é o dado mais
+
+1094
+00:34:21,760 --> 00:34:23,720
+atualizado, porque ele vai no date time
+
+1095
+00:34:23,720 --> 00:34:25,200
+ali no no minuto, no milésimo de
+
+1096
+00:34:25,200 --> 00:34:26,520
+segundo, ele sabe quem é o dado mais
+
+1097
+00:34:26,520 --> 00:34:28,720
+atualizado, evitando assim consistência
+
+1098
+00:34:28,720 --> 00:34:31,480
+eventual. Então quórum aqui, nesse meu
+
+1099
+00:34:31,480 --> 00:34:34,040
+caso aqui é a forma de garantir a
+
+1100
+00:34:34,040 --> 00:34:37,000
+consistência do dado. Então em tempo de
+
+1101
+00:34:37,000 --> 00:34:39,520
+execução, eu consigo garantir essa
+
+1102
+00:34:39,520 --> 00:34:41,240
+consistência se eu quero ela mais
+
+1103
+00:34:41,240 --> 00:34:43,200
+afrouxada, se eu quero ela mais forte.
+
+1104
+00:34:43,200 --> 00:34:45,399
+Então, por exemplo, se eu colocar o One
+
+1105
+00:34:45,399 --> 00:34:47,119
+aqui, eu tô dizendo pro Cassandra o
+
+1106
+00:34:47,119 --> 00:34:48,919
+seguinte: "Cassandra, insere a câmera
+
+1107
+00:34:48,919 --> 00:34:50,800
+Sony, garante que escreveu isso, que
+
+1108
+00:34:50,800 --> 00:34:52,560
+replicou isso para apenas um nó e já me
+
+1109
+00:34:52,560 --> 00:34:53,800
+devolve a resposta que eu vou devolver
+
+1110
+00:34:53,800 --> 00:34:55,240
+pro usuário". Então, eu estou dizendo o
+
+1111
+00:34:55,240 --> 00:34:57,000
+seguinte: "Olha, eu quero mais
+
+1112
+00:34:57,000 --> 00:34:59,359
+disponibilidade e baixa latência".
+
+1113
+00:34:59,359 --> 00:35:01,640
+Agora, se esse dado ele é muito crítico,
+
+1114
+00:35:01,640 --> 00:35:04,000
+cara, vai de quórum. Por quê? Porque no
+
+1115
+00:35:04,000 --> 00:35:06,079
+fator de replicação, ele vai conseguir
+
+1116
+00:35:06,079 --> 00:35:08,200
+garantir que a maioria esteja com dado
+
+1117
+00:35:08,200 --> 00:35:10,200
+atualizado. E se alguém vier ler esse
+
+1118
+00:35:10,200 --> 00:35:12,400
+dado, ele vai conseguir encontrar nesses
+
+1119
+00:35:12,400 --> 00:35:14,520
+10 nós, a maioria de seis, vai haver uma
+
+1120
+00:35:14,520 --> 00:35:15,920
+interseção e ele vai conseguir encontrar
+
+1121
+00:35:15,920 --> 00:35:17,640
+o dado mais atualizado. E aí eu sei que
+
+1122
+00:35:17,640 --> 00:35:19,160
+na tua mente agora deve est aquela
+
+1123
+00:35:19,160 --> 00:35:20,480
+confusão assim: "Pô, Renato, mas pera
+
+1124
+00:35:20,480 --> 00:35:22,440
+aí, ele não replica para todo mundo? Ele
+
+1125
+00:35:22,440 --> 00:35:24,119
+não, isso aqui funciona de maneira
+
+1126
+00:35:24,119 --> 00:35:25,640
+diferente, tem essa questão da
+
+1127
+00:35:25,640 --> 00:35:28,320
+replicação. O Cassandra já sabe. Por
+
+1128
+00:35:28,320 --> 00:35:30,079
+exemplo, se eu pedir a câmera Sony
+
+1129
+00:35:30,079 --> 00:35:31,440
+depois de ser inserido lá, se eu fizer
+
+1130
+00:35:31,440 --> 00:35:34,040
+um select, ele sabe quem são os 10 nós,
+
+1131
+00:35:34,040 --> 00:35:35,760
+ele sabe onde que tá essa câmera. Então
+
+1132
+00:35:35,760 --> 00:35:37,079
+você não precisa se preocupar com isso,
+
+1133
+00:35:37,079 --> 00:35:39,000
+ele sabe. E como ele sabe, e eu vou
+
+1134
+00:35:39,000 --> 00:35:41,320
+dizer na leitura também, eu consigo
+
+1135
+00:35:41,320 --> 00:35:42,920
+definir essa configuração até na
+
+1136
+00:35:42,920 --> 00:35:44,599
+leitura. Então, por exemplo, se na
+
+1137
+00:35:44,599 --> 00:35:46,200
+leitura da câmera Sony, se isso aqui
+
+1138
+00:35:46,200 --> 00:35:48,119
+fosse um select ao invés de um insert e
+
+1139
+00:35:48,119 --> 00:35:49,880
+eu passasse aqui, por exemplo, one, eu
+
+1140
+00:35:49,880 --> 00:35:51,400
+poderia pegar o dado de maneira
+
+1141
+00:35:51,400 --> 00:35:52,960
+inconsistente. Por quê? Porque eu tô
+
+1142
+00:35:52,960 --> 00:35:54,839
+pedindo só um. De repente, daqueles 10
+
+1143
+00:35:54,839 --> 00:35:56,480
+que ele vai lá buscar e ele só precisa
+
+1144
+00:35:56,480 --> 00:35:57,920
+buscar em um, porque eu tô dizendo para
+
+1145
+00:35:57,920 --> 00:35:59,520
+ele no select aqui, tô dizendo, cara,
+
+1146
+00:35:59,520 --> 00:36:01,760
+busca só de um. Pode ser que um desses
+
+1147
+00:36:01,760 --> 00:36:03,839
+desses nós ali esteja desatualizado. E
+
+1148
+00:36:03,839 --> 00:36:05,079
+aí eu tô dizendo: "Olha, para mim a
+
+1149
+00:36:05,079 --> 00:36:06,640
+consistência não importa tanto." Agora,
+
+1150
+00:36:06,640 --> 00:36:08,720
+se eu quero garantir que a minha leitura
+
+1151
+00:36:08,720 --> 00:36:10,720
+também seja consistente, aí eu passo o
+
+1152
+00:36:10,720 --> 00:36:12,960
+quórum, ou até melhor, eu posso passar o
+
+1153
+00:36:12,960 --> 00:36:16,040
+all aqui, que é todos, leia todos os
+
+1154
+00:36:16,040 --> 00:36:18,119
+nós. Mas o que que vai acontecer? Quanto
+
+1155
+00:36:18,119 --> 00:36:20,680
+mais perto do all você tiver, maior vai
+
+1156
+00:36:20,680 --> 00:36:22,000
+ser a latência, porque ele vai ter que
+
+1157
+00:36:22,000 --> 00:36:23,800
+consultar todo mundo ou ele vai ter que
+
+1158
+00:36:23,800 --> 00:36:26,319
+inserir em todo mundo. Então o Cassandra
+
+1159
+00:36:26,319 --> 00:36:28,599
+é maravilhoso esse conceito de quórum
+
+1160
+00:36:28,599 --> 00:36:30,560
+aqui, esse nível de consistência que
+
+1161
+00:36:30,560 --> 00:36:32,400
+você consegue ajustar em tempo de
+
+1162
+00:36:32,400 --> 00:36:34,640
+execução de código e são pouquíssimos
+
+1163
+00:36:34,640 --> 00:36:36,560
+bancos que te entregam isso aqui, cara.
+
+1164
+00:36:36,560 --> 00:36:38,800
+Isso é maravilhoso. Por quê? Porque eu
+
+1165
+00:36:38,800 --> 00:36:41,359
+consigo em tempo de execução fazer o
+
+1166
+00:36:41,359 --> 00:36:43,920
+seguinte, eu consigo aqui n é qualquer,
+
+1167
+00:36:43,920 --> 00:36:46,160
+ou seja, cara, só insere aí lei e me
+
+1168
+00:36:46,160 --> 00:36:47,560
+devolve aqui que eu já vou devolver pro
+
+1169
+00:36:47,560 --> 00:36:49,200
+servidor que chamou. Então eu estou mais
+
+1170
+00:36:49,200 --> 00:36:51,520
+perto de disponibilidade. Se eu jogar um
+
+1171
+00:36:51,520 --> 00:36:53,040
+wall aqui, eu tô mais perto de
+
+1172
+00:36:53,040 --> 00:36:54,599
+consistência e abro mão da
+
+1173
+00:36:54,599 --> 00:36:56,640
+disponibilidade. Então eu consigo, cara,
+
+1174
+00:36:56,640 --> 00:36:58,880
+garantir isso de acordo com o dado que
+
+1175
+00:36:58,880 --> 00:37:00,440
+eu estiver buscando ou inserindo no
+
+1176
+00:37:00,440 --> 00:37:02,800
+banco de dados em tempo de execução. E
+
+1177
+00:37:02,800 --> 00:37:04,040
+isso tem que ficar claro para você, que
+
+1178
+00:37:04,040 --> 00:37:05,720
+isso aqui não é um sistema binário, tá?
+
+1179
+00:37:05,720 --> 00:37:07,280
+Isso aqui não é totalmente consistente
+
+1180
+00:37:07,280 --> 00:37:09,040
+ou totalmente disponível. O Cassandra
+
+1181
+00:37:09,040 --> 00:37:11,160
+permite que a sua aplicação escolha o
+
+1182
+00:37:11,160 --> 00:37:13,480
+momento de ser consistente e o momento
+
+1183
+00:37:13,480 --> 00:37:16,119
+de ser disponível. Isso é maravilhoso. E
+
+1184
+00:37:16,119 --> 00:37:17,359
+o melhor de tudo é que ainda é mais
+
+1185
+00:37:17,359 --> 00:37:18,839
+próximo do SQL. Então isso aqui é
+
+1186
+00:37:18,839 --> 00:37:20,839
+extremamente amigável. Cara, o Cassandra
+
+1187
+00:37:20,839 --> 00:37:22,760
+é um banco monstruoso. Inclusive, para
+
+1188
+00:37:22,760 --> 00:37:24,440
+quem não sabe, o Discord usou o
+
+1189
+00:37:24,440 --> 00:37:26,480
+Cassandra por muitos e muitos anos, tá?
+
+1190
+00:37:26,480 --> 00:37:28,720
+Inclusive, eu acho que até 2022 usou o
+
+1191
+00:37:28,720 --> 00:37:31,560
+Cassandra e tinha trilhões de dados lá
+
+1192
+00:37:31,560 --> 00:37:33,359
+armazenados. Então, cara, esse banco
+
+1193
+00:37:33,359 --> 00:37:35,880
+aqui é fenomenal. Então você fica ligado
+
+1194
+00:37:35,880 --> 00:37:38,160
+nisso aqui, porque o quórum é a forma
+
+1195
+00:37:38,160 --> 00:37:40,599
+que a gente faz o afrouxamento, tá?
+
+1196
+00:37:40,599 --> 00:37:42,079
+Então quanto mais próximo eu tiver aqui
+
+1197
+00:37:42,079 --> 00:37:44,040
+do all e quanto mais perto eu tiver do,
+
+1198
+00:37:44,040 --> 00:37:45,640
+eu vou escolher aqui ou então eu posso
+
+1199
+00:37:45,640 --> 00:37:47,520
+escolher a questão aqui bem no meio e
+
+1200
+00:37:47,520 --> 00:37:49,079
+ficar entre consistência e
+
+1201
+00:37:49,079 --> 00:37:51,520
+disponibilidade. Então é assim que você
+
+1202
+00:37:51,520 --> 00:37:54,040
+afrocha ou aperta a consistência e vai
+
+1203
+00:37:54,040 --> 00:37:55,880
+tornando ali a disponibilidade mais
+
+1204
+00:37:55,880 --> 00:37:58,000
+maleável e tudo mais. Então é assim,
+
+1205
+00:37:58,000 --> 00:37:59,839
+esse local quórum aqui é um conceito que
+
+1206
+00:37:59,839 --> 00:38:01,119
+eu posso trazer em um outro vídeo, mas
+
+1207
+00:38:01,119 --> 00:38:02,560
+basicamente esse local quórum aqui é o
+
+1208
+00:38:02,560 --> 00:38:05,000
+que os bancos usam, tá? Esse local é o é
+
+1209
+00:38:05,000 --> 00:38:06,760
+o data center, tá? Então você pode ter o
+
+1210
+00:38:06,760 --> 00:38:08,520
+Cassandro em vários data centers e aí
+
+1211
+00:38:08,520 --> 00:38:10,680
+ele vai garantir o quórum daquele data
+
+1212
+00:38:10,680 --> 00:38:12,240
+center, tá? Que você tá chamando, tá?
+
+1213
+00:38:12,240 --> 00:38:13,920
+Ele não vai garantir o global. Então o
+
+1214
+00:38:13,920 --> 00:38:16,079
+all é global, todos os data centers,
+
+1215
+00:38:16,079 --> 00:38:17,960
+leia em todos os nós do fator de
+
+1216
+00:38:17,960 --> 00:38:20,119
+replicação que eu já te ensinei qual é.
+
+1217
+00:38:20,119 --> 00:38:21,440
+Se isso aqui não ficou muito claro,
+
+1218
+00:38:21,440 --> 00:38:23,240
+cara, deixa no comentário aí abaixo que
+
+1219
+00:38:23,240 --> 00:38:24,760
+eu gravo um vídeo sobre isso. Eu falo um
+
+1220
+00:38:24,760 --> 00:38:26,599
+vídeo só sobre isso aqui. Então não vou
+
+1221
+00:38:26,599 --> 00:38:28,480
+estender mais por aqui, tá? O foco aqui
+
+1222
+00:38:28,480 --> 00:38:30,319
+é que você entenda que tá, eu passei por
+
+1223
+00:38:30,319 --> 00:38:31,640
+esse lance do quórum para você entender
+
+1224
+00:38:31,640 --> 00:38:33,440
+o seguinte aqui. Você escolhe o banco de
+
+1225
+00:38:33,440 --> 00:38:35,040
+dados de acordo com os atributos que ele
+
+1226
+00:38:35,040 --> 00:38:36,520
+tem a te oferecer e de acordo com a
+
+1227
+00:38:36,520 --> 00:38:38,240
+classificação dentro do teorema. Porque
+
+1228
+00:38:38,240 --> 00:38:39,960
+de nada adianta você escolher, cara,
+
+1229
+00:38:39,960 --> 00:38:42,160
+banco consistente para aplicação que
+
+1230
+00:38:42,160 --> 00:38:43,880
+demanda disponibilidade. Não adianta
+
+1231
+00:38:43,880 --> 00:38:45,720
+você escolher banco que garante muita
+
+1232
+00:38:45,720 --> 00:38:46,960
+disponibilidade, sendo que a tua
+
+1233
+00:38:46,960 --> 00:38:49,040
+aplicação precisa de muita consistência.
+
+1234
+00:38:49,040 --> 00:38:50,440
+Ah, Renato, mas você disse aí que dá
+
+1235
+00:38:50,440 --> 00:38:52,800
+para alterar o a arquitetura interna do
+
+1236
+00:38:52,800 --> 00:38:54,480
+banco. Até dá para você alterar. você
+
+1237
+00:38:54,480 --> 00:38:55,760
+consegue fazer isso, mas tem banco que
+
+1238
+00:38:55,760 --> 00:38:57,200
+você não vai conseguir. Então fica
+
+1239
+00:38:57,200 --> 00:38:59,119
+ligado nisso aqui, porque isso é
+
+1240
+00:38:59,119 --> 00:39:00,720
+importante. Mais uma vez vou deixar o
+
+1241
+00:39:00,720 --> 00:39:02,200
+link desse diagrama na descrição, você
+
+1242
+00:39:02,200 --> 00:39:03,800
+vai poder ler isso aqui, brincar e tal.
+
+1243
+00:39:03,800 --> 00:39:05,480
+Então fica ligeiro nisso aí. Dando
+
+1244
+00:39:05,480 --> 00:39:06,800
+continuidade aqui, a gente vai ter
+
+1245
+00:39:06,800 --> 00:39:08,240
+vários bancos. O Mongo, que é um banco
+
+1246
+00:39:08,240 --> 00:39:09,760
+que é consistente, ele garante
+
+1247
+00:39:09,760 --> 00:39:11,359
+atomicidade, consistência, isolamento e
+
+1248
+00:39:11,359 --> 00:39:12,920
+durabilidade dos dados. É orientado ao
+
+1249
+00:39:12,920 --> 00:39:15,319
+documento. Ele usa raft por baixo dos
+
+1250
+00:39:15,319 --> 00:39:16,720
+panos, que é um outro conceito. Vou
+
+1251
+00:39:16,720 --> 00:39:18,440
+deixar até aqui, ó. Só você clicar aqui,
+
+1252
+00:39:18,440 --> 00:39:20,200
+ó. Você vai para uma aplicaçãozinha lá
+
+1253
+00:39:20,200 --> 00:39:22,359
+que é totalmente visual, um desenhozinho
+
+1254
+00:39:22,359 --> 00:39:23,599
+que ele vai se movimentando, você vai
+
+1255
+00:39:23,599 --> 00:39:25,200
+entender como é que o Raft funciona. O
+
+1256
+00:39:25,200 --> 00:39:27,119
+Raft basicamente ele faz o seguinte, tá?
+
+1257
+00:39:27,119 --> 00:39:28,680
+Ele vai pegar o teu mongo DB ali, ele
+
+1258
+00:39:28,680 --> 00:39:30,400
+vai eleger um líder e aí dentro de um
+
+1259
+00:39:30,400 --> 00:39:32,000
+líder, você vai, se ele ficar fora do A,
+
+1260
+00:39:32,000 --> 00:39:33,599
+ele elege uma leitura como líder, um
+
+1261
+00:39:33,599 --> 00:39:35,960
+banco secundário. Inclusive isso aqui do
+
+1262
+00:39:35,960 --> 00:39:38,000
+líder não acontece aqui no Postcre, tá?
+
+1263
+00:39:38,000 --> 00:39:39,680
+Até daria para fazer. Então o que que eu
+
+1264
+00:39:39,680 --> 00:39:40,960
+quero que você entenda aqui que a
+
+1265
+00:39:40,960 --> 00:39:43,000
+escolha do Postgre nesse nosso cenário,
+
+1266
+00:39:43,000 --> 00:39:44,880
+cara, é horrível. Postgreen não foi
+
+1267
+00:39:44,880 --> 00:39:46,720
+feito para sistema distribuído, não
+
+1268
+00:39:46,720 --> 00:39:48,480
+adianta. Ele é single node. Ele é um
+
+1269
+00:39:48,480 --> 00:39:50,280
+banco que no teorema CAP lá ele era
+
+1270
+00:39:50,280 --> 00:39:52,000
+conhecido como CA, consistência e
+
+1271
+00:39:52,000 --> 00:39:53,319
+disponibilidade, mas não garante
+
+1272
+00:39:53,319 --> 00:39:55,440
+tolerância a partição. E todo o sistema
+
+1273
+00:39:55,440 --> 00:39:57,079
+distribuído precisa lidar com partição
+
+1274
+00:39:57,079 --> 00:39:58,520
+de rede. Então não adianta você escolher
+
+1275
+00:39:58,520 --> 00:40:00,599
+post grec para sistema distribuído de
+
+1276
+00:40:00,599 --> 00:40:02,359
+larga escala, não vai dar certo. Você
+
+1277
+00:40:02,359 --> 00:40:04,359
+até consegue fazer uma uma força a mais
+
+1278
+00:40:04,359 --> 00:40:06,280
+forçando muito a barra usando um RDS ali
+
+1279
+00:40:06,280 --> 00:40:08,240
+da AWS, mas você vai gastar um rio de
+
+1280
+00:40:08,240 --> 00:40:10,079
+dinheiro, cara. Então essas são as
+
+1281
+00:40:10,079 --> 00:40:12,000
+compensações que você precisa fazer.
+
+1282
+00:40:12,000 --> 00:40:14,040
+Voltando na nossa tabelinha aqui, você
+
+1283
+00:40:14,040 --> 00:40:15,240
+vai ter vários bancos, cara. Você vai
+
+1284
+00:40:15,240 --> 00:40:17,000
+ter aqui o damo DB, que também te
+
+1285
+00:40:17,000 --> 00:40:19,319
+garante consistência forte de acordo com
+
+1286
+00:40:19,319 --> 00:40:21,560
+isso aqui, ó, o consistent read. Aí é só
+
+1287
+00:40:21,560 --> 00:40:23,079
+a configuração mesmo, configuração
+
+1288
+00:40:23,079 --> 00:40:24,880
+geral. Ou você passa o consistent read
+
+1289
+00:40:24,880 --> 00:40:26,680
+true ou falso aqui. Então, se eu quero
+
+1290
+00:40:26,680 --> 00:40:28,240
+consistência na leitura, eu ten que
+
+1291
+00:40:28,240 --> 00:40:29,920
+passar o verdadeiro. Se não é falso, vai
+
+1292
+00:40:29,920 --> 00:40:31,599
+de consistência eventual. Então vai
+
+1293
+00:40:31,599 --> 00:40:32,920
+depender se o que você tá criando é um
+
+1294
+00:40:32,920 --> 00:40:34,599
+microsserviço, vai depender se você tá
+
+1295
+00:40:34,599 --> 00:40:36,119
+criando uma aplicação inteira que
+
+1296
+00:40:36,119 --> 00:40:38,240
+precisa dessa questão aqui de você
+
+1297
+00:40:38,240 --> 00:40:39,920
+contornar a consistência, ou seja, de
+
+1298
+00:40:39,920 --> 00:40:42,599
+você trabalhar a consistência em tempo
+
+1299
+00:40:42,599 --> 00:40:44,880
+de execução de código. Ou seja, cara, eu
+
+1300
+00:40:44,880 --> 00:40:47,079
+vou fazer um select no saldo bancário, é
+
+1301
+00:40:47,079 --> 00:40:49,040
+consistência máxima, eu vou fazer, sei
+
+1302
+00:40:49,040 --> 00:40:50,760
+lá, um select nos dados do usuário que
+
+1303
+00:40:50,760 --> 00:40:52,079
+pode estar desatualizado ou um
+
+1304
+00:40:52,079 --> 00:40:53,280
+comentário, aí a gente vai de
+
+1305
+00:40:53,280 --> 00:40:55,240
+consistência leve mesmo para poder ter
+
+1306
+00:40:55,240 --> 00:40:57,280
+baixa latência e alta disponibilidade.
+
+1307
+00:40:57,280 --> 00:40:59,280
+Então é assim que você escolhe o banco
+
+1308
+00:40:59,280 --> 00:41:01,160
+de dados da sua aplicação. Vou deixar
+
+1309
+00:41:01,160 --> 00:41:02,760
+aqui um blogzinho do Cassandra lá pr
+
+1310
+00:41:02,760 --> 00:41:04,119
+você dar uma lida. Vou deixar o raft
+
+1311
+00:41:04,119 --> 00:41:06,040
+aqui pr você ler também. Dia aqui
+
+1312
+00:41:06,040 --> 00:41:07,480
+completo aqui para você brincar, pr você
+
+1313
+00:41:07,480 --> 00:41:09,400
+entender. Tabelinha do banco de dados
+
+1314
+00:41:09,400 --> 00:41:10,680
+também. Tudo isso aqui vai ficar
+
+1315
+00:41:10,680 --> 00:41:12,359
+disponível para você para que você
+
+1316
+00:41:12,359 --> 00:41:14,160
+consiga trabalhar a questão do banco.
+
+1317
+00:41:14,160 --> 00:41:15,599
+Inclusive antes de finalizar esse vídeo
+
+1318
+00:41:15,599 --> 00:41:17,240
+aqui, ó, você tá vendo Postgre aqui, ó,
+
+1319
+00:41:17,240 --> 00:41:19,839
+como CP. Postgre não é CP, cara. Post é
+
+1320
+00:41:19,839 --> 00:41:21,599
+CA. Eu coloquei ele como CP porque dá
+
+1321
+00:41:21,599 --> 00:41:23,720
+para você fazer umas mandinga aqui e
+
+1322
+00:41:23,720 --> 00:41:25,839
+tornar ele um pouco mais distribuído,
+
+1323
+00:41:25,839 --> 00:41:28,440
+mas não é o natural. Inclusive esse
+
+1324
+00:41:28,440 --> 00:41:29,960
+conceito do charging aqui que eu te
+
+1325
+00:41:29,960 --> 00:41:32,560
+mostrei do Cassandra no Postgre dá para
+
+1326
+00:41:32,560 --> 00:41:34,720
+fazer, mas dá um trabalho tão federal
+
+1327
+00:41:34,720 --> 00:41:36,400
+que se não vale a pena você fazer fazer
+
+1328
+00:41:36,400 --> 00:41:38,079
+charging do banco de dados aqui na mão.
+
+1329
+00:41:38,079 --> 00:41:39,119
+Você tem que fazer na mão, cara. Você
+
+1330
+00:41:39,119 --> 00:41:40,800
+tem que criar o algoritmo que vai
+
+1331
+00:41:40,800 --> 00:41:42,680
+entender aonde, em qual partição, em
+
+1332
+00:41:42,680 --> 00:41:44,400
+qual fragmento que tá aquele dado que
+
+1333
+00:41:44,400 --> 00:41:46,359
+você tá buscando baseado no ID. Cara,
+
+1334
+00:41:46,359 --> 00:41:48,680
+isso dá um trabalho federal, não vale a
+
+1335
+00:41:48,680 --> 00:41:51,319
+pena. Então entende que não se resume a
+
+1336
+00:41:51,319 --> 00:41:53,520
+posteggre mais cic ou mongo db que a
+
+1337
+00:41:53,520 --> 00:41:55,960
+coisa vai muito além e é isso aqui cara
+
+1338
+00:41:55,960 --> 00:41:58,359
+que vai te safar na entrevista. Se você
+
+1339
+00:41:58,359 --> 00:42:00,240
+demonstra esse conhecimento aqui na
+
+1340
+00:42:00,240 --> 00:42:02,240
+entrevista, irmão, acabou, acabou. É
+
+1341
+00:42:02,240 --> 00:42:04,040
+game change isso aqui, cara. Então fica
+
+1342
+00:42:04,040 --> 00:42:05,680
+ligado nisso aqui, porque isso aqui,
+
+1343
+00:42:05,680 --> 00:42:07,880
+cara, de verdade, é o que vai mudar o
+
+1344
+00:42:07,880 --> 00:42:09,640
+jogo para você, é o que vai te botar um
+
+1345
+00:42:09,640 --> 00:42:11,319
+passo à frente da concorrência dos
+
+1346
+00:42:11,319 --> 00:42:12,960
+outros candidatos e vai fazer você se
+
+1347
+00:42:12,960 --> 00:42:14,240
+destacar em qualquer entrevista.
+
+1348
+00:42:14,240 --> 00:42:16,440
+Inclusive, isso aqui é o conceito mais
+
+1349
+00:42:16,440 --> 00:42:18,280
+puro de system design, de arquitetura de
+
+1350
+00:42:18,280 --> 00:42:19,800
+microsserviços, de sistemas
+
+1351
+00:42:19,800 --> 00:42:22,079
+distribuídos. Não tem como trabalhar com
+
+1352
+00:42:22,079 --> 00:42:24,119
+sistema distribuído. Se você não conhece
+
+1353
+00:42:24,119 --> 00:42:26,359
+isso aqui, cara, não tem como. Então, dá
+
+1354
+00:42:26,359 --> 00:42:28,000
+uma olhada nesse material. Tem vários
+
+1355
+00:42:28,000 --> 00:42:29,880
+outros bancos aqui, ó. Tem o CCK Road DB
+
+1356
+00:42:29,880 --> 00:42:31,680
+aqui, que foi um banco feito para ser
+
+1357
+00:42:31,680 --> 00:42:33,440
+relacionalmente distribuído, tá? Um
+
+1358
+00:42:33,440 --> 00:42:35,640
+banco relacional distribuído. Esse banco
+
+1359
+00:42:35,640 --> 00:42:37,200
+aqui serve para aplicação financeira e
+
+1360
+00:42:37,200 --> 00:42:39,400
+bancária. Ele exige de forte, sistema de
+
+1361
+00:42:39,400 --> 00:42:40,960
+gerenciamento de inventário global, back
+
+1362
+00:42:40,960 --> 00:42:42,440
+end de jogos multirregião. Isso aqui
+
+1363
+00:42:42,440 --> 00:42:44,240
+serve para muita coisa. Ele usa raft por
+
+1364
+00:42:44,240 --> 00:42:45,640
+baixo dos panos. Já te mostrei ali mais
+
+1365
+00:42:45,640 --> 00:42:46,839
+ou menos o que que é o raft ali, já te
+
+1366
+00:42:46,839 --> 00:42:48,800
+falei por alto. A gente tem aqui também,
+
+1367
+00:42:48,800 --> 00:42:50,599
+ó, o Spanner B, que é um banco
+
+1368
+00:42:50,599 --> 00:42:52,839
+fenomenal, é caro para caramba esse
+
+1369
+00:42:52,839 --> 00:42:55,359
+banco aqui. Só que esse banco, ele foi
+
+1370
+00:42:55,359 --> 00:42:56,800
+um dos bancos que se atreveu a querer
+
+1371
+00:42:56,800 --> 00:42:58,440
+quebrar o teorema. Posso falar sobre
+
+1372
+00:42:58,440 --> 00:43:00,319
+isso em outro vídeo aí e tal, porque
+
+1373
+00:43:00,319 --> 00:43:01,440
+esse vídeo aqui já tá mais do que
+
+1374
+00:43:01,440 --> 00:43:03,000
+esticado. Então ele usa relógios
+
+1375
+00:43:03,000 --> 00:43:05,359
+atômicos, usa true time aqui, ele vai no
+
+1376
+00:43:05,359 --> 00:43:07,880
+microlésimo de segundo lá dentro para
+
+1377
+00:43:07,880 --> 00:43:09,400
+saber quem é o dado mais atualizado,
+
+1378
+00:43:09,400 --> 00:43:11,400
+evita a concorrência. Então esse banco
+
+1379
+00:43:11,400 --> 00:43:13,200
+aqui é monstruoso. Ele usa um conceito
+
+1380
+00:43:13,200 --> 00:43:15,640
+chamado Paxus. Aqui, ó, esse Paxus aqui
+
+1381
+00:43:15,640 --> 00:43:17,319
+é diferente do Raft, é diferente do
+
+1382
+00:43:17,319 --> 00:43:18,839
+quórum, ele até usa os conceitos por
+
+1383
+00:43:18,839 --> 00:43:20,520
+baixo dos panos, um é inspirado no
+
+1384
+00:43:20,520 --> 00:43:22,200
+outro. Posso falar sobre isso em outro
+
+1385
+00:43:22,200 --> 00:43:24,040
+vídeo mais uma vez. Tem o Redis aqui que
+
+1386
+00:43:24,040 --> 00:43:25,680
+ele usa o Sentinel, que é um outro
+
+1387
+00:43:25,680 --> 00:43:27,680
+mecanismo, tá? E aí não dá para você
+
+1388
+00:43:27,680 --> 00:43:29,359
+transformar ele. Como eu falei, ó, tem
+
+1389
+00:43:29,359 --> 00:43:31,000
+banco, você vai conseguir transformar a
+
+1390
+00:43:31,000 --> 00:43:32,640
+essência, tá? E aí geralmente vai est
+
+1391
+00:43:32,640 --> 00:43:34,119
+aqui a informação. Então, dá uma olhada
+
+1392
+00:43:34,119 --> 00:43:35,880
+na planilha. Então, é baseado nisso,
+
+1393
+00:43:35,880 --> 00:43:37,599
+cara, que você faz a escolha dos seus
+
+1394
+00:43:37,599 --> 00:43:39,680
+bancos de dados. Então, mais uma vez,
+
+1395
+00:43:39,680 --> 00:43:41,440
+deixa nos comentários abaixo qual é a
+
+1396
+00:43:41,440 --> 00:43:42,760
+tua dúvida, porque eu sei que daqui a
+
+1397
+00:43:42,760 --> 00:43:44,200
+pouco você vai surgir um monte de
+
+1398
+00:43:44,200 --> 00:43:47,079
+dúvidas aí, mas isso aqui é conceito, é
+
+1399
+00:43:47,079 --> 00:43:49,760
+a base para você começar a estudar sobre
+
+1400
+00:43:49,760 --> 00:43:51,599
+sistemas distribuídos. Sem isso aqui,
+
+1401
+00:43:51,599 --> 00:43:52,960
+esquece, não vai ver sistema
+
+1402
+00:43:52,960 --> 00:43:54,720
+distribuído, você vai se estrepar ou vai
+
+1403
+00:43:54,720 --> 00:43:56,000
+fazer merda, vai escolher sistema
+
+1404
+00:43:56,000 --> 00:43:57,240
+errado, vai escolher banco de dados
+
+1405
+00:43:57,240 --> 00:43:58,960
+errado em produção e vai ter problema
+
+1406
+00:43:58,960 --> 00:44:01,079
+depois. Então vem na minha, só te coloco
+
+1407
+00:44:01,079 --> 00:44:02,880
+na boa, tu sabe disso. Dá uma olhada na
+
+1408
+00:44:02,880 --> 00:44:04,400
+descrição, vou deixar embaixo, vou decer
+
+1409
+00:44:04,400 --> 00:44:05,760
+esse diagrama aqui que vocês pediram
+
+1410
+00:44:05,760 --> 00:44:07,119
+para caramba lá na outra aula. Não
+
+1411
+00:44:07,119 --> 00:44:08,640
+esquece também de assistir a outra aula
+
+1412
+00:44:08,640 --> 00:44:10,440
+lá do vídeo de 1 milhão de usuários. E
+
+1413
+00:44:10,440 --> 00:44:12,200
+por fim, a gente vai ficando por aqui,
+
+1414
+00:44:12,200 --> 00:44:13,720
+beleza? Bom, e agora que você aprendeu a
+
+1415
+00:44:13,720 --> 00:44:15,960
+utilizar os teoremas CAP e Passel que,
+
+1416
+00:44:15,960 --> 00:44:17,760
+fazendo as compensações corretas entre
+
+1417
+00:44:17,760 --> 00:44:19,640
+consistência, disponibilidade, baixa
+
+1418
+00:44:19,640 --> 00:44:21,440
+latência da tua aplicação e tá muito
+
+1419
+00:44:21,440 --> 00:44:23,359
+mais preparado para começar a trabalhar
+
+1420
+00:44:23,359 --> 00:44:25,480
+com sistemas distribuídos, deixa teu
+
+1421
+00:44:25,480 --> 00:44:27,000
+like aí, se inscreve no canal, ativa o
+
+1422
+00:44:27,000 --> 00:44:28,280
+sininho para tu não perder nenhuma
+
+1423
+00:44:28,280 --> 00:44:30,119
+notificação. Não se esquece também de
+
+1424
+00:44:30,119 --> 00:44:32,000
+dar uma olhada no mapa do arquiteto, um
+
+1425
+00:44:32,000 --> 00:44:33,319
+guia de carreira completo que vai te
+
+1426
+00:44:33,319 --> 00:44:34,839
+conduzir do absoluto zero até o
+
+1427
+00:44:34,839 --> 00:44:36,640
+arquiteto de software. Então não deixa
+
+1428
+00:44:36,640 --> 00:44:38,160
+de dar uma olhada. Vou deixar o link na
+
+1429
+00:44:38,160 --> 00:44:40,359
+descrição. Se ficou qualquer dúvida,
+
+1430
+00:44:40,359 --> 00:44:42,359
+deixa nos comentários abaixo que eu faço
+
+1431
+00:44:42,359 --> 00:44:44,400
+questão de responder e eu sei que vai
+
+1432
+00:44:44,400 --> 00:44:46,280
+surgir dúvidas. Por fim, eu vou ficando
+
+1433
+00:44:46,280 --> 00:44:49,079
+por aqui. Um forte abraço para você e
+
+1434
+00:44:49,079 --> 00:44:51,960
+nos vemos em breve.
+
+1435
+00:44:51,960 --> 00:44:54,000
+Yeah.

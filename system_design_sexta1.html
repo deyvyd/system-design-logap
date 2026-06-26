@@ -1,0 +1,4264 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>System Design — Sexta 1</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500&family=Space+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="shared.css" />
+  </head>
+  <body>
+    <div class="deck" id="deck">
+      <div class="grid-bg"></div>
+
+      <!-- ═══════════ SLIDE 0 — COVER ═══════════ -->
+      <div class="slide active" id="slide-0">
+        <div class="slide-header">
+          <div class="slide-tag">Aiyra Engenharia de Dados</div>
+          <div class="slide-counter" id="counter-0">01 / 10</div>
+        </div>
+        <div class="slide-body">
+          <div class="content" style="flex: 0 0 58%">
+            <div class="cover-eyebrow" data-reveal="0">
+              Logap Lab ·
+              <span
+                style="
+                  background: #00d4ff;
+                  color: #0d1117;
+                  font-weight: 700;
+                  padding: 1px 7px;
+                  border-radius: 3px;
+                "
+                >Sessão 1</span
+              >
+              de 2
+            </div>
+            <h1 class="display" data-reveal="0">
+              Fundamentos de<br />
+              Arquitetura de Software<br />
+              e <span class="accent">System Design</span>
+            </h1>
+            <p class="cover-sub" data-reveal="0">
+              Como pensar a arquitetura de software antes de escrever a primeira
+              linha de código — dos fundamentos à aplicação em sistemas reais.
+            </p>
+            <div class="cover-meta" data-reveal="0">
+              <div class="meta-item">
+                <span class="meta-label">Apresentado por</span>
+                <span class="meta-value">Deyvyd</span>
+              </div>
+              <div class="meta-item">
+                <span class="meta-label">Sessão</span>
+                <span class="meta-value">Fundamentos</span>
+              </div>
+              <div class="meta-item">
+                <span class="meta-label">Formato</span>
+                <span class="meta-value">Apresentação + Discussão</span>
+              </div>
+            </div>
+          </div>
+          <div class="diagram-area" style="flex: 0 0 38%">
+            <svg
+              viewBox="0 0 340 420"
+              width="100%"
+              height="100%"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <!-- central glow -->
+              <defs>
+                <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#00D4FF" stop-opacity="0.15" />
+                  <stop offset="100%" stop-color="#00D4FF" stop-opacity="0" />
+                </radialGradient>
+                <marker
+                  id="arrowC"
+                  markerWidth="6"
+                  markerHeight="6"
+                  refX="5"
+                  refY="3"
+                  orient="auto"
+                >
+                  <path d="M0,0 L0,6 L6,3 z" fill="#00D4FF" opacity="0.7" />
+                </marker>
+                <marker
+                  id="arrowV"
+                  markerWidth="6"
+                  markerHeight="6"
+                  refX="5"
+                  refY="3"
+                  orient="auto"
+                >
+                  <path d="M0,0 L0,6 L6,3 z" fill="#A855F7" opacity="0.7" />
+                </marker>
+              </defs>
+              <circle cx="170" cy="210" r="120" fill="url(#glow)" />
+
+              <!-- nodes -->
+              <!-- Users -->
+              <rect
+                x="120"
+                y="20"
+                width="100"
+                height="44"
+                rx="8"
+                fill="#1E2433"
+                stroke="#00D4FF"
+                stroke-width="1.2"
+                data-reveal="1"
+              />
+              <text
+                x="170"
+                y="38"
+                text-anchor="middle"
+                fill="#E8EDF5"
+                font-size="11"
+                font-weight="600"
+                data-reveal="1"
+              >
+                Usuários
+              </text>
+              <text
+                x="170"
+                y="53"
+                text-anchor="middle"
+                fill="#6B7A99"
+                font-size="9"
+                data-reveal="1"
+              >
+                Front-end / Mobile
+              </text>
+
+              <!-- API -->
+              <rect
+                x="105"
+                y="140"
+                width="130"
+                height="44"
+                rx="8"
+                fill="#1E2433"
+                stroke="#A855F7"
+                stroke-width="1.2"
+                data-reveal="2"
+                data-undim-after="5"
+              />
+              <text
+                x="170"
+                y="158"
+                text-anchor="middle"
+                fill="#E8EDF5"
+                font-size="11"
+                font-weight="600"
+                data-reveal="2"
+                data-undim-after="5"
+              >
+                Servidor / API
+              </text>
+              <text
+                x="170"
+                y="173"
+                text-anchor="middle"
+                fill="#6B7A99"
+                font-size="9"
+                data-reveal="2"
+                data-undim-after="5"
+              >
+                Lógica de negócio
+              </text>
+
+              <!-- DB -->
+              <rect
+                x="105"
+                y="270"
+                width="130"
+                height="44"
+                rx="8"
+                fill="#1E2433"
+                stroke="#10B981"
+                stroke-width="1.2"
+                data-reveal="4"
+                data-undim-after="5"
+              />
+              <text
+                x="170"
+                y="288"
+                text-anchor="middle"
+                fill="#E8EDF5"
+                font-size="11"
+                font-weight="600"
+                data-reveal="4"
+                data-undim-after="5"
+              >
+                Banco de Dados
+              </text>
+              <text
+                x="170"
+                y="303"
+                text-anchor="middle"
+                fill="#6B7A99"
+                font-size="9"
+                data-reveal="4"
+                data-undim-after="5"
+              >
+                Persistência
+              </text>
+
+              <!-- Cache node -->
+              <rect
+                x="240"
+                y="198"
+                width="80"
+                height="36"
+                rx="8"
+                fill="#1E2433"
+                stroke="#F59E0B"
+                stroke-width="1"
+                data-reveal="3"
+                data-undim-after="5"
+              />
+              <text
+                x="280"
+                y="213"
+                text-anchor="middle"
+                fill="#F59E0B"
+                font-size="10"
+                font-weight="600"
+                data-reveal="3"
+                data-undim-after="5"
+              >
+                Cache
+              </text>
+              <text
+                x="280"
+                y="227"
+                text-anchor="middle"
+                fill="#6B7A99"
+                font-size="8"
+                data-reveal="3"
+                data-undim-after="5"
+              >
+                Redis
+              </text>
+
+              <!-- arrows users→api -->
+              <line
+                x1="170"
+                y1="64"
+                x2="170"
+                y2="138"
+                stroke="#00D4FF"
+                stroke-width="1.5"
+                stroke-dasharray="5,4"
+                marker-end="url(#arrowC)"
+                class="flow-line"
+                stroke-dashoffset="0"
+                data-reveal="2"
+                data-undim-after="5"
+              />
+
+              <!-- arrows api→db -->
+              <line
+                x1="170"
+                y1="184"
+                x2="170"
+                y2="268"
+                stroke="#A855F7"
+                stroke-width="1.5"
+                stroke-dasharray="5,4"
+                marker-end="url(#arrowV)"
+                class="flow-line"
+                stroke-dashoffset="0"
+                data-reveal="4"
+                data-undim-after="5"
+              />
+
+              <!-- api→cache -->
+              <line
+                x1="235"
+                y1="210"
+                x2="222"
+                y2="192"
+                data-reveal="3"
+                data-undim-after="5"
+                stroke="#F59E0B"
+                stroke-width="1"
+                stroke-dasharray="4,3"
+                opacity="0.7"
+              />
+
+              <!-- sistema boundary — engloba servidor, cache e banco -->
+              <rect
+                x="100"
+                y="132"
+                width="228"
+                height="192"
+                rx="10"
+                fill="rgba(0,212,255,0.03)"
+                stroke="rgba(0,212,255,0.2)"
+                stroke-width="1.2"
+                stroke-dasharray="6,4"
+                data-reveal="5"
+                data-undim-after="6"
+              />
+              <text
+                x="288"
+                y="146"
+                text-anchor="middle"
+                fill="rgba(0,212,255,0.35)"
+                font-size="7"
+                font-style="italic"
+                data-reveal="5"
+                data-undim-after="6"
+              >
+                sistema
+              </text>
+
+              <!-- label RF/RNF — define o sistema inteiro -->
+              <rect
+                x="12"
+                y="211"
+                width="78"
+                height="34"
+                rx="6"
+                fill="rgba(0,212,255,0.07)"
+                stroke="rgba(0,212,255,0.25)"
+                stroke-width="1"
+                data-reveal="6"
+              />
+              <text
+                x="51"
+                y="225"
+                text-anchor="middle"
+                fill="#00D4FF"
+                font-size="8.5"
+                font-weight="600"
+                data-reveal="6"
+              >
+                RF / RNF
+              </text>
+              <text
+                x="51"
+                y="238"
+                text-anchor="middle"
+                fill="#6B7A99"
+                font-size="7.5"
+                data-reveal="6"
+              >
+                definem tudo
+              </text>
+              <line
+                x1="90"
+                y1="228"
+                x2="100"
+                y2="228"
+                stroke="rgba(0,212,255,0.4)"
+                stroke-width="1.2"
+                stroke-dasharray="3,2"
+                data-reveal="6"
+              />
+
+              <!-- pulse dots -->
+              <circle
+                cx="170"
+                cy="64"
+                r="4"
+                fill="#00D4FF"
+                class="pulse"
+                data-reveal="1"
+              />
+              <circle
+                cx="170"
+                cy="268"
+                r="4"
+                fill="#A855F7"
+                class="pulse"
+                style="animation-delay: 0.7s"
+                data-reveal="4"
+                data-undim-after="5"
+              />
+              <circle
+                cx="235"
+                cy="210"
+                r="3"
+                fill="#F59E0B"
+                class="pulse"
+                style="animation-delay: 1.2s"
+                data-reveal="3"
+                data-undim-after="5"
+              />
+
+              <!-- bottom label -->
+              <text
+                x="170"
+                y="370"
+                text-anchor="middle"
+                fill="#6B7A99"
+                font-size="9"
+                data-reveal="7"
+              >
+                Arquitetura básica cliente–servidor
+              </text>
+              <text
+                x="170"
+                y="384"
+                text-anchor="middle"
+                fill="#6B7A99"
+                font-size="9"
+                data-reveal="7"
+              >
+                É daqui que tudo começa
+              </text>
+            </svg>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 11%"></div>
+          </div>
+          <div class="nav-hint"><span class="key">→</span> avançar</div>
+        </div>
+      </div>
+
+      <!-- ═══════════ SLIDE 1 — AGENDA ═══════════ -->
+      <div class="slide" id="slide-1">
+        <div class="slide-header">
+          <div class="slide-tag">Agenda</div>
+          <div class="slide-counter">02 / 10</div>
+        </div>
+        <div class="slide-body">
+          <div class="content" style="flex: 0 0 52%">
+            <h2 class="slide-title" data-reveal="0">
+              O que veremos <span class="accent">hoje</span>
+            </h2>
+            <p class="lead" data-reveal="0">
+              Sessão 1 de 2 — Fundamentos e casos reais.
+            </p>
+            <div class="agenda-list">
+              <div class="agenda-item" data-slide="2" data-reveal="1">
+                <span class="agenda-num">01</span>
+                <div>
+                  <div class="agenda-title">O que é System Design</div>
+                  <div class="agenda-sub">
+                    Definição, fit vs. overkill, por onde começar
+                  </div>
+                </div>
+              </div>
+              <div class="agenda-item" data-slide="3" data-reveal="2">
+                <span class="agenda-num">02</span>
+                <div>
+                  <div class="agenda-title">A primeira decisão</div>
+                  <div class="agenda-sub">
+                    Build vs. buy, trade-offs, o que faz sentido construir
+                  </div>
+                </div>
+              </div>
+              <div class="agenda-item" data-slide="4" data-reveal="3">
+                <span class="agenda-num">03</span>
+                <div>
+                  <div class="agenda-title">RF e RNF como ponto de partida</div>
+                  <div class="agenda-sub">
+                    A conexão com análise de requisitos
+                  </div>
+                </div>
+              </div>
+              <div class="agenda-item" data-slide="4" data-reveal="4">
+                <span class="agenda-num">04</span>
+                <div>
+                  <div class="agenda-title">
+                    Arquitetura básica e seus problemas
+                  </div>
+                  <div class="agenda-sub">
+                    Ponto único de falha, separação de responsabilidades
+                  </div>
+                </div>
+              </div>
+              <div class="agenda-item" data-slide="5" data-reveal="5">
+                <span class="agenda-num">05</span>
+                <div>
+                  <div class="agenda-title">
+                    Escalabilidade vertical vs. horizontal
+                  </div>
+                  <div class="agenda-sub">
+                    Load balancer, failover, redundância
+                  </div>
+                </div>
+              </div>
+              <div class="agenda-item" data-slide="6" data-reveal="6">
+                <span class="agenda-num">06</span>
+                <div>
+                  <div class="agenda-title">Replicação de banco de dados</div>
+                  <div class="agenda-sub">
+                    Master/slave, consistência eventual
+                  </div>
+                </div>
+              </div>
+              <div class="agenda-item" data-slide="7" data-reveal="7">
+                <span class="agenda-num">07</span>
+                <div>
+                  <div class="agenda-title">Cache-Aside Pattern</div>
+                  <div class="agenda-sub">
+                    Redis, TTL, quando e o que cachear
+                  </div>
+                </div>
+              </div>
+              <div class="agenda-item" data-slide="8" data-reveal="8">
+                <span class="agenda-num">08</span>
+                <div>
+                  <div class="agenda-title">Case: DocGen</div>
+                  <div class="agenda-sub">
+                    Decisões de arquitetura em um projeto real
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="diagram-area">
+            <svg
+              viewBox="0 0 300 400"
+              width="90%"
+              height="90%"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <defs>
+                <linearGradient id="toGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="50%" stop-color="#EF4444" />
+                  <stop offset="50%" stop-color="#10B981" />
+                </linearGradient>
+                <radialGradient id="glow2" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#7C3AED" stop-opacity="0.12" />
+                  <stop offset="100%" stop-color="#7C3AED" stop-opacity="0" />
+                </radialGradient>
+              </defs>
+
+              <!-- always visible -->
+              <circle cx="150" cy="200" r="130" fill="url(#glow2)" />
+
+              <!-- step 1: SD + rings -->
+              <g data-reveal="1" data-undim-after="1">
+                <text
+                  x="150"
+                  y="68"
+                  text-anchor="middle"
+                  fill="#A855F7"
+                  font-size="48"
+                  font-weight="700"
+                  opacity="0.15"
+                >
+                  SD
+                </text>
+                <circle
+                  cx="150"
+                  cy="200"
+                  r="90"
+                  fill="none"
+                  stroke="rgba(124,58,237,0.15)"
+                  stroke-width="1"
+                  stroke-dasharray="4,6"
+                />
+                <circle
+                  cx="150"
+                  cy="200"
+                  r="60"
+                  fill="none"
+                  stroke="rgba(0,212,255,0.12)"
+                  stroke-width="1"
+                  stroke-dasharray="3,5"
+                />
+                <circle
+                  cx="150"
+                  cy="200"
+                  r="30"
+                  fill="none"
+                  stroke="rgba(0,212,255,0.2)"
+                  stroke-width="1"
+                />
+              </g>
+
+              <!-- step 2: CORE -->
+              <g data-reveal="2">
+                <circle
+                  cx="150"
+                  cy="200"
+                  r="18"
+                  fill="rgba(0,212,255,0.1)"
+                  stroke="#00D4FF"
+                  stroke-width="1.5"
+                />
+                <text
+                  x="150"
+                  y="204"
+                  text-anchor="middle"
+                  fill="#00D4FF"
+                  font-size="9"
+                  font-weight="700"
+                >
+                  CORE
+                </text>
+              </g>
+
+              <!-- step 3: RF e RNF -->
+              <g data-reveal="3">
+                <line
+                  x1="150"
+                  y1="182"
+                  x2="150"
+                  y2="130"
+                  stroke="rgba(59,130,246,0.3)"
+                  stroke-width="1"
+                  stroke-dasharray="3,3"
+                />
+                <g style="cursor: default">
+                  <title>Requisitos Funcionais e Não-Funcionais</title>
+                  <circle
+                    cx="150"
+                    cy="114"
+                    r="16"
+                    fill="#1E2433"
+                    stroke="#3B82F6"
+                    stroke-width="1.2"
+                  />
+                  <text text-anchor="middle" fill="#3B82F6" font-size="7">
+                    <tspan x="150" y="111">RF e</tspan>
+                    <tspan x="150" dy="8">RNF</tspan>
+                  </text>
+                </g>
+              </g>
+
+              <!-- step 4: T-O (trade-off / arquitetura básica) -->
+              <g data-reveal="4">
+                <line
+                  x1="138"
+                  y1="191"
+                  x2="88"
+                  y2="163"
+                  stroke="rgba(100,100,100,0.3)"
+                  stroke-width="1"
+                  stroke-dasharray="3,3"
+                />
+                <g style="cursor: default">
+                  <title>Trade-off</title>
+                  <circle
+                    cx="74"
+                    cy="155"
+                    r="16"
+                    fill="#1E2433"
+                    stroke="url(#toGrad)"
+                    stroke-width="1.8"
+                  />
+                  <text
+                    x="74"
+                    y="158"
+                    text-anchor="middle"
+                    font-size="7"
+                    font-weight="600"
+                  >
+                    <tspan fill="#EF4444">T</tspan>
+                    <tspan fill="rgba(255,255,255,0.3)">-</tspan>
+                    <tspan fill="#10B981">O</tspan>
+                  </text>
+                </g>
+              </g>
+
+              <!-- step 5: Escala + LB (escalabilidade) -->
+              <g data-reveal="5">
+                <line
+                  x1="162"
+                  y1="191"
+                  x2="212"
+                  y2="163"
+                  stroke="rgba(168,85,247,0.3)"
+                  stroke-width="1"
+                  stroke-dasharray="3,3"
+                />
+                <g style="cursor: default">
+                  <title>Escalabilidade</title>
+                  <circle
+                    cx="226"
+                    cy="155"
+                    r="16"
+                    fill="#1E2433"
+                    stroke="#A855F7"
+                    stroke-width="1.2"
+                  />
+                  <text
+                    x="226"
+                    y="158"
+                    text-anchor="middle"
+                    fill="#A855F7"
+                    font-size="7"
+                  >
+                    Escala
+                  </text>
+                </g>
+                <line
+                  x1="138"
+                  y1="210"
+                  x2="88"
+                  y2="237"
+                  stroke="rgba(236,72,153,0.3)"
+                  stroke-width="1"
+                  stroke-dasharray="3,3"
+                />
+                <g style="cursor: default">
+                  <title>Load Balancer</title>
+                  <circle
+                    cx="74"
+                    cy="245"
+                    r="16"
+                    fill="#1E2433"
+                    stroke="#EC4899"
+                    stroke-width="1.2"
+                  />
+                  <text
+                    x="74"
+                    y="248"
+                    text-anchor="middle"
+                    fill="#EC4899"
+                    font-size="7"
+                  >
+                    LB
+                  </text>
+                </g>
+              </g>
+
+              <!-- step 6: BD (replicação) -->
+              <g data-reveal="6">
+                <line
+                  x1="162"
+                  y1="210"
+                  x2="212"
+                  y2="237"
+                  stroke="rgba(245,158,11,0.3)"
+                  stroke-width="1"
+                  stroke-dasharray="3,3"
+                />
+                <g style="cursor: default">
+                  <title>Banco de Dados</title>
+                  <circle
+                    cx="226"
+                    cy="245"
+                    r="16"
+                    fill="#1E2433"
+                    stroke="#F59E0B"
+                    stroke-width="1.2"
+                  />
+                  <text
+                    x="226"
+                    y="248"
+                    text-anchor="middle"
+                    fill="#F59E0B"
+                    font-size="7"
+                  >
+                    BD
+                  </text>
+                </g>
+              </g>
+
+              <!-- step 7: Cache -->
+              <g data-reveal="7">
+                <line
+                  x1="150"
+                  y1="218"
+                  x2="150"
+                  y2="270"
+                  stroke="rgba(16,185,129,0.3)"
+                  stroke-width="1"
+                  stroke-dasharray="3,3"
+                />
+                <g style="cursor: default">
+                  <title>Cache</title>
+                  <circle
+                    cx="150"
+                    cy="286"
+                    r="16"
+                    fill="#1E2433"
+                    stroke="#10B981"
+                    stroke-width="1.2"
+                  />
+                  <text
+                    x="150"
+                    y="289"
+                    text-anchor="middle"
+                    fill="#10B981"
+                    font-size="7"
+                  >
+                    Cache
+                  </text>
+                </g>
+              </g>
+            </svg>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 22%"></div>
+          </div>
+          <div class="nav-hint">
+            <span class="key">←</span><span class="key">→</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════ SLIDE 2 — O QUE É SD ═══════════ -->
+      <div class="slide" id="slide-2">
+        <div class="slide-header">
+          <div class="slide-tag">Fundamentos</div>
+          <div class="slide-counter">03 / 10</div>
+        </div>
+        <div class="slide-body">
+          <div class="content" style="flex: 0 0 50%">
+            <h2 class="slide-title" data-reveal="0">
+              O que é <span class="accent">System Design</span>
+            </h2>
+            <p class="lead" data-reveal="0">
+              É o processo de tomar decisões de arquitetura antes de escrever
+              código — entendendo o problema para criar a solução adequada.
+            </p>
+            <div class="concept-grid">
+              <!-- step 3: callout overkill — brilhante até step 4 -->
+              <div
+                class="callout"
+                data-reveal="3"
+                data-undim-after="3"
+                data-undim-until="4"
+              >
+                <strong>Overkill é tão ruim quanto subdimensionado.</strong> Um
+                sistema com microsserviços para 50 usuários é desperdício de
+                recursos e complexidade desnecessária.
+              </div>
+              <!-- step 4: Fit — brilhante até step 5 -->
+              <div
+                class="concept-item"
+                data-reveal="4"
+                data-undim-after="4"
+                data-undim-until="5"
+              >
+                <div class="concept-icon">🎯</div>
+                <div class="concept-text">
+                  <h4>Fit, não template</h4>
+                  <p>
+                    Não existe arquitetura certa em abstrato. Existe a
+                    arquitetura certa para aquele problema, naquele volume,
+                    naquele momento.
+                  </p>
+                </div>
+              </div>
+              <!-- step 5: trade-offs — brilhante até step 6 (perguntas) -->
+              <div
+                class="concept-item"
+                data-reveal="5"
+                data-undim-after="5"
+                data-undim-until="6"
+              >
+                <div class="concept-icon">⚖️</div>
+                <div class="concept-text">
+                  <h4>Trade-offs, não balas de prata</h4>
+                  <p>
+                    Toda decisão arquitetural resolve um problema e cria outro.
+                    O objetivo é escolher conscientemente qual problema você
+                    prefere ter.
+                  </p>
+                </div>
+              </div>
+              <!-- step 11: evolução gradual -->
+              <div class="concept-item" data-reveal="11" data-undim-after="11">
+                <div class="concept-icon">🔄</div>
+                <div class="concept-text">
+                  <h4>Evolução gradual</h4>
+                  <p>
+                    Você não constrói a arquitetura final de uma vez. Ela evolui
+                    conforme o sistema cresce e os gargalos aparecem.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <!-- step 12: dummy — atrasa .complete -->
+            <span data-reveal="12" style="display: none"></span>
+          </div>
+          <div class="diagram-area">
+            <svg
+              viewBox="0 0 360 350"
+              width="100%"
+              height="100%"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <defs>
+                <linearGradient id="specGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#EF4444" />
+                  <stop offset="50%" stop-color="#10B981" />
+                  <stop offset="100%" stop-color="#EF4444" />
+                </linearGradient>
+              </defs>
+
+              <!-- step 0: barra do espectro -->
+              <g data-reveal="0" data-undim-after="0" data-undim-until="6">
+                <rect
+                  x="16"
+                  y="76"
+                  width="328"
+                  height="12"
+                  rx="6"
+                  fill="url(#specGrad)"
+                  opacity="0.7"
+                />
+              </g>
+              <!-- label SUBDIMENSIONADO: brilhante só no step 1 -->
+              <g data-reveal="0" data-undim-after="1" data-undim-until="2">
+                <text
+                  x="16"
+                  y="68"
+                  fill="#EF4444"
+                  font-size="8.5"
+                  font-weight="600"
+                >
+                  SUBDIMENSIONADO
+                </text>
+              </g>
+              <!-- label OVERKILL: brilhante só no step 2 -->
+              <g data-reveal="0" data-undim-after="2" data-undim-until="3">
+                <text
+                  x="344"
+                  y="68"
+                  text-anchor="end"
+                  fill="#EF4444"
+                  font-size="8.5"
+                  font-weight="600"
+                >
+                  OVERKILL
+                </text>
+              </g>
+              <!-- FIT indicator: brilha no step 4, dim no step 6 (perguntas) -->
+              <g data-reveal="0" data-undim-after="4" data-undim-until="6">
+                <polygon points="180,58 174,74 186,74" fill="#00D4FF" />
+                <text
+                  x="180"
+                  y="54"
+                  text-anchor="middle"
+                  fill="#00D4FF"
+                  font-size="9"
+                  font-weight="700"
+                >
+                  FIT
+                </text>
+              </g>
+
+              <!-- step 1: caixa problemas subdimensionado -->
+              <g data-reveal="1">
+                <rect
+                  x="10"
+                  y="106"
+                  width="104"
+                  height="72"
+                  rx="8"
+                  fill="rgba(239,68,68,0.08)"
+                  stroke="rgba(239,68,68,0.25)"
+                  stroke-width="1"
+                />
+                <text
+                  x="62"
+                  y="123"
+                  text-anchor="middle"
+                  fill="#EF4444"
+                  font-size="8.5"
+                  font-weight="600"
+                >
+                  Problemas
+                </text>
+                <text
+                  x="62"
+                  y="139"
+                  text-anchor="middle"
+                  fill="#6B7A99"
+                  font-size="7.5"
+                >
+                  Lentidão
+                </text>
+                <text
+                  x="62"
+                  y="153"
+                  text-anchor="middle"
+                  fill="#6B7A99"
+                  font-size="7.5"
+                >
+                  Sistema fora do ar
+                </text>
+                <text
+                  x="62"
+                  y="167"
+                  text-anchor="middle"
+                  fill="#6B7A99"
+                  font-size="7.5"
+                >
+                  Dados perdidos
+                </text>
+              </g>
+
+              <!-- step 2: caixa problemas overkill -->
+              <g data-reveal="2">
+                <rect
+                  x="246"
+                  y="106"
+                  width="104"
+                  height="72"
+                  rx="8"
+                  fill="rgba(239,68,68,0.08)"
+                  stroke="rgba(239,68,68,0.25)"
+                  stroke-width="1"
+                />
+                <text
+                  x="298"
+                  y="123"
+                  text-anchor="middle"
+                  fill="#EF4444"
+                  font-size="8.5"
+                  font-weight="600"
+                >
+                  Problemas
+                </text>
+                <text
+                  x="298"
+                  y="139"
+                  text-anchor="middle"
+                  fill="#6B7A99"
+                  font-size="7.5"
+                >
+                  Custo alto
+                </text>
+                <text
+                  x="298"
+                  y="153"
+                  text-anchor="middle"
+                  fill="#6B7A99"
+                  font-size="7.5"
+                >
+                  Complexidade inútil
+                </text>
+                <text
+                  x="298"
+                  y="167"
+                  text-anchor="middle"
+                  fill="#6B7A99"
+                  font-size="7.5"
+                >
+                  Time lento
+                </text>
+              </g>
+
+              <!-- step 4: zona certa — dim no step 6 (perguntas) -->
+              <g data-reveal="4" data-undim-after="4" data-undim-until="6">
+                <rect
+                  x="128"
+                  y="100"
+                  width="104"
+                  height="84"
+                  rx="8"
+                  fill="rgba(16,185,129,0.08)"
+                  stroke="#10B981"
+                  stroke-width="1.5"
+                />
+                <text
+                  x="180"
+                  y="119"
+                  text-anchor="middle"
+                  fill="#10B981"
+                  font-size="8.5"
+                  font-weight="700"
+                >
+                  ZONA CERTA
+                </text>
+                <text
+                  x="180"
+                  y="135"
+                  text-anchor="middle"
+                  fill="#6B7A99"
+                  font-size="7.5"
+                >
+                  Custo adequado
+                </text>
+                <text
+                  x="180"
+                  y="149"
+                  text-anchor="middle"
+                  fill="#6B7A99"
+                  font-size="7.5"
+                >
+                  Performance OK
+                </text>
+                <text
+                  x="180"
+                  y="163"
+                  text-anchor="middle"
+                  fill="#6B7A99"
+                  font-size="7.5"
+                >
+                  Time produtivo
+                </text>
+              </g>
+
+              <!-- step 6: header + caixa perguntas — dim ao chegar no step 11 (evolução) -->
+              <g data-reveal="6" data-undim-after="6" data-undim-until="11">
+                <text
+                  x="180"
+                  y="212"
+                  text-anchor="middle"
+                  fill="#A0AECF"
+                  font-size="10"
+                  font-weight="600"
+                >
+                  Perguntas que definem o fit
+                </text>
+                <rect
+                  x="10"
+                  y="220"
+                  width="340"
+                  height="112"
+                  rx="10"
+                  fill="var(--bg3)"
+                  stroke="var(--border)"
+                  stroke-width="1"
+                />
+              </g>
+              <!-- pergunta 1: brilhante só no step 6 -->
+              <g data-reveal="6" data-undim-after="6" data-undim-until="7">
+                <text x="26" y="242" fill="#6B7A99" font-size="8.5">
+                  → Quantos usuários simultâneos esperamos?
+                </text>
+              </g>
+              <!-- pergunta 2: brilhante só no step 7 -->
+              <g data-reveal="7" data-undim-after="7" data-undim-until="8">
+                <text x="26" y="260" fill="#6B7A99" font-size="8.5">
+                  → Qual o tempo de resposta aceitável?
+                </text>
+              </g>
+              <!-- pergunta 3: brilhante só no step 8 -->
+              <g data-reveal="8" data-undim-after="8" data-undim-until="9">
+                <text x="26" y="278" fill="#6B7A99" font-size="8.5">
+                  → O sistema pode ficar fora do ar? Por quanto tempo?
+                </text>
+              </g>
+              <!-- pergunta 4: sozinha no step 9 -->
+              <g data-reveal="9" data-undim-after="9" data-undim-until="10">
+                <text x="26" y="296" fill="#6B7A99" font-size="8.5">
+                  → Os dados podem estar levemente desatualizados?
+                </text>
+              </g>
+              <!-- step 10: todas as perguntas bright + nota — dim no step 11 -->
+              <g data-reveal="10" data-undim-after="10" data-undim-until="11">
+                <text x="26" y="242" fill="#6B7A99" font-size="8.5">
+                  → Quantos usuários simultâneos esperamos?
+                </text>
+                <text x="26" y="260" fill="#6B7A99" font-size="8.5">
+                  → Qual o tempo de resposta aceitável?
+                </text>
+                <text x="26" y="278" fill="#6B7A99" font-size="8.5">
+                  → O sistema pode ficar fora do ar? Por quanto tempo?
+                </text>
+                <text x="26" y="296" fill="#6B7A99" font-size="8.5">
+                  → Os dados podem estar levemente desatualizados?
+                </text>
+                <text
+                  x="26"
+                  y="318"
+                  fill="#00D4FF"
+                  font-size="8"
+                  font-style="italic"
+                >
+                  Isso é análise de requisitos não-funcionais.
+                </text>
+              </g>
+            </svg>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 33%"></div>
+          </div>
+          <div class="nav-hint">
+            <span class="key">←</span><span class="key">→</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════ SLIDE 3 — A PRIMEIRA DECISÃO ═══════════ -->
+      <div class="slide" id="slide-3">
+        <div class="slide-header">
+          <div class="slide-tag">Fundamentos</div>
+          <div class="slide-counter">04 / 10</div>
+        </div>
+        <div class="slide-body">
+          <!-- LEFT: texto com colapso/expansão por step -->
+          <div
+            class="content"
+            style="
+              flex: 0 0 46%;
+              overflow: hidden;
+              display: flex;
+              flex-direction: column;
+              gap: 0;
+            "
+          >
+            <h2 class="slide-title" data-reveal="0">
+              A primeira <span class="accent">decisão</span>
+            </h2>
+
+            <!-- step 1: contexto -->
+            <div
+              class="step-item"
+              data-reveal="1"
+              style="border-left: 2px solid #a855f7; padding-left: 10px"
+            >
+              <div
+                style="
+                  color: #a855f7;
+                  font-size: 11px;
+                  font-weight: 700;
+                  text-transform: uppercase;
+                  letter-spacing: 1.5px;
+                  padding: 5px 0 3px;
+                "
+              >
+                Contexto
+              </div>
+              <div
+                class="step-detail"
+                style="
+                  color: #a0aecf;
+                  font-size: 14px;
+                  line-height: 1.5;
+                  padding-bottom: 5px;
+                "
+              >
+                Empresa de dev em crescimento — necessidade de gerir o RH de
+                forma profissional.
+              </div>
+            </div>
+
+            <!-- steps 2-5: levantamento (somem ao chegar nas ferramentas) -->
+            <div
+              class="step-item"
+              data-reveal="2"
+              data-hide-after="6"
+              data-undim-after="2"
+              data-undim-until="4"
+              style="
+                border-left: 2px solid #00d4ff;
+                padding-left: 10px;
+                margin-top: 4px;
+              "
+            >
+              <div
+                style="
+                  color: #00d4ff;
+                  font-size: 14px;
+                  font-style: italic;
+                  padding: 5px 0;
+                "
+              >
+                Quantos funcionários?
+              </div>
+            </div>
+            <div
+              class="step-item"
+              data-reveal="3"
+              data-hide-after="6"
+              style="
+                border-left: 2px solid rgba(232, 237, 245, 0.3);
+                padding-left: 12px;
+                margin-top: 2px;
+              "
+            >
+              <div
+                style="
+                  color: #e8edf5;
+                  font-size: 18px;
+                  font-weight: 700;
+                  padding: 4px 0;
+                "
+              >
+                → 40
+              </div>
+            </div>
+            <div
+              class="step-item"
+              data-reveal="4"
+              data-hide-after="6"
+              data-undim-after="4"
+              data-undim-until="6"
+              style="
+                border-left: 2px solid #00d4ff;
+                padding-left: 10px;
+                margin-top: 4px;
+              "
+            >
+              <div
+                style="
+                  color: #00d4ff;
+                  font-size: 14px;
+                  font-style: italic;
+                  padding: 5px 0;
+                "
+              >
+                O que precisamos gerenciar?
+              </div>
+            </div>
+            <div
+              class="step-item"
+              data-reveal="5"
+              data-hide-after="6"
+              style="
+                border-left: 2px solid rgba(232, 237, 245, 0.3);
+                padding-left: 12px;
+                margin-top: 2px;
+              "
+            >
+              <div
+                style="display: flex; gap: 6px; flex-wrap: wrap; padding: 5px 0"
+              >
+                <span
+                  style="
+                    background: #1e2433;
+                    color: #a0aecf;
+                    font-size: 13px;
+                    padding: 4px 10px;
+                    border-radius: 3px;
+                  "
+                  >ponto</span
+                >
+                <span
+                  style="
+                    background: #1e2433;
+                    color: #a0aecf;
+                    font-size: 13px;
+                    padding: 4px 10px;
+                    border-radius: 3px;
+                  "
+                  >holerite</span
+                >
+                <span
+                  style="
+                    background: #1e2433;
+                    color: #a0aecf;
+                    font-size: 13px;
+                    padding: 4px 10px;
+                    border-radius: 3px;
+                  "
+                  >férias</span
+                >
+                <span
+                  style="
+                    background: #1e2433;
+                    color: #a0aecf;
+                    font-size: 13px;
+                    padding: 4px 10px;
+                    border-radius: 3px;
+                  "
+                  >PDI</span
+                >
+                <span
+                  style="
+                    background: #1e2433;
+                    color: #a0aecf;
+                    font-size: 13px;
+                    padding: 4px 10px;
+                    border-radius: 3px;
+                  "
+                  >avaliações</span
+                >
+              </div>
+            </div>
+
+            <!-- fase: LEVANTAMENTO DE REQUISITOS (aparece no step 6, já dimmed via phase-label) -->
+            <div
+              class="step-item phase-label"
+              data-reveal="6"
+              style="
+                border-left: 2px solid #00d4ff;
+                padding-left: 10px;
+                margin-top: 8px;
+              "
+            >
+              <div
+                style="
+                  color: #00d4ff;
+                  font-size: 11px;
+                  font-weight: 700;
+                  text-transform: uppercase;
+                  letter-spacing: 1.5px;
+                  padding: 5px 0;
+                "
+              >
+                Levantamento de Requisitos
+              </div>
+            </div>
+
+            <!-- steps 6-8: ferramentas (somem ao chegar em Possibilidades) -->
+            <div
+              class="step-item"
+              data-reveal="6"
+              data-hide-after="9"
+              style="
+                margin-top: 4px;
+                background: rgba(245, 158, 11, 0.06);
+                border: 1px solid rgba(245, 158, 11, 0.25);
+                border-radius: 6px;
+                padding: 0 12px;
+              "
+            >
+              <div
+                style="
+                  color: #f59e0b;
+                  font-size: 14px;
+                  font-weight: 700;
+                  padding: 7px 0 6px;
+                "
+              >
+                Planilha compartilhada
+              </div>
+              <div
+                class="step-detail"
+                style="display: flex; gap: 10px; padding-bottom: 8px"
+              >
+                <div style="flex: 1">
+                  <div
+                    style="
+                      color: #10b981;
+                      font-size: 11px;
+                      font-weight: 600;
+                      margin-bottom: 4px;
+                    "
+                  >
+                    ↑ prós
+                  </div>
+                  <div
+                    style="color: #6b7a99; font-size: 12px; line-height: 1.7"
+                  >
+                    gratuito<br />familiar<br />rápido de começar
+                  </div>
+                </div>
+                <div
+                  style="width: 1px; background: rgba(255, 255, 255, 0.06)"
+                ></div>
+                <div style="flex: 1">
+                  <div
+                    style="
+                      color: #ef4444;
+                      font-size: 11px;
+                      font-weight: 600;
+                      margin-bottom: 4px;
+                    "
+                  >
+                    ↓ contras
+                  </div>
+                  <div
+                    style="color: #6b7a99; font-size: 12px; line-height: 1.7"
+                  >
+                    ponto manual<br />sem histórico<br />conflito de edição
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="step-item"
+              data-reveal="7"
+              data-hide-after="9"
+              style="
+                margin-top: 4px;
+                background: rgba(239, 68, 68, 0.06);
+                border: 1px solid rgba(239, 68, 68, 0.25);
+                border-radius: 6px;
+                padding: 0 12px;
+              "
+            >
+              <div
+                style="
+                  color: #ef4444;
+                  font-size: 14px;
+                  font-weight: 700;
+                  padding: 7px 0 6px;
+                "
+              >
+                Construir solução interna
+              </div>
+              <div
+                class="step-detail"
+                style="display: flex; gap: 10px; padding-bottom: 8px"
+              >
+                <div style="flex: 1">
+                  <div
+                    style="
+                      color: #10b981;
+                      font-size: 11px;
+                      font-weight: 600;
+                      margin-bottom: 4px;
+                    "
+                  >
+                    ↑ prós
+                  </div>
+                  <div
+                    style="color: #6b7a99; font-size: 12px; line-height: 1.7"
+                  >
+                    controle total<br />integração perfeita<br />sob medida
+                  </div>
+                </div>
+                <div
+                  style="width: 1px; background: rgba(255, 255, 255, 0.06)"
+                ></div>
+                <div style="flex: 1">
+                  <div
+                    style="
+                      color: #ef4444;
+                      font-size: 11px;
+                      font-weight: 600;
+                      margin-bottom: 4px;
+                    "
+                  >
+                    ↓ contras
+                  </div>
+                  <div
+                    style="color: #6b7a99; font-size: 12px; line-height: 1.7"
+                  >
+                    meses de dev<br />manutenção contínua<br />tira foco do
+                    produto
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="step-item"
+              data-reveal="8"
+              data-hide-after="9"
+              style="
+                margin-top: 4px;
+                background: rgba(16, 185, 129, 0.08);
+                border: 1px solid rgba(16, 185, 129, 0.4);
+                border-radius: 6px;
+                padding: 0 12px;
+              "
+            >
+              <div
+                style="
+                  color: #10b981;
+                  font-size: 14px;
+                  font-weight: 700;
+                  padding: 7px 0 6px;
+                "
+              >
+                Contratar ferramenta especializada
+              </div>
+              <div
+                class="step-detail"
+                style="display: flex; gap: 10px; padding-bottom: 8px"
+              >
+                <div style="flex: 1">
+                  <div
+                    style="
+                      color: #10b981;
+                      font-size: 11px;
+                      font-weight: 600;
+                      margin-bottom: 4px;
+                    "
+                  >
+                    ↑ prós
+                  </div>
+                  <div
+                    style="color: #6b7a99; font-size: 12px; line-height: 1.7"
+                  >
+                    foco no core<br />custo previsível<br />disponível em dias
+                  </div>
+                </div>
+                <div
+                  style="width: 1px; background: rgba(255, 255, 255, 0.06)"
+                ></div>
+                <div style="flex: 1">
+                  <div
+                    style="
+                      color: #ef4444;
+                      font-size: 11px;
+                      font-weight: 600;
+                      margin-bottom: 4px;
+                    "
+                  >
+                    ↓ contras
+                  </div>
+                  <div
+                    style="color: #6b7a99; font-size: 12px; line-height: 1.7"
+                  >
+                    vendor lock-in<br />dados externos<br />depende do roadmap
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- fase: POSSIBILIDADES (full no step 9, dima no step 10) -->
+            <div
+              class="step-item"
+              data-reveal="9"
+              data-undim-after="9"
+              data-undim-until="12"
+              style="
+                border-left: 2px solid #f59e0b;
+                padding-left: 10px;
+                margin-top: 8px;
+              "
+            >
+              <div
+                style="
+                  color: #f59e0b;
+                  font-size: 11px;
+                  font-weight: 700;
+                  text-transform: uppercase;
+                  letter-spacing: 1.5px;
+                  padding: 5px 0;
+                "
+              >
+                Possibilidades
+              </div>
+            </div>
+            <div
+              class="step-item"
+              data-reveal="9"
+              data-hide-after="10"
+              style="
+                border-left: 2px solid rgba(232, 237, 245, 0.15);
+                padding-left: 10px;
+                margin-top: 4px;
+              "
+            >
+              <div
+                style="
+                  color: #e8edf5;
+                  font-size: 14px;
+                  font-weight: 700;
+                  padding: 5px 0;
+                "
+              >
+                Qual dessas faz mais sentido?
+              </div>
+            </div>
+
+            <!-- step 10: rejeição Planilha -->
+            <div
+              class="step-item"
+              data-reveal="10"
+              data-hide-after="12"
+              style="
+                border-left: 2px solid #ef4444;
+                padding-left: 10px;
+                margin-top: 6px;
+              "
+            >
+              <div
+                style="
+                  color: #ef4444;
+                  font-size: 13px;
+                  font-weight: 700;
+                  padding: 5px 0 2px;
+                "
+              >
+                ✗ Planilha compartilhada
+              </div>
+              <div
+                class="step-detail"
+                style="color: #6b7a99; font-size: 12px; padding-bottom: 6px"
+              >
+                solução subdimensionada para o crescimento
+              </div>
+            </div>
+
+            <!-- step 11: rejeição Construir -->
+            <div
+              class="step-item"
+              data-reveal="11"
+              data-hide-after="12"
+              style="
+                border-left: 2px solid #ef4444;
+                padding-left: 10px;
+                margin-top: 4px;
+              "
+            >
+              <div
+                style="
+                  color: #ef4444;
+                  font-size: 13px;
+                  font-weight: 700;
+                  padding: 5px 0 2px;
+                "
+              >
+                ✗ Construir solução interna
+              </div>
+              <div
+                class="step-detail"
+                style="color: #6b7a99; font-size: 12px; padding-bottom: 6px"
+              >
+                overkill — meses de dev para gerir RH
+              </div>
+            </div>
+
+            <!-- fase: DECISÃO (step 12) -->
+            <div
+              class="step-item"
+              data-reveal="12"
+              style="
+                border-left: 2px solid #10b981;
+                padding-left: 10px;
+                margin-top: 8px;
+              "
+            >
+              <div
+                style="
+                  color: #10b981;
+                  font-size: 11px;
+                  font-weight: 700;
+                  text-transform: uppercase;
+                  letter-spacing: 1.5px;
+                  padding: 5px 0 3px;
+                "
+              >
+                Decisão
+              </div>
+              <div
+                class="step-detail"
+                style="
+                  display: flex;
+                  gap: 8px;
+                  padding-bottom: 4px;
+                  margin-top: 4px;
+                "
+              >
+                <div
+                  style="
+                    flex: 1;
+                    background: rgba(109, 40, 217, 0.08);
+                    border: 1px solid rgba(109, 40, 217, 0.35);
+                    border-radius: 5px;
+                    padding: 10px 12px;
+                    text-align: center;
+                  "
+                >
+                  <img
+                    src="assets/tiquetaque.webp"
+                    style="
+                      height: 28px;
+                      object-fit: contain;
+                      margin-bottom: 6px;
+                      display: block;
+                      margin-left: auto;
+                      margin-right: auto;
+                    "
+                  />
+                  <div
+                    style="color: #e8edf5; font-size: 14px; font-weight: 700"
+                  >
+                    TiqueTaque
+                  </div>
+                  <div style="color: #6b7a99; font-size: 12px; margin-top: 3px">
+                    controle de ponto
+                  </div>
+                </div>
+                <div
+                  style="
+                    flex: 1;
+                    background: rgba(192, 132, 252, 0.08);
+                    border: 1px solid rgba(192, 132, 252, 0.35);
+                    border-radius: 5px;
+                    padding: 10px 12px;
+                    text-align: center;
+                  "
+                >
+                  <img
+                    src="assets/convenia.svg"
+                    style="
+                      height: 28px;
+                      object-fit: contain;
+                      margin-bottom: 6px;
+                      display: block;
+                      margin-left: auto;
+                      margin-right: auto;
+                    "
+                  />
+                  <div
+                    style="color: #e8edf5; font-size: 14px; font-weight: 700"
+                  >
+                    Convenia
+                  </div>
+                  <div style="color: #6b7a99; font-size: 12px; margin-top: 3px">
+                    holerite · férias · PDI · avaliações
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- fase: REFLEXÃO (step 13) — não usa step-item para não colapsar no .complete -->
+            <div data-reveal="13" style="margin-top: 8px">
+              <div
+                style="
+                  border-left: 2px solid #ec4899;
+                  padding-left: 10px;
+                  margin-bottom: 8px;
+                "
+              >
+                <div
+                  style="
+                    color: #ec4899;
+                    font-size: 11px;
+                    font-weight: 700;
+                    text-transform: uppercase;
+                    letter-spacing: 1.5px;
+                    padding: 5px 0 3px;
+                  "
+                >
+                  Reflexão
+                </div>
+              </div>
+              <div
+                style="
+                  background: rgba(236, 72, 153, 0.05);
+                  border-left: 3px solid #ec4899;
+                  border-radius: 0 4px 4px 0;
+                  padding: 12px 14px;
+                "
+              >
+                <div
+                  style="
+                    color: #e8edf5;
+                    font-size: 16px;
+                    font-style: italic;
+                    line-height: 1.5;
+                  "
+                >
+                  "Vale a pena construir, ou o mercado já resolve por um valor
+                  acessível?"
+                </div>
+                <div style="color: #6b7a99; font-size: 13px; margin-top: 8px">
+                  Essa é a primeira pergunta de qualquer System Design.
+                </div>
+              </div>
+              <!-- step 14: dummy — atrasa .complete para o press seguinte à reflexão -->
+              <span data-reveal="14" style="display: none"></span>
+            </div>
+          </div>
+          <!-- .content -->
+
+          <!-- RIGHT: diagrama SVG que constrói progressivamente -->
+          <div class="diagram-area">
+            <svg
+              viewBox="0 0 392 260"
+              width="100%"
+              height="100%"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <defs>
+                <marker
+                  id="arrDec"
+                  markerWidth="5"
+                  markerHeight="5"
+                  refX="4"
+                  refY="2.5"
+                  orient="auto"
+                >
+                  <path d="M0,0 L0,5 L5,2.5 z" fill="#6B7A99" />
+                </marker>
+                <marker
+                  id="arrGrn"
+                  markerWidth="5"
+                  markerHeight="5"
+                  refX="4"
+                  refY="2.5"
+                  orient="auto"
+                >
+                  <path d="M0,0 L0,5 L5,2.5 z" fill="#10B981" />
+                </marker>
+              </defs>
+
+              <!-- step 1: Problema -->
+              <g data-reveal="1" data-undim-after="1" data-undim-until="2">
+                <rect
+                  x="2"
+                  y="112"
+                  width="72"
+                  height="36"
+                  rx="5"
+                  fill="rgba(168,85,247,0.1)"
+                  stroke="#A855F7"
+                  stroke-width="1.2"
+                />
+                <text
+                  x="38"
+                  y="126"
+                  text-anchor="middle"
+                  fill="#A855F7"
+                  font-size="9"
+                  font-weight="700"
+                >
+                  Problema
+                </text>
+                <text
+                  x="38"
+                  y="140"
+                  text-anchor="middle"
+                  fill="#6B7A99"
+                  font-size="8"
+                >
+                  gerir RH
+                </text>
+              </g>
+
+              <!-- step 2: Requisitos box -->
+              <g data-reveal="2" data-undim-after="2" data-undim-until="6">
+                <line
+                  x1="74"
+                  y1="130"
+                  x2="90"
+                  y2="130"
+                  stroke="#6B7A99"
+                  stroke-width="1.2"
+                  marker-end="url(#arrDec)"
+                />
+                <rect
+                  x="90"
+                  y="96"
+                  width="76"
+                  height="68"
+                  rx="5"
+                  fill="rgba(0,212,255,0.04)"
+                  stroke="rgba(0,212,255,0.4)"
+                  stroke-width="1.2"
+                />
+                <text
+                  x="128"
+                  y="112"
+                  text-anchor="middle"
+                  fill="#00D4FF"
+                  font-size="9"
+                  font-weight="700"
+                >
+                  Requisitos
+                </text>
+              </g>
+
+              <!-- step 3: 40 funcionários -->
+              <g data-reveal="3" data-undim-after="3" data-undim-until="6">
+                <text
+                  x="128"
+                  y="126"
+                  text-anchor="middle"
+                  fill="#A0AECF"
+                  font-size="8"
+                  font-weight="600"
+                >
+                  40 funcionários
+                </text>
+              </g>
+
+              <!-- step 5: lista de itens -->
+              <g data-reveal="5" data-undim-after="5" data-undim-until="6">
+                <text
+                  x="128"
+                  y="140"
+                  text-anchor="middle"
+                  fill="#6B7A99"
+                  font-size="7.5"
+                >
+                  ponto · holerite
+                </text>
+                <text
+                  x="128"
+                  y="151"
+                  text-anchor="middle"
+                  fill="#6B7A99"
+                  font-size="7.5"
+                >
+                  férias · PDI · aval.
+                </text>
+              </g>
+
+              <!-- step 6: Planilha -->
+              <g data-reveal="6" data-undim-after="9" data-undim-until="12">
+                <line
+                  x1="166"
+                  y1="130"
+                  x2="192"
+                  y2="58"
+                  stroke="rgba(107,122,153,0.4)"
+                  stroke-width="1"
+                  stroke-dasharray="3,2"
+                />
+                <rect
+                  x="192"
+                  y="40"
+                  width="84"
+                  height="36"
+                  rx="5"
+                  fill="rgba(245,158,11,0.06)"
+                  stroke="rgba(245,158,11,0.35)"
+                  stroke-width="1"
+                />
+                <text
+                  x="234"
+                  y="63"
+                  text-anchor="middle"
+                  fill="#F59E0B"
+                  font-size="9"
+                  font-weight="700"
+                >
+                  Planilha
+                </text>
+              </g>
+
+              <!-- step 7: Construir -->
+              <g data-reveal="7" data-undim-after="9" data-undim-until="12">
+                <line
+                  x1="166"
+                  y1="130"
+                  x2="192"
+                  y2="130"
+                  stroke="rgba(107,122,153,0.4)"
+                  stroke-width="1"
+                  stroke-dasharray="3,2"
+                />
+                <rect
+                  x="192"
+                  y="112"
+                  width="84"
+                  height="36"
+                  rx="5"
+                  fill="rgba(239,68,68,0.06)"
+                  stroke="rgba(239,68,68,0.35)"
+                  stroke-width="1"
+                />
+                <text
+                  x="234"
+                  y="135"
+                  text-anchor="middle"
+                  fill="#EF4444"
+                  font-size="9"
+                  font-weight="700"
+                >
+                  Construir
+                </text>
+              </g>
+
+              <!-- step 8: Contratar -->
+              <g data-reveal="8" data-undim-after="9" data-undim-until="13">
+                <line
+                  x1="166"
+                  y1="130"
+                  x2="192"
+                  y2="202"
+                  stroke="rgba(107,122,153,0.4)"
+                  stroke-width="1"
+                  stroke-dasharray="3,2"
+                />
+                <rect
+                  x="192"
+                  y="184"
+                  width="84"
+                  height="36"
+                  rx="5"
+                  fill="rgba(16,185,129,0.06)"
+                  stroke="rgba(16,185,129,0.4)"
+                  stroke-width="1"
+                />
+                <text
+                  x="234"
+                  y="207"
+                  text-anchor="middle"
+                  fill="#10B981"
+                  font-size="9"
+                  font-weight="700"
+                >
+                  Contratar
+                </text>
+              </g>
+
+              <!-- step 9: "Qual?" acima das opções -->
+              <g data-reveal="9">
+                <text
+                  x="234"
+                  y="26"
+                  text-anchor="middle"
+                  fill="#E8EDF5"
+                  font-size="11"
+                  font-weight="700"
+                  letter-spacing="1"
+                >
+                  Qual?
+                </text>
+                <line
+                  x1="192"
+                  y1="30"
+                  x2="276"
+                  y2="30"
+                  stroke="rgba(232,237,245,0.2)"
+                  stroke-width="0.8"
+                />
+              </g>
+
+              <!-- step 10: ✗ Planilha — subdimensionada -->
+              <g data-reveal="10">
+                <rect
+                  x="191"
+                  y="39"
+                  width="86"
+                  height="38"
+                  rx="5"
+                  fill="rgba(245,158,11,0.1)"
+                  stroke="rgba(245,158,11,0.9)"
+                  stroke-width="2"
+                />
+                <text
+                  x="283"
+                  y="63"
+                  text-anchor="middle"
+                  fill="#EF4444"
+                  font-size="14"
+                  font-weight="700"
+                >
+                  ✗
+                </text>
+                <text
+                  x="234"
+                  y="90"
+                  text-anchor="middle"
+                  fill="#EF4444"
+                  font-size="7.5"
+                >
+                  subdimensionada
+                </text>
+              </g>
+
+              <!-- step 11: ✗ Construir — overkill -->
+              <g data-reveal="11">
+                <rect
+                  x="191"
+                  y="111"
+                  width="86"
+                  height="38"
+                  rx="5"
+                  fill="rgba(239,68,68,0.1)"
+                  stroke="rgba(239,68,68,0.9)"
+                  stroke-width="2"
+                />
+                <text
+                  x="283"
+                  y="135"
+                  text-anchor="middle"
+                  fill="#EF4444"
+                  font-size="14"
+                  font-weight="700"
+                >
+                  ✗
+                </text>
+                <text
+                  x="234"
+                  y="162"
+                  text-anchor="middle"
+                  fill="#EF4444"
+                  font-size="7.5"
+                >
+                  overkill
+                </text>
+              </g>
+
+              <!-- step 12: ✓ Contratar + highlight + arrow + Decisão -->
+              <g data-reveal="12">
+                <!-- highlight Contratar -->
+                <rect
+                  x="191"
+                  y="183"
+                  width="86"
+                  height="38"
+                  rx="5"
+                  fill="none"
+                  stroke="#10B981"
+                  stroke-width="2"
+                />
+                <text
+                  x="283"
+                  y="207"
+                  text-anchor="middle"
+                  fill="#10B981"
+                  font-size="14"
+                  font-weight="700"
+                >
+                  ✓
+                </text>
+                <!-- arrow Contratar → Decisão -->
+                <line
+                  x1="276"
+                  y1="202"
+                  x2="308"
+                  y2="168"
+                  stroke="#10B981"
+                  stroke-width="1.2"
+                  stroke-dasharray="3,2"
+                  marker-end="url(#arrGrn)"
+                />
+                <!-- Decisão box -->
+                <rect
+                  x="308"
+                  y="120"
+                  width="80"
+                  height="52"
+                  rx="5"
+                  fill="rgba(109,40,217,0.08)"
+                  stroke="rgba(109,40,217,0.4)"
+                  stroke-width="1.5"
+                />
+                <text
+                  x="348"
+                  y="136"
+                  text-anchor="middle"
+                  fill="#E8EDF5"
+                  font-size="8"
+                  font-weight="700"
+                >
+                  TiqueTaque
+                </text>
+                <line
+                  x1="318"
+                  y1="146"
+                  x2="378"
+                  y2="146"
+                  stroke="#1E2433"
+                  stroke-width="1"
+                />
+                <text
+                  x="348"
+                  y="160"
+                  text-anchor="middle"
+                  fill="#E8EDF5"
+                  font-size="8"
+                  font-weight="700"
+                >
+                  Convenia
+                </text>
+              </g>
+            </svg>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 40%"></div>
+          </div>
+          <div class="nav-hint">
+            <span class="key">←</span><span class="key">→</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════ SLIDE 3 — RF / RNF ═══════════ -->
+      <div class="slide" id="slide-3">
+        <div class="slide-header">
+          <div class="slide-tag">Requisitos</div>
+          <div class="slide-counter">05 / 10</div>
+        </div>
+        <div class="slide-body">
+          <div class="content" style="flex: 0 0 50%">
+            <h2 class="slide-title" data-reveal="0">
+              <span class="accent-v">RF e RNF</span> como ponto de partida
+            </h2>
+            <p class="lead" data-reveal="0">
+              Toda arquitetura foi feita para atender requisitos. Sem eles, não
+              existe system design — existe chute.
+            </p>
+            <div class="compare">
+              <div class="compare-card card-cyan" data-reveal="1">
+                <h4 style="color: var(--cyan)">⚙️ Requisitos Funcionais</h4>
+                <ul>
+                  <li>
+                    <span>→</span> O que o sistema
+                    <strong style="color: var(--text)">faz</strong>
+                  </li>
+                  <li><span>→</span> Usuário pode fazer upload</li>
+                  <li><span>→</span> Sistema gera relatório</li>
+                  <li><span>→</span> Notificação por e-mail</li>
+                </ul>
+              </div>
+              <div class="compare-card card-v" data-reveal="2">
+                <h4 style="color: var(--violet2)">
+                  📐 Requisitos Não-Funcionais
+                </h4>
+                <ul>
+                  <li>
+                    <span>→</span> Como o sistema
+                    <strong style="color: var(--text)">se comporta</strong>
+                  </li>
+                  <li><span>→</span> Suporte 10k usuários simultâneos</li>
+                  <li><span>→</span> Resposta em até 200ms</li>
+                  <li><span>→</span> 99,9% de disponibilidade</li>
+                </ul>
+              </div>
+            </div>
+            <div
+              class="callout callout-cyan"
+              style="margin-top: 14px"
+              data-reveal="3"
+            >
+              <strong>RF define as funcionalidades e serviços.</strong> "Usuário faz upload" → precisamos entender o que o usuário faz no sistema para saber quais funcionalidades construir e serviços oferecer.
+            </div>
+            <div
+              class="callout callout-v"
+              style="margin-top: 14px"
+              data-reveal="4"
+            >
+              <strong>RNF define como o sistema se comporta.</strong> "Leitura em até 200ms" não é uma feature, é uma exigência de qualidade sobre algo que já existe. CDN + Cache na frente do storage. O arquivo sai do servidor de borda mais próximo do usuário, não do S3 direto.
+            </div>
+            <span data-reveal="5" style="display: none"></span>
+          </div>
+          <div class="diagram-area">
+            <svg
+              viewBox="0 0 300 320"
+              width="92%"
+              height="92%"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <defs>
+                <marker id="arrC2" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                  <path d="M0,0 L0,6 L6,3 z" fill="#00D4FF" />
+                </marker>
+                <marker id="arrV2" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                  <path d="M0,0 L0,6 L6,3 z" fill="#A855F7" />
+                </marker>
+              </defs>
+
+              <!-- step 1: dashed REQUISITOS container + RF box -->
+              <g data-reveal="1" data-undim-after="1">
+                <rect x="5" y="10" width="290" height="90" rx="8" fill="none" stroke="#3A4357" stroke-width="1.5" stroke-dasharray="6,4"/>
+                <text x="150" y="26" text-anchor="middle" fill="#6B7A99" font-size="8" font-weight="700" letter-spacing="2">REQUISITOS</text>
+                <!-- RF box -->
+                <rect x="12" y="34" width="130" height="58" rx="6" fill="rgba(0,212,255,0.08)" stroke="#00D4FF" stroke-width="1.5"/>
+                <text x="77" y="56" text-anchor="middle" fill="#00D4FF" font-size="9" font-weight="700">RF</text>
+                <text x="77" y="72" text-anchor="middle" fill="#A0AECF" font-size="8">Usuário faz upload</text>
+                <text x="77" y="84" text-anchor="middle" fill="#6B7A99" font-size="7">de arquivos</text>
+              </g>
+
+              <!-- step 2: RNF box -->
+              <g data-reveal="2" data-undim-after="2">
+                <rect x="158" y="34" width="130" height="58" rx="6" fill="rgba(168,85,247,0.08)" stroke="#A855F7" stroke-width="1.5"/>
+                <text x="223" y="56" text-anchor="middle" fill="#A855F7" font-size="9" font-weight="700">RNF</text>
+                <text x="223" y="72" text-anchor="middle" fill="#A0AECF" font-size="8">Leitura de arquivo</text>
+                <text x="223" y="84" text-anchor="middle" fill="#A0AECF" font-size="8">em até 200ms</text>
+              </g>
+
+              <!-- step 3: RF define → Upload Service -->
+              <g data-reveal="3" data-undim-after="3">
+                <line x1="77" y1="92" x2="150" y2="148" stroke="#00D4FF" stroke-width="1.2" stroke-opacity="0.6" marker-end="url(#arrC2)"/>
+                <rect x="100" y="112" width="60" height="14" rx="3" fill="#0D1117"/>
+                <text x="130" y="122" text-anchor="middle" fill="#00D4FF" font-size="7.5">RF define</text>
+                <!-- Upload Service box -->
+                <rect x="75" y="152" width="150" height="46" rx="6" fill="rgba(0,212,255,0.08)" stroke="#00D4FF" stroke-width="1.5"/>
+                <text x="150" y="171" text-anchor="middle" fill="#00D4FF" font-size="9" font-weight="700">Upload Service</text>
+                <text x="150" y="187" text-anchor="middle" fill="#6B7A99" font-size="7.5">S3 / Storage</text>
+              </g>
+
+              <!-- step 4: RNF exige → CDN + Cache -->
+              <g data-reveal="4" data-undim-after="4">
+                <line x1="150" y1="198" x2="150" y2="238" stroke="#A855F7" stroke-width="1.2" stroke-opacity="0.6" marker-end="url(#arrV2)"/>
+                <rect x="157" y="210" width="60" height="14" rx="3" fill="#0D1117"/>
+                <text x="187" y="220" text-anchor="middle" fill="#A855F7" font-size="7.5">RNF exige</text>
+                <!-- CDN box -->
+                <rect x="75" y="242" width="150" height="46" rx="6" fill="rgba(168,85,247,0.08)" stroke="#A855F7" stroke-width="1.5"/>
+                <text x="150" y="261" text-anchor="middle" fill="#A855F7" font-size="9" font-weight="700">CDN + Cache</text>
+                <text x="150" y="277" text-anchor="middle" fill="#6B7A99" font-size="7.5">200ms garantido</text>
+              </g>
+
+            </svg>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 44%"></div>
+          </div>
+          <div class="nav-hint">
+            <span class="key">←</span><span class="key">→</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════ SLIDE 4 — ESCALABILIDADE ═══════════ -->
+      <div class="slide" id="slide-4">
+        <div class="slide-header">
+          <div class="slide-tag">Escalabilidade</div>
+          <div class="slide-counter">06 / 10</div>
+        </div>
+        <div class="slide-body">
+          <div class="content" style="flex: 0 0 46%">
+            <h2 class="slide-title" data-reveal="0">
+              Vertical <span class="accent-v">vs</span> Horizontal
+            </h2>
+            <p class="lead" data-reveal="0">
+              Dois caminhos para crescer — com trade-offs muito diferentes.
+            </p>
+            <div class="compare">
+              <div class="compare-card card-amber" data-reveal="1">
+                <h4 style="color: var(--amber)">⬆️ Vertical (Scale Up)</h4>
+                <ul>
+                  <li><span>+</span> Simples de implementar</li>
+                  <li><span>+</span> Sem mudança na aplicação</li>
+                  <li><span>−</span> Tem limite físico de hardware</li>
+                  <li><span>−</span> Não resolve disponibilidade</li>
+                  <li><span>−</span> Ponto único de falha</li>
+                </ul>
+              </div>
+              <div class="compare-card card-green" data-reveal="2">
+                <h4 style="color: var(--green)">↔️ Horizontal (Scale Out)</h4>
+                <ul>
+                  <li><span>+</span> Sem limite teórico</li>
+                  <li><span>+</span> Redundância e failover</li>
+                  <li><span>+</span> Se um cai, outros assumem</li>
+                  <li><span>−</span> Precisa de Load Balancer</li>
+                  <li><span>−</span> Banco vira o gargalo</li>
+                </ul>
+              </div>
+            </div>
+            <div class="callout" data-reveal="3">
+              <strong>Load Balancer</strong> distribui as requisições entre
+              instâncias, fica exposto publicamente enquanto os servidores ficam
+              em rede privada. Faz health check: se uma instância cai, para de
+              enviar tráfego para ela automaticamente.
+            </div>
+          </div>
+          <div class="diagram-area">
+            <svg
+              viewBox="0 0 320 410"
+              width="100%"
+              height="100%"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <defs>
+                <marker
+                  id="arrLB"
+                  markerWidth="6"
+                  markerHeight="6"
+                  refX="5"
+                  refY="3"
+                  orient="auto"
+                >
+                  <path d="M0,0 L0,6 L6,3 z" fill="#00D4FF" opacity="0.8" />
+                </marker>
+                <marker
+                  id="arrLBv"
+                  markerWidth="6"
+                  markerHeight="6"
+                  refX="5"
+                  refY="3"
+                  orient="auto"
+                >
+                  <path d="M0,0 L0,6 L6,3 z" fill="#A855F7" opacity="0.8" />
+                </marker>
+              </defs>
+
+              <g data-reveal="0">
+                <!-- Users -->
+                <rect
+                  x="115"
+                  y="14"
+                  width="90"
+                  height="36"
+                  rx="7"
+                  fill="#1E2433"
+                  stroke="#6B7A99"
+                  stroke-width="1"
+                />
+                <text
+                  x="160"
+                  y="28"
+                  text-anchor="middle"
+                  fill="#A0AECF"
+                  font-size="9"
+                  font-weight="600"
+                >
+                  Usuários
+                </text>
+                <text
+                  x="160"
+                  y="42"
+                  text-anchor="middle"
+                  fill="#6B7A99"
+                  font-size="8"
+                >
+                  requisições
+                </text>
+                <line
+                  x1="160"
+                  y1="50"
+                  x2="160"
+                  y2="76"
+                  stroke="rgba(0,212,255,0.5)"
+                  stroke-width="1.5"
+                  marker-end="url(#arrLB)"
+                  stroke-dasharray="4,3"
+                  class="flow-line"
+                />
+              </g>
+              <g data-reveal="1">
+                <!-- Load Balancer -->
+                <rect
+                  x="80"
+                  y="80"
+                  width="160"
+                  height="42"
+                  rx="9"
+                  fill="rgba(0,212,255,0.1)"
+                  stroke="#00D4FF"
+                  stroke-width="1.8"
+                />
+                <text
+                  x="160"
+                  y="97"
+                  text-anchor="middle"
+                  fill="#00D4FF"
+                  font-size="10"
+                  font-weight="700"
+                >
+                  Load Balancer
+                </text>
+                <text
+                  x="160"
+                  y="113"
+                  text-anchor="middle"
+                  fill="#6B7A99"
+                  font-size="8"
+                >
+                  IP público · health check · round-robin
+                </text>
+              </g>
+              <g data-reveal="2">
+                <!-- LB → 3 instances -->
+                <line
+                  x1="120"
+                  y1="122"
+                  x2="70"
+                  y2="158"
+                  stroke="rgba(239,68,68,0.35)"
+                  stroke-width="1.2"
+                  marker-end="url(#arrLB)"
+                  stroke-dasharray="4,3"
+                />
+                <line
+                  x1="160"
+                  y1="122"
+                  x2="160"
+                  y2="158"
+                  stroke="rgba(0,212,255,0.4)"
+                  stroke-width="1.2"
+                  marker-end="url(#arrLB)"
+                />
+                <line
+                  x1="200"
+                  y1="122"
+                  x2="250"
+                  y2="158"
+                  stroke="rgba(0,212,255,0.4)"
+                  stroke-width="1.2"
+                  marker-end="url(#arrLB)"
+                />
+
+                <!-- Instância 1 — DOWN -->
+                <rect
+                  x="18"
+                  y="162"
+                  width="88"
+                  height="38"
+                  rx="7"
+                  fill="rgba(239,68,68,0.1)"
+                  stroke="#EF4444"
+                  stroke-width="1.5"
+                />
+                <text
+                  x="62"
+                  y="177"
+                  text-anchor="middle"
+                  fill="#EF4444"
+                  font-size="9"
+                  font-weight="600"
+                >
+                  ✕ Instância 1
+                </text>
+                <text
+                  x="62"
+                  y="192"
+                  text-anchor="middle"
+                  fill="#EF4444"
+                  font-size="7.5"
+                  opacity="0.7"
+                >
+                  offline
+                </text>
+
+                <!-- Instância 2 -->
+                <rect
+                  x="116"
+                  y="162"
+                  width="88"
+                  height="38"
+                  rx="7"
+                  fill="#1E2433"
+                  stroke="#A855F7"
+                  stroke-width="1"
+                />
+                <text
+                  x="160"
+                  y="177"
+                  text-anchor="middle"
+                  fill="#E8EDF5"
+                  font-size="9"
+                  font-weight="600"
+                >
+                  Instância 2
+                </text>
+                <text
+                  x="160"
+                  y="192"
+                  text-anchor="middle"
+                  fill="#6B7A99"
+                  font-size="8"
+                >
+                  IP privado
+                </text>
+
+                <!-- Instância 3 -->
+                <rect
+                  x="214"
+                  y="162"
+                  width="88"
+                  height="38"
+                  rx="7"
+                  fill="#1E2433"
+                  stroke="#A855F7"
+                  stroke-width="1"
+                />
+                <text
+                  x="258"
+                  y="177"
+                  text-anchor="middle"
+                  fill="#E8EDF5"
+                  font-size="9"
+                  font-weight="600"
+                >
+                  Instância 3
+                </text>
+                <text
+                  x="258"
+                  y="192"
+                  text-anchor="middle"
+                  fill="#6B7A99"
+                  font-size="8"
+                >
+                  IP privado
+                </text>
+
+                <!-- Failover label -->
+                <text
+                  x="62"
+                  y="215"
+                  text-anchor="middle"
+                  fill="#10B981"
+                  font-size="7.5"
+                >
+                  ↑ LB redireciona tráfego
+                </text>
+              </g>
+              <g data-reveal="3">
+                <!-- DB arrow -->
+                <line
+                  x1="160"
+                  y1="200"
+                  x2="160"
+                  y2="232"
+                  stroke="rgba(168,85,247,0.4)"
+                  stroke-width="1.2"
+                  marker-end="url(#arrLBv)"
+                />
+
+                <!-- DB -->
+                <rect
+                  x="80"
+                  y="236"
+                  width="160"
+                  height="40"
+                  rx="8"
+                  fill="#1E2433"
+                  stroke="#10B981"
+                  stroke-width="1.2"
+                />
+                <text
+                  x="160"
+                  y="253"
+                  text-anchor="middle"
+                  fill="#E8EDF5"
+                  font-size="10"
+                  font-weight="600"
+                >
+                  Banco de Dados
+                </text>
+                <text
+                  x="160"
+                  y="268"
+                  text-anchor="middle"
+                  fill="#6B7A99"
+                  font-size="8"
+                >
+                  próximo gargalo a resolver
+                </text>
+
+                <!-- Warning -->
+                <rect
+                  x="20"
+                  y="292"
+                  width="280"
+                  height="34"
+                  rx="7"
+                  fill="rgba(245,158,11,0.07)"
+                  stroke="rgba(245,158,11,0.25)"
+                  stroke-width="1"
+                />
+                <text
+                  x="160"
+                  y="306"
+                  text-anchor="middle"
+                  fill="#F59E0B"
+                  font-size="8.5"
+                  font-weight="600"
+                >
+                  ⚠ Todas as instâncias apontam pro mesmo banco
+                </text>
+                <text
+                  x="160"
+                  y="320"
+                  text-anchor="middle"
+                  fill="#6B7A99"
+                  font-size="8"
+                >
+                  → ele se torna o ponto único de falha
+                </text>
+
+                <!-- Elasticity -->
+                <rect
+                  x="20"
+                  y="340"
+                  width="280"
+                  height="52"
+                  rx="7"
+                  fill="rgba(16,185,129,0.06)"
+                  stroke="rgba(16,185,129,0.2)"
+                  stroke-width="1"
+                />
+                <text
+                  x="160"
+                  y="357"
+                  text-anchor="middle"
+                  fill="#10B981"
+                  font-size="8.5"
+                  font-weight="600"
+                >
+                  💡 Elasticidade (Auto Scaling)
+                </text>
+                <text
+                  x="160"
+                  y="372"
+                  text-anchor="middle"
+                  fill="#6B7A99"
+                  font-size="8"
+                >
+                  Min: 2 instâncias · Max: 10 instâncias
+                </text>
+                <text
+                  x="160"
+                  y="385"
+                  text-anchor="middle"
+                  fill="#6B7A99"
+                  font-size="8"
+                >
+                  Sobe/desce automaticamente com o tráfego
+                </text>
+              </g>
+            </svg>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 55%"></div>
+          </div>
+          <div class="nav-hint">
+            <span class="key">←</span><span class="key">→</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════ SLIDE 5 — REPLICAÇÃO DE BANCO ═══════════ -->
+      <div class="slide" id="slide-5">
+        <div class="slide-header">
+          <div class="slide-tag">Banco de Dados</div>
+          <div class="slide-counter">07 / 10</div>
+        </div>
+        <div class="slide-body">
+          <div class="content" style="flex: 0 0 46%">
+            <h2 class="slide-title" data-reveal="0">
+              Replicação de <span class="accent">Banco</span>
+            </h2>
+            <p class="lead" data-reveal="0">
+              Com múltiplas instâncias da aplicação, o banco vira o gargalo. A
+              solução é separar escrita de leitura.
+            </p>
+            <div class="concept-grid">
+              <div class="concept-item" data-reveal="1">
+                <div class="concept-icon">✍️</div>
+                <div class="concept-text">
+                  <h4>Master (escrita)</h4>
+                  <p>
+                    Recebe todos os INSERTs, UPDATEs e DELETEs. É a fonte de
+                    verdade dos dados.
+                  </p>
+                </div>
+              </div>
+              <div class="concept-item" data-reveal="2">
+                <div class="concept-icon">📖</div>
+                <div class="concept-text">
+                  <h4>Slaves (leitura)</h4>
+                  <p>
+                    Réplicas do master. Recebem os SELECTs. A maioria das
+                    aplicações lê muito mais do que escreve.
+                  </p>
+                </div>
+              </div>
+              <div class="concept-item" data-reveal="3">
+                <div class="concept-icon">⏱️</div>
+                <div class="concept-text">
+                  <h4>Consistência eventual</h4>
+                  <p>
+                    A replicação leva alguns milissegundos. Um dado
+                    recém-inserido pode não aparecer imediatamente nos slaves.
+                    Isso é um trade-off consciente.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="callout" data-reveal="4">
+              <strong>Quando isso é problema?</strong> Saldo bancário não pode
+              estar desatualizado. Contador de likes em rede social pode. O
+              contexto define a tolerância.
+            </div>
+          </div>
+          <div class="diagram-area">
+            <svg
+              viewBox="0 0 300 380"
+              width="100%"
+              height="100%"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <defs>
+                <marker
+                  id="arrW"
+                  markerWidth="6"
+                  markerHeight="6"
+                  refX="5"
+                  refY="3"
+                  orient="auto"
+                >
+                  <path d="M0,0 L0,6 L6,3 z" fill="#F59E0B" />
+                </marker>
+                <marker
+                  id="arrR"
+                  markerWidth="6"
+                  markerHeight="6"
+                  refX="5"
+                  refY="3"
+                  orient="auto"
+                >
+                  <path d="M0,0 L0,6 L6,3 z" fill="#10B981" />
+                </marker>
+                <marker
+                  id="arrRep"
+                  markerWidth="6"
+                  markerHeight="6"
+                  refX="5"
+                  refY="3"
+                  orient="auto"
+                >
+                  <path d="M0,0 L0,6 L6,3 z" fill="#A855F7" />
+                </marker>
+              </defs>
+              <g data-reveal="0">
+                <!-- App instances -->
+                <rect
+                  x="100"
+                  y="14"
+                  width="100"
+                  height="34"
+                  rx="7"
+                  fill="#1E2433"
+                  stroke="#A855F7"
+                  stroke-width="1"
+                />
+                <text
+                  x="150"
+                  y="28"
+                  text-anchor="middle"
+                  fill="#E8EDF5"
+                  font-size="9"
+                  font-weight="600"
+                >
+                  Aplicação
+                </text>
+                <text
+                  x="150"
+                  y="41"
+                  text-anchor="middle"
+                  fill="#6B7A99"
+                  font-size="8"
+                >
+                  múltiplas instâncias
+                </text>
+
+                <!-- Write arrow -->
+                <path
+                  d="M 130,48 Q 80,80 80,110"
+                  fill="none"
+                  stroke="#F59E0B"
+                  stroke-width="1.4"
+                  marker-end="url(#arrW)"
+                  stroke-dasharray="5,3"
+                  class="flow-line"
+                />
+                <text
+                  x="62"
+                  y="84"
+                  fill="#F59E0B"
+                  font-size="8"
+                  font-weight="600"
+                >
+                  escrita
+                </text>
+
+                <!-- Read arrows — App → Slave 1 e Slave 2 -->
+                <path
+                  d="M 178,48 Q 192,80 198,114"
+                  fill="none"
+                  stroke="#10B981"
+                  stroke-width="1.4"
+                  marker-end="url(#arrR)"
+                  stroke-dasharray="5,3"
+                  class="flow-line"
+                />
+                <path
+                  d="M 188,48 Q 240,70 262,114"
+                  fill="none"
+                  stroke="#10B981"
+                  stroke-width="1.4"
+                  marker-end="url(#arrR)"
+                  stroke-dasharray="5,3"
+                  class="flow-line"
+                />
+                <text
+                  x="238"
+                  y="62"
+                  fill="#10B981"
+                  font-size="8"
+                  font-weight="600"
+                >
+                  leitura
+                </text>
+              </g>
+              <g data-reveal="1">
+                <!-- Master -->
+                <rect
+                  x="30"
+                  y="114"
+                  width="100"
+                  height="50"
+                  rx="9"
+                  fill="rgba(245,158,11,0.1)"
+                  stroke="#F59E0B"
+                  stroke-width="1.8"
+                />
+                <text
+                  x="80"
+                  y="134"
+                  text-anchor="middle"
+                  fill="#F59E0B"
+                  font-size="10"
+                  font-weight="700"
+                >
+                  MASTER
+                </text>
+                <text
+                  x="80"
+                  y="150"
+                  text-anchor="middle"
+                  fill="#6B7A99"
+                  font-size="8"
+                >
+                  escrita
+                </text>
+                <text
+                  x="80"
+                  y="162"
+                  text-anchor="middle"
+                  fill="#6B7A99"
+                  font-size="8"
+                >
+                  fonte de verdade
+                </text>
+              </g>
+              <g data-reveal="2">
+                <!-- Slaves -->
+                <rect
+                  x="170"
+                  y="114"
+                  width="56"
+                  height="50"
+                  rx="8"
+                  fill="rgba(16,185,129,0.08)"
+                  stroke="#10B981"
+                  stroke-width="1.2"
+                />
+                <text
+                  x="198"
+                  y="133"
+                  text-anchor="middle"
+                  fill="#10B981"
+                  font-size="9"
+                  font-weight="600"
+                >
+                  Slave 1
+                </text>
+                <text
+                  x="198"
+                  y="149"
+                  text-anchor="middle"
+                  fill="#6B7A99"
+                  font-size="8"
+                >
+                  leitura
+                </text>
+                <text
+                  x="198"
+                  y="162"
+                  text-anchor="middle"
+                  fill="#6B7A99"
+                  font-size="8"
+                >
+                  réplica
+                </text>
+
+                <rect
+                  x="234"
+                  y="114"
+                  width="56"
+                  height="50"
+                  rx="8"
+                  fill="rgba(16,185,129,0.08)"
+                  stroke="#10B981"
+                  stroke-width="1.2"
+                />
+                <text
+                  x="262"
+                  y="133"
+                  text-anchor="middle"
+                  fill="#10B981"
+                  font-size="9"
+                  font-weight="600"
+                >
+                  Slave 2
+                </text>
+                <text
+                  x="262"
+                  y="149"
+                  text-anchor="middle"
+                  fill="#6B7A99"
+                  font-size="8"
+                >
+                  leitura
+                </text>
+                <text
+                  x="262"
+                  y="162"
+                  text-anchor="middle"
+                  fill="#6B7A99"
+                  font-size="8"
+                >
+                  réplica
+                </text>
+
+                <!-- Replication arrows -->
+                <!-- Master → Slave 1: linha direta -->
+                <line
+                  x1="130"
+                  y1="132"
+                  x2="168"
+                  y2="132"
+                  stroke="#A855F7"
+                  stroke-width="1.2"
+                  marker-end="url(#arrRep)"
+                  stroke-dasharray="4,3"
+                  class="flow-line"
+                />
+                <text
+                  x="149"
+                  y="127"
+                  text-anchor="middle"
+                  fill="#A855F7"
+                  font-size="7"
+                >
+                  replica
+                </text>
+                <!-- Master → Slave 2: contorna por baixo dos boxes -->
+                <path
+                  d="M 130,158 L 130,176 L 262,176 L 262,164"
+                  fill="none"
+                  stroke="#A855F7"
+                  stroke-width="1.2"
+                  marker-end="url(#arrRep)"
+                  stroke-dasharray="4,3"
+                  class="flow-line"
+                />
+                <text
+                  x="196"
+                  y="185"
+                  text-anchor="middle"
+                  fill="#A855F7"
+                  font-size="7"
+                >
+                  replica
+                </text>
+              </g>
+              <g data-reveal="3">
+                <!-- Eventual consistency box -->
+                <rect
+                  x="20"
+                  y="190"
+                  width="270"
+                  height="70"
+                  rx="10"
+                  fill="var(--bg3)"
+                  stroke="var(--border)"
+                  stroke-width="1"
+                />
+                <text
+                  x="155"
+                  y="208"
+                  text-anchor="middle"
+                  fill="#A0AECF"
+                  font-size="9.5"
+                  font-weight="600"
+                >
+                  ⏱ Consistência Eventual
+                </text>
+                <text
+                  x="155"
+                  y="225"
+                  text-anchor="middle"
+                  fill="#6B7A99"
+                  font-size="8.5"
+                >
+                  Master recebe UPDATE → replica em ~ms para os slaves
+                </text>
+                <text
+                  x="155"
+                  y="240"
+                  text-anchor="middle"
+                  fill="#6B7A99"
+                  font-size="8.5"
+                >
+                  Nesse intervalo, leitura pode retornar dado antigo
+                </text>
+                <text
+                  x="155"
+                  y="255"
+                  text-anchor="middle"
+                  fill="#F59E0B"
+                  font-size="8"
+                >
+                  Isso é normal e aceitável na maioria dos contextos
+                </text>
+              </g>
+              <g data-reveal="4">
+                <!-- Trade-off examples -->
+                <rect
+                  x="20"
+                  y="276"
+                  width="125"
+                  height="54"
+                  rx="8"
+                  fill="rgba(239,68,68,0.07)"
+                  stroke="rgba(239,68,68,0.2)"
+                  stroke-width="1"
+                />
+                <text
+                  x="83"
+                  y="293"
+                  text-anchor="middle"
+                  fill="#EF4444"
+                  font-size="8.5"
+                  font-weight="600"
+                >
+                  ❌ Não use aqui
+                </text>
+                <text
+                  x="83"
+                  y="309"
+                  text-anchor="middle"
+                  fill="#6B7A99"
+                  font-size="8"
+                >
+                  Saldo bancário
+                </text>
+                <text
+                  x="83"
+                  y="323"
+                  text-anchor="middle"
+                  fill="#6B7A99"
+                  font-size="8"
+                >
+                  Estoque (últimas unid.)
+                </text>
+
+                <rect
+                  x="155"
+                  y="276"
+                  width="135"
+                  height="54"
+                  rx="8"
+                  fill="rgba(16,185,129,0.07)"
+                  stroke="rgba(16,185,129,0.2)"
+                  stroke-width="1"
+                />
+                <text
+                  x="222"
+                  y="293"
+                  text-anchor="middle"
+                  fill="#10B981"
+                  font-size="8.5"
+                  font-weight="600"
+                >
+                  ✓ OK aqui
+                </text>
+                <text
+                  x="222"
+                  y="309"
+                  text-anchor="middle"
+                  fill="#6B7A99"
+                  font-size="8"
+                >
+                  Contagem de likes
+                </text>
+                <text
+                  x="222"
+                  y="323"
+                  text-anchor="middle"
+                  fill="#6B7A99"
+                  font-size="8"
+                >
+                  Catálogo de produtos
+                </text>
+              </g>
+            </svg>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 66%"></div>
+          </div>
+          <div class="nav-hint">
+            <span class="key">←</span><span class="key">→</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════ SLIDE 6 — CACHE ═══════════ -->
+      <div class="slide" id="slide-6">
+        <div class="slide-header">
+          <div class="slide-tag">Performance</div>
+          <div class="slide-counter">08 / 10</div>
+        </div>
+        <div class="slide-body">
+          <div class="content" style="flex: 0 0 46%">
+            <h2 class="slide-title" data-reveal="0">
+              <span class="accent">Cache</span>-Aside Pattern
+            </h2>
+            <p class="lead" data-reveal="0">
+              Quando o banco é bombardeado com consultas repetidas dos mesmos
+              dados, o cache resolve sem mudar a infraestrutura.
+            </p>
+            <div class="flow-steps">
+              <div class="flow-step" data-reveal="1">
+                <span class="flow-num">01</span>
+                <span class="flow-text">Requisição chega na API</span>
+              </div>
+              <div class="flow-step" data-reveal="2">
+                <span class="flow-num">02</span>
+                <span class="flow-text"
+                  ><strong>Consulta o Redis primeiro.</strong> O dado
+                  existe?</span
+                >
+              </div>
+              <div class="flow-step" data-reveal="3">
+                <span class="flow-num">03a</span>
+                <span class="flow-text"
+                  ><strong>Cache hit →</strong> retorna direto. Banco não é
+                  tocado.</span
+                >
+              </div>
+              <div class="flow-step" data-reveal="4">
+                <span class="flow-num">03b</span>
+                <span class="flow-text"
+                  ><strong>Cache miss →</strong> vai ao banco, armazena no Redis
+                  com TTL, retorna.</span
+                >
+              </div>
+              <div class="flow-step" data-reveal="5">
+                <span class="flow-num">04</span>
+                <span class="flow-text"
+                  >Quando TTL expira, próxima requisição atualiza o cache.</span
+                >
+              </div>
+            </div>
+            <div class="criteria" data-reveal="6">
+              <p
+                style="
+                  font-size: 0.78rem;
+                  color: var(--muted);
+                  margin-bottom: 4px;
+                  font-weight: 500;
+                "
+              >
+                Cachear apenas dados que são:
+              </p>
+              <div class="crit-item">
+                <span class="crit-icon">🔁</span
+                ><span>Muito requisitados (consultas repetidas)</span>
+              </div>
+              <div class="crit-item">
+                <span class="crit-icon">🕰️</span
+                ><span>Não mudam com frequência alta</span>
+              </div>
+              <div class="crit-item">
+                <span class="crit-icon">📊</span
+                ><span>Tolerantes a leve desatualização</span>
+              </div>
+            </div>
+          </div>
+          <div class="diagram-area">
+            <svg
+              viewBox="-22 0 312 380"
+              width="100%"
+              height="100%"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <defs>
+                <marker
+                  id="arrCache"
+                  markerWidth="6"
+                  markerHeight="6"
+                  refX="5"
+                  refY="3"
+                  orient="auto"
+                >
+                  <path d="M0,0 L0,6 L6,3 z" fill="#00D4FF" />
+                </marker>
+                <marker
+                  id="arrHit"
+                  markerWidth="6"
+                  markerHeight="6"
+                  refX="5"
+                  refY="3"
+                  orient="auto"
+                >
+                  <path d="M0,0 L0,6 L6,3 z" fill="#10B981" />
+                </marker>
+                <marker
+                  id="arrMiss"
+                  markerWidth="6"
+                  markerHeight="6"
+                  refX="5"
+                  refY="3"
+                  orient="auto"
+                >
+                  <path d="M0,0 L0,6 L6,3 z" fill="#F59E0B" />
+                </marker>
+              </defs>
+
+              <g data-reveal="0">
+                <!-- Speed ladder -->
+                <rect
+                  x="190"
+                  y="14"
+                  width="85"
+                  height="102"
+                  rx="8"
+                  fill="var(--bg3)"
+                  stroke="var(--border)"
+                  stroke-width="1"
+                />
+                <text
+                  x="232"
+                  y="30"
+                  text-anchor="middle"
+                  fill="#A0AECF"
+                  font-size="8"
+                  font-weight="600"
+                >
+                  Velocidade
+                </text>
+                <rect
+                  x="198"
+                  y="36"
+                  width="70"
+                  height="14"
+                  rx="3"
+                  fill="rgba(0,212,255,0.3)"
+                />
+                <text
+                  x="234"
+                  y="47"
+                  text-anchor="middle"
+                  fill="#00D4FF"
+                  font-size="7.5"
+                  font-weight="600"
+                >
+                  RAM / Redis 100ns
+                </text>
+                <rect
+                  x="198"
+                  y="56"
+                  width="50"
+                  height="14"
+                  rx="3"
+                  fill="rgba(16,185,129,0.2)"
+                />
+                <text
+                  x="224"
+                  y="67"
+                  text-anchor="middle"
+                  fill="#10B981"
+                  font-size="7.5"
+                >
+                  SSD 100μs
+                </text>
+                <rect
+                  x="198"
+                  y="76"
+                  width="34"
+                  height="14"
+                  rx="3"
+                  fill="rgba(245,158,11,0.2)"
+                />
+                <text
+                  x="216"
+                  y="87"
+                  text-anchor="middle"
+                  fill="#F59E0B"
+                  font-size="7.5"
+                >
+                  DB 1ms
+                </text>
+                <rect
+                  x="198"
+                  y="96"
+                  width="44"
+                  height="14"
+                  rx="3"
+                  fill="rgba(239,68,68,0.2)"
+                />
+                <text
+                  x="220"
+                  y="107"
+                  text-anchor="middle"
+                  fill="#EF4444"
+                  font-size="7.5"
+                >
+                  HD 10ms
+                </text>
+              </g>
+              <g data-reveal="1">
+                <!-- API box -->
+                <rect
+                  x="14"
+                  y="14"
+                  width="100"
+                  height="36"
+                  rx="7"
+                  fill="#1E2433"
+                  stroke="#A855F7"
+                  stroke-width="1.2"
+                />
+                <text
+                  x="64"
+                  y="28"
+                  text-anchor="middle"
+                  fill="#E8EDF5"
+                  font-size="9"
+                  font-weight="600"
+                >
+                  API
+                </text>
+                <text
+                  x="64"
+                  y="43"
+                  text-anchor="middle"
+                  fill="#6B7A99"
+                  font-size="8"
+                >
+                  recebe requisição
+                </text>
+              </g>
+              <g data-reveal="2">
+                <!-- Redis -->
+                <rect
+                  x="14"
+                  y="100"
+                  width="100"
+                  height="40"
+                  rx="7"
+                  fill="rgba(0,212,255,0.08)"
+                  stroke="#00D4FF"
+                  stroke-width="1.5"
+                />
+                <text
+                  x="64"
+                  y="116"
+                  text-anchor="middle"
+                  fill="#00D4FF"
+                  font-size="10"
+                  font-weight="700"
+                >
+                  Redis
+                </text>
+                <text
+                  x="64"
+                  y="132"
+                  text-anchor="middle"
+                  fill="#6B7A99"
+                  font-size="8"
+                >
+                  cache em memória RAM
+                </text>
+
+                <!-- arrows api→redis -->
+                <line
+                  x1="64"
+                  y1="50"
+                  x2="64"
+                  y2="98"
+                  stroke="#00D4FF"
+                  stroke-width="1.4"
+                  marker-end="url(#arrCache)"
+                  stroke-dasharray="4,3"
+                  class="flow-line"
+                />
+                <text x="70" y="78" fill="#6B7A99" font-size="7.5">
+                  consulta
+                </text>
+              </g>
+              <g data-reveal="3">
+                <!-- HIT path -->
+                <path
+                  d="M 14,116 Q -10,116 -10,50 Q -10,32 14,32"
+                  fill="none"
+                  stroke="#10B981"
+                  stroke-width="1.4"
+                  marker-end="url(#arrHit)"
+                />
+                <rect
+                  x="0"
+                  y="62"
+                  width="38"
+                  height="20"
+                  rx="4"
+                  fill="rgba(16,185,129,0.15)"
+                />
+                <text
+                  x="19"
+                  y="76"
+                  text-anchor="middle"
+                  fill="#10B981"
+                  font-size="8"
+                  font-weight="600"
+                >
+                  HIT ✓
+                </text>
+              </g>
+              <g data-reveal="4">
+                <!-- MISS path -->
+                <line
+                  x1="64"
+                  y1="140"
+                  x2="64"
+                  y2="192"
+                  stroke="#F59E0B"
+                  stroke-width="1.3"
+                  marker-end="url(#arrMiss)"
+                  stroke-dasharray="4,3"
+                />
+                <text x="70" y="170" fill="#6B7A99" font-size="7.5">
+                  miss →
+                </text>
+
+                <!-- DB -->
+                <rect
+                  x="14"
+                  y="196"
+                  width="100"
+                  height="40"
+                  rx="7"
+                  fill="#1E2433"
+                  stroke="#10B981"
+                  stroke-width="1.2"
+                />
+                <text
+                  x="64"
+                  y="212"
+                  text-anchor="middle"
+                  fill="#E8EDF5"
+                  font-size="9"
+                  font-weight="600"
+                >
+                  Banco de Dados
+                </text>
+                <text
+                  x="64"
+                  y="227"
+                  text-anchor="middle"
+                  fill="#6B7A99"
+                  font-size="8"
+                >
+                  consulta persistente
+                </text>
+              </g>
+              <g data-reveal="5">
+                <!-- store in cache -->
+                <path
+                  d="M 114,216 Q 155,216 155,120 Q 155,108 114,116"
+                  fill="none"
+                  stroke="#A855F7"
+                  stroke-width="1.2"
+                  marker-end="url(#arrCache)"
+                  stroke-dasharray="3,3"
+                />
+                <text x="158" y="166" fill="#A855F7" font-size="7.5">
+                  armazena
+                </text>
+                <text x="158" y="177" fill="#A855F7" font-size="7.5">
+                  com TTL
+                </text>
+
+                <!-- TTL label -->
+                <rect
+                  x="14"
+                  y="254"
+                  width="100"
+                  height="32"
+                  rx="6"
+                  fill="rgba(168,85,247,0.07)"
+                  stroke="rgba(168,85,247,0.2)"
+                  stroke-width="1"
+                />
+                <text
+                  x="64"
+                  y="267"
+                  text-anchor="middle"
+                  fill="#A855F7"
+                  font-size="8.5"
+                  font-weight="600"
+                >
+                  TTL (Time to Live)
+                </text>
+                <text
+                  x="64"
+                  y="280"
+                  text-anchor="middle"
+                  fill="#6B7A99"
+                  font-size="8"
+                >
+                  tempo de vida no cache
+                </text>
+              </g>
+              <g data-reveal="6">
+                <!-- anti-pattern -->
+                <rect
+                  x="14"
+                  y="302"
+                  width="260"
+                  height="60"
+                  rx="8"
+                  fill="rgba(239,68,68,0.05)"
+                  stroke="rgba(239,68,68,0.2)"
+                  stroke-width="1"
+                />
+                <text
+                  x="144"
+                  y="320"
+                  text-anchor="middle"
+                  fill="#EF4444"
+                  font-size="8.5"
+                  font-weight="600"
+                >
+                  ❌ Não cachear
+                </text>
+                <text
+                  x="144"
+                  y="336"
+                  text-anchor="middle"
+                  fill="#6B7A99"
+                  font-size="8"
+                >
+                  Saldo bancário · Dados que exigem consistência forte
+                </text>
+                <text
+                  x="144"
+                  y="351"
+                  text-anchor="middle"
+                  fill="#6B7A99"
+                  font-size="8"
+                >
+                  Dados que mudam a cada segundo
+                </text>
+              </g>
+            </svg>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 77%"></div>
+          </div>
+          <div class="nav-hint">
+            <span class="key">←</span><span class="key">→</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════ SLIDE 7 — CASE DOCGEN ═══════════ -->
+      <div class="slide" id="slide-7">
+        <div class="slide-header">
+          <div class="slide-tag">Case Real</div>
+          <div class="slide-counter">09 / 10</div>
+        </div>
+        <div class="slide-body">
+          <div class="content" style="flex: 0 0 48%">
+            <div
+              class="cover-eyebrow"
+              style="margin-bottom: 12px"
+              data-reveal="0"
+            >
+              Projeto interno · Aiyra
+            </div>
+            <h2 class="slide-title" data-reveal="0">
+              <span class="accent">DocGen</span>
+            </h2>
+            <p class="lead" data-reveal="0">
+              Automação na geração de documentações técnicas e de
+              desenvolvimento para o grupo Axia. Redução significativa no tempo
+              de geração para quem adotou a ferramenta.
+            </p>
+            <p
+              style="
+                font-size: 0.78rem;
+                color: var(--muted);
+                margin-top: 16px;
+                margin-bottom: 10px;
+                font-weight: 500;
+              "
+              data-reveal="0"
+            >
+              Decisões de arquitetura tomadas:
+            </p>
+            <div class="arch-decision" data-reveal="1">
+              <strong>JSON em vez de banco de dados</strong> — dados são
+              temporários (só para geração do documento). Banco seria
+              complexidade desnecessária.
+              <em
+                >Isso é system design: escolher a ferramenta certa para o
+                problema certo.</em
+              >
+            </div>
+            <div class="arch-decision" style="margin-top: 8px" data-reveal="2">
+              <strong>JSON reutilizável</strong> — doc incompleta pode ser
+              retomada. Estrutura pode ser reaproveitada para novo documento.
+              Dado o problema, essa foi a solução de persistência adequada.
+            </div>
+          </div>
+          <div class="diagram-area">
+            <svg
+              viewBox="0 0 310 380"
+              width="100%"
+              height="100%"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <defs>
+                <marker
+                  id="arrDoc"
+                  markerWidth="6"
+                  markerHeight="6"
+                  refX="5"
+                  refY="3"
+                  orient="auto"
+                >
+                  <path d="M0,0 L0,6 L6,3 z" fill="#00D4FF" />
+                </marker>
+                <marker
+                  id="arrDocA"
+                  markerWidth="6"
+                  markerHeight="6"
+                  refX="5"
+                  refY="3"
+                  orient="auto"
+                >
+                  <path d="M0,0 L0,6 L6,3 z" fill="#F59E0B" />
+                </marker>
+              </defs>
+
+              <g data-reveal="0">
+                <!-- Title badge -->
+                <rect
+                  x="85"
+                  y="14"
+                  width="140"
+                  height="28"
+                  rx="14"
+                  fill="rgba(0,212,255,0.1)"
+                  stroke="rgba(0,212,255,0.3)"
+                  stroke-width="1"
+                />
+                <text
+                  x="155"
+                  y="32"
+                  text-anchor="middle"
+                  fill="#00D4FF"
+                  font-size="9"
+                  font-weight="700"
+                >
+                  Arquitetura DocGen
+                </text>
+
+                <!-- Docker border -->
+                <rect
+                  x="14"
+                  y="60"
+                  width="282"
+                  height="240"
+                  rx="14"
+                  fill="rgba(124,58,237,0.04)"
+                  stroke="rgba(124,58,237,0.2)"
+                  stroke-width="1.5"
+                  stroke-dasharray="6,4"
+                />
+                <text x="32" y="76" fill="#7C3AED" font-size="8">
+                  🐳 Docker
+                </text>
+              </g>
+              <g data-reveal="1">
+                <!-- Formulário -->
+                <rect
+                  x="98"
+                  y="84"
+                  width="114"
+                  height="38"
+                  rx="7"
+                  fill="#1E2433"
+                  stroke="#00D4FF"
+                  stroke-width="1.2"
+                />
+                <text
+                  x="155"
+                  y="99"
+                  text-anchor="middle"
+                  fill="#E8EDF5"
+                  font-size="9"
+                  font-weight="600"
+                >
+                  Formulário
+                </text>
+                <text
+                  x="155"
+                  y="113"
+                  text-anchor="middle"
+                  fill="#6B7A99"
+                  font-size="8"
+                >
+                  dados do usuário
+                </text>
+                <line
+                  x1="155"
+                  y1="122"
+                  x2="155"
+                  y2="148"
+                  stroke="#00D4FF"
+                  stroke-width="1.3"
+                  marker-end="url(#arrDoc)"
+                  stroke-dasharray="4,3"
+                  class="flow-line"
+                />
+
+                <!-- Python Engine -->
+                <rect
+                  x="76"
+                  y="152"
+                  width="128"
+                  height="40"
+                  rx="8"
+                  fill="rgba(168,85,247,0.1)"
+                  stroke="#A855F7"
+                  stroke-width="1.5"
+                />
+                <text
+                  x="140"
+                  y="169"
+                  text-anchor="middle"
+                  fill="#A855F7"
+                  font-size="10"
+                  font-weight="700"
+                >
+                  🐍 Python Engine
+                </text>
+                <text
+                  x="140"
+                  y="183"
+                  text-anchor="middle"
+                  fill="#6B7A99"
+                  font-size="8"
+                >
+                  geração de documentos
+                </text>
+
+                <!-- JSON state — separado com gap visível -->
+                <line
+                  x1="204"
+                  y1="172"
+                  x2="218"
+                  y2="172"
+                  stroke="#F59E0B"
+                  stroke-width="1.2"
+                  marker-end="url(#arrDocA)"
+                  stroke-dasharray="3,2"
+                />
+                <rect
+                  x="222"
+                  y="152"
+                  width="62"
+                  height="40"
+                  rx="7"
+                  fill="rgba(245,158,11,0.08)"
+                  stroke="#F59E0B"
+                  stroke-width="1"
+                />
+                <text
+                  x="253"
+                  y="169"
+                  text-anchor="middle"
+                  fill="#F59E0B"
+                  font-size="9"
+                  font-weight="600"
+                >
+                  JSON
+                </text>
+                <text
+                  x="253"
+                  y="183"
+                  text-anchor="middle"
+                  fill="#6B7A99"
+                  font-size="7.5"
+                >
+                  temporário
+                </text>
+
+                <line
+                  x1="140"
+                  y1="192"
+                  x2="140"
+                  y2="220"
+                  stroke="#10B981"
+                  stroke-width="1.3"
+                  marker-end="url(#arrDoc)"
+                  stroke-dasharray="4,3"
+                  class="flow-line"
+                />
+              </g>
+              <g data-reveal="2">
+                <!-- Outputs -->
+                <rect
+                  x="28"
+                  y="224"
+                  width="250"
+                  height="68"
+                  rx="8"
+                  fill="var(--bg3)"
+                  stroke="var(--border)"
+                  stroke-width="1"
+                />
+                <text
+                  x="153"
+                  y="240"
+                  text-anchor="middle"
+                  fill="#10B981"
+                  font-size="9"
+                  font-weight="600"
+                >
+                  Output gerado
+                </text>
+
+                <!-- .docx — cor Word blue -->
+                <rect
+                  x="36"
+                  y="247"
+                  width="70"
+                  height="34"
+                  rx="6"
+                  fill="rgba(43,91,232,0.12)"
+                  stroke="rgba(43,91,232,0.45)"
+                  stroke-width="1"
+                />
+                <rect
+                  x="63"
+                  y="252"
+                  width="16"
+                  height="16"
+                  rx="3"
+                  fill="#2B5BE8"
+                />
+                <text
+                  x="71"
+                  y="263"
+                  text-anchor="middle"
+                  fill="white"
+                  font-size="9"
+                  font-weight="800"
+                >
+                  W
+                </text>
+                <text
+                  x="71"
+                  y="275"
+                  text-anchor="middle"
+                  fill="#2B5BE8"
+                  font-size="7"
+                >
+                  .docx
+                </text>
+
+                <!-- .pdf -->
+                <rect
+                  x="114"
+                  y="247"
+                  width="70"
+                  height="34"
+                  rx="6"
+                  fill="rgba(239,68,68,0.08)"
+                  stroke="rgba(239,68,68,0.3)"
+                  stroke-width="1"
+                />
+                <rect
+                  x="139"
+                  y="252"
+                  width="20"
+                  height="16"
+                  rx="3"
+                  fill="#EF4444"
+                />
+                <text
+                  x="149"
+                  y="263"
+                  text-anchor="middle"
+                  fill="white"
+                  font-size="7"
+                  font-weight="800"
+                >
+                  PDF
+                </text>
+                <text
+                  x="149"
+                  y="275"
+                  text-anchor="middle"
+                  fill="#EF4444"
+                  font-size="7"
+                >
+                  .pdf
+                </text>
+
+                <!-- .json -->
+                <rect
+                  x="192"
+                  y="247"
+                  width="70"
+                  height="34"
+                  rx="6"
+                  fill="rgba(245,158,11,0.08)"
+                  stroke="rgba(245,158,11,0.3)"
+                  stroke-width="1"
+                />
+                <rect
+                  x="217"
+                  y="252"
+                  width="20"
+                  height="16"
+                  rx="3"
+                  fill="rgba(245,158,11,0.2)"
+                  stroke="#F59E0B"
+                  stroke-width="1"
+                />
+                <text
+                  x="227"
+                  y="263"
+                  text-anchor="middle"
+                  fill="#F59E0B"
+                  font-size="9"
+                  font-weight="800"
+                >
+                  { }
+                </text>
+                <text
+                  x="227"
+                  y="275"
+                  text-anchor="middle"
+                  fill="#F59E0B"
+                  font-size="7"
+                >
+                  .json
+                </text>
+
+                <!-- Decision callout -->
+                <rect
+                  x="14"
+                  y="312"
+                  width="282"
+                  height="52"
+                  rx="8"
+                  fill="rgba(0,212,255,0.05)"
+                  stroke="rgba(0,212,255,0.2)"
+                  stroke-width="1"
+                />
+                <text
+                  x="155"
+                  y="329"
+                  text-anchor="middle"
+                  fill="#00D4FF"
+                  font-size="8.5"
+                  font-weight="600"
+                >
+                  💡 Por que JSON e não banco de dados?
+                </text>
+                <text
+                  x="155"
+                  y="345"
+                  text-anchor="middle"
+                  fill="#6B7A99"
+                  font-size="8"
+                >
+                  Dados são temporários → banco seria overkill
+                </text>
+                <text
+                  x="155"
+                  y="358"
+                  text-anchor="middle"
+                  fill="#6B7A99"
+                  font-size="8"
+                >
+                  JSON serve como estado, reuso e retomada → fit perfeito
+                </text>
+              </g>
+            </svg>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 88%"></div>
+          </div>
+          <div class="nav-hint">
+            <span class="key">←</span><span class="key">→</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════ SLIDE 8 — DISCUSSÃO ═══════════ -->
+      <div class="slide" id="slide-8">
+        <div class="slide-header">
+          <div class="slide-tag">Discussão</div>
+          <div class="slide-counter">10 / 10</div>
+        </div>
+        <div class="slide-body">
+          <div class="content full">
+            <h2
+              class="slide-title"
+              style="text-align: center; margin-bottom: 10px"
+              data-reveal="0"
+            >
+              Agora é com <span class="accent">vocês</span>
+            </h2>
+            <p
+              class="lead"
+              style="text-align: center; max-width: 580px; margin: 0 auto 32px"
+              data-reveal="0"
+            >
+              Com os conceitos que vimos hoje — algum deles soa familiar? Já
+              passaram por algum desses problemas nos sistemas que a gente
+              mantém?
+            </p>
+            <div
+              class="disc-questions"
+              style="max-width: 680px; margin: 0 auto"
+            >
+              <div class="disc-q" data-reveal="1">
+                <span>📈</span>
+                <span
+                  >Já enfrentamos problemas de escalabilidade nos sistemas dos
+                  clientes? Como resolvemos?</span
+                >
+              </div>
+              <div class="disc-q" data-reveal="2">
+                <span>🎲</span>
+                <span
+                  >Vocês sabem como o banco de dados está configurado nos
+                  sistemas dos nossos clientes? Existe replicação?</span
+                >
+              </div>
+              <div class="disc-q" data-reveal="3">
+                <span>🔄</span>
+                <span
+                  >Nos sistemas dos nossos clientes, existe algum cenário onde
+                  um dado atualizado pode demorar a aparecer em outro lugar do
+                  sistema (consistência eventual)?</span
+                >
+              </div>
+              <div class="disc-q" data-reveal="4">
+                <span>🏗️</span>
+                <span
+                  >Qual sistema do nosso portfólio teria o maior problema se o
+                  número de usuários triplicasse amanhã?</span
+                >
+              </div>
+            </div>
+            <div style="text-align: center; margin-top: 28px" data-reveal="5">
+              <div
+                class="pill pill-cyan"
+                style="
+                  display: inline-block;
+                  font-size: 0.8rem;
+                  padding: 8px 20px;
+                "
+              >
+                Próxima sessão: Aprofundamento - Teorema CAP, Microsserviços,
+                Multi Data Center
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 100%"></div>
+          </div>
+          <div class="nav-hint"><span class="key">←</span> voltar</div>
+        </div>
+      </div>
+    </div>
+    <!-- /deck -->
+
+    <script src="nav.js"></script>
+    <script>
+      initNav({ agendaSlide: 1 });
+    </script>
+  </body>
+</html>

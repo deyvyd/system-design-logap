@@ -1,0 +1,2143 @@
+1
+00:00:00,040 --> 00:00:01,680
+nos últimos anos os microsserviços se
+
+2
+00:00:01,680 --> 00:00:03,120
+tornaram quase que um requisito
+
+3
+00:00:03,120 --> 00:00:05,279
+obrigatório no mercado de tecnologia se
+
+4
+00:00:05,279 --> 00:00:06,839
+você já abriu o Linkedin e procurou por
+
+5
+00:00:06,839 --> 00:00:08,360
+vagas para programador sabe que
+
+6
+00:00:08,360 --> 00:00:10,320
+praticamente a maioria delas exigem
+
+7
+00:00:10,320 --> 00:00:11,880
+conhecimentos em microsserviços
+
+8
+00:00:11,880 --> 00:00:14,879
+mensageria com RT MQ a Cica kubernetes
+
+9
+00:00:14,879 --> 00:00:17,600
+aws servel E por aí vai Esses são os
+
+10
+00:00:17,600 --> 00:00:19,400
+requisitos do momento e com isso a ideia
+
+11
+00:00:19,400 --> 00:00:21,320
+de que microsserviços são solução para
+
+12
+00:00:21,320 --> 00:00:23,000
+todos os problemas se espalhou quase que
+
+13
+00:00:23,000 --> 00:00:25,320
+de forma contagiosa a sensação é de que
+
+14
+00:00:25,320 --> 00:00:27,359
+se você não adotar microsserviços no teu
+
+15
+00:00:27,359 --> 00:00:29,199
+projeto tu vai ficar para trás e o pior
+
+16
+00:00:29,199 --> 00:00:31,320
+você começa acreditar que todo o sistema
+
+17
+00:00:31,320 --> 00:00:33,120
+precisa ser construído dessa maneira
+
+18
+00:00:33,120 --> 00:00:34,800
+como se essa fosse a única forma da
+
+19
+00:00:34,800 --> 00:00:36,600
+gente construir sistema moderno e
+
+20
+00:00:36,600 --> 00:00:38,680
+escalável e é por isso que no vídeo de
+
+21
+00:00:38,680 --> 00:00:40,800
+hoje eu vou te mostrar Por que você não
+
+22
+00:00:40,800 --> 00:00:42,600
+deve começar um projeto utilizando
+
+23
+00:00:42,600 --> 00:00:44,280
+microsserviços Inclusive eu também vou
+
+24
+00:00:44,280 --> 00:00:45,960
+te mostrar qual é a relação que sut tem
+
+25
+00:00:45,960 --> 00:00:47,960
+diretamente com domain driven design e
+
+26
+00:00:47,960 --> 00:00:49,360
+fora isso eu também vou te mostrar qual
+
+27
+00:00:49,360 --> 00:00:51,039
+é a melhor arquitetura para você iniciar
+
+28
+00:00:51,039 --> 00:00:52,920
+um projeto do zero e que até as maiores
+
+29
+00:00:52,920 --> 00:00:55,160
+empresas de Tecnologia do mundo já estão
+
+30
+00:00:55,160 --> 00:00:57,199
+adotando essa arquitetura fala pessoal
+
+31
+00:00:57,199 --> 00:00:58,879
+Renato Augusto aqui de novo e dessa vez
+
+32
+00:00:58,879 --> 00:01:00,519
+para te mostrar uma das maiores
+
+33
+00:01:00,519 --> 00:01:02,280
+armadilhas da arquitetura de software
+
+34
+00:01:02,280 --> 00:01:04,040
+moderna que é obsessão por
+
+35
+00:01:04,040 --> 00:01:06,040
+microsserviços muita gente acha que
+
+36
+00:01:06,040 --> 00:01:08,400
+microsserviços são um objetivo e não uma
+
+37
+00:01:08,400 --> 00:01:10,240
+ferramenta que um sistema distribuído
+
+38
+00:01:10,240 --> 00:01:12,560
+cheio de pequenos serviços Independentes
+
+39
+00:01:12,560 --> 00:01:14,560
+automaticamente significa um software
+
+40
+00:01:14,560 --> 00:01:16,680
+moderno escalável e preparado para
+
+41
+00:01:16,680 --> 00:01:18,560
+crescer e essa ideia se espalhou tanto
+
+42
+00:01:18,560 --> 00:01:20,360
+que parece que qualquer projeto precisa
+
+43
+00:01:20,360 --> 00:01:22,320
+nascer assim o que muita gente não sabe
+
+44
+00:01:22,320 --> 00:01:24,600
+é que até as gigantes da tecnologia já
+
+45
+00:01:24,600 --> 00:01:26,720
+começaram a repensar essa abordagem de
+
+46
+00:01:26,720 --> 00:01:28,439
+microsserviços um exemplo disso é a
+
+47
+00:01:28,439 --> 00:01:30,040
+Amazon que é menos de 2 anos nos
+
+48
+00:01:30,040 --> 00:01:31,600
+divulgou uma notícia dizendo que migrou
+
+49
+00:01:31,600 --> 00:01:33,439
+parte do sistema da Amazon Prime de
+
+50
+00:01:33,439 --> 00:01:35,399
+volta para uma arquitetura monolítica e
+
+51
+00:01:35,399 --> 00:01:38,000
+conseguiu reduzir em mais de 90% os
+
+52
+00:01:38,000 --> 00:01:40,479
+custos com infraestrutura na WS uma
+
+53
+00:01:40,479 --> 00:01:42,600
+menor complexidade sistêmica e muito
+
+54
+00:01:42,600 --> 00:01:44,520
+mais eficiência operacional e antes que
+
+55
+00:01:44,520 --> 00:01:46,640
+você torça o nariz e diga que monolito é
+
+56
+00:01:46,640 --> 00:01:48,600
+coisa ultrapassada Calma que eu não tô
+
+57
+00:01:48,600 --> 00:01:50,280
+falando aqui daquele sistema gigante
+
+58
+00:01:50,280 --> 00:01:52,240
+desorganizado e difícil de manter eu tô
+
+59
+00:01:52,240 --> 00:01:54,079
+falando aqui é de um tipo diferente de
+
+60
+00:01:54,079 --> 00:01:56,439
+monolito que foi projetado para resolver
+
+61
+00:01:56,439 --> 00:01:58,200
+exatamente os problemas que levaram
+
+62
+00:01:58,200 --> 00:01:59,960
+tantas empresas a adotar microos
+
+63
+00:01:59,960 --> 00:02:02,119
+serviços prematuramente e se você é um
+
+64
+00:02:02,119 --> 00:02:03,799
+aspirante arquiteto de software deve
+
+65
+00:02:03,799 --> 00:02:05,119
+estar se perguntando tá E qual é o
+
+66
+00:02:05,119 --> 00:02:06,520
+caminho que eu deveria seguir nessa
+
+67
+00:02:06,520 --> 00:02:08,160
+história toda antes de eu te responder
+
+68
+00:02:08,160 --> 00:02:09,440
+essa pergunta eu preciso te lembrar
+
+69
+00:02:09,440 --> 00:02:10,840
+primeiro como que funciona uma
+
+70
+00:02:10,840 --> 00:02:12,640
+arquitetura monolítica e como que
+
+71
+00:02:12,640 --> 00:02:14,200
+funciona uma arquitetura baseada em
+
+72
+00:02:14,200 --> 00:02:16,239
+microsserviços entendendo primeiros
+
+73
+00:02:16,239 --> 00:02:18,040
+monolitos a coisa aqui é bem simples
+
+74
+00:02:18,040 --> 00:02:19,720
+pensa no monolito como aquele sistema
+
+75
+00:02:19,720 --> 00:02:21,760
+que centraliza todas as funcionalidades
+
+76
+00:02:21,760 --> 00:02:23,560
+dentro dele mesmo isso significa que
+
+77
+00:02:23,560 --> 00:02:25,680
+tudo roda dentro de um mesmo processo e
+
+78
+00:02:25,680 --> 00:02:27,720
+todas as partes do sistema como cadastro
+
+79
+00:02:27,720 --> 00:02:29,400
+de cliente processamento de pedido
+
+80
+00:02:29,400 --> 00:02:31,480
+geração de relatório está tudo no mesmo
+
+81
+00:02:31,480 --> 00:02:33,519
+lugar e geralmente o monolito tem apenas
+
+82
+00:02:33,519 --> 00:02:35,640
+um banco de dados para toda a aplicação
+
+83
+00:02:35,640 --> 00:02:37,519
+e um repositório pro código fonte a
+
+84
+00:02:37,519 --> 00:02:39,280
+grande vantagem do bom e velho monolito
+
+85
+00:02:39,280 --> 00:02:41,280
+é que ele é simples da gente desenvolver
+
+86
+00:02:41,280 --> 00:02:43,480
+testar e escalar verticalmente e até
+
+87
+00:02:43,480 --> 00:02:45,280
+horizontalmente com a escala vertical
+
+88
+00:02:45,280 --> 00:02:47,080
+Você pode adicionar mais recursos no
+
+89
+00:02:47,080 --> 00:02:48,959
+servidor como mais memória mais poder de
+
+90
+00:02:48,959 --> 00:02:50,840
+processamento mais armazenamento e
+
+91
+00:02:50,840 --> 00:02:52,640
+otimizar ele para atender uma carga
+
+92
+00:02:52,640 --> 00:02:54,480
+maior de requisições sem precisar
+
+93
+00:02:54,480 --> 00:02:55,959
+dividir a aplicação em vários
+
+94
+00:02:55,959 --> 00:02:57,800
+microsserviços logo de cara já para
+
+95
+00:02:57,800 --> 00:02:59,640
+escalar um monolito horizontalmente a
+
+96
+00:02:59,640 --> 00:03:01,360
+gente a gente cria réplicas do nosso
+
+97
+00:03:01,360 --> 00:03:03,040
+sistema e coloca essas réplicas debaixo
+
+98
+00:03:03,040 --> 00:03:04,760
+de um load balancer e ele vai se
+
+99
+00:03:04,760 --> 00:03:06,159
+encarregar de receber todas as
+
+100
+00:03:06,159 --> 00:03:08,200
+requisições dos usuários e distribuir
+
+101
+00:03:08,200 --> 00:03:09,760
+essas requisições entre as várias
+
+102
+00:03:09,760 --> 00:03:11,280
+instâncias que a gente criou do nosso
+
+103
+00:03:11,280 --> 00:03:13,680
+sistema agora como Nem tudo são flores
+
+104
+00:03:13,680 --> 00:03:15,560
+as desvantagens dessa abordagem é que se
+
+105
+00:03:15,560 --> 00:03:17,720
+uma parte do sistema precisar de mais
+
+106
+00:03:17,720 --> 00:03:19,440
+recursos do que outra por exemplo
+
+107
+00:03:19,440 --> 00:03:21,040
+imagina que o nosso sistema tá recebendo
+
+108
+00:03:21,040 --> 00:03:23,040
+uma enchurrada de requisições E aí a
+
+109
+00:03:23,040 --> 00:03:24,879
+gente Analisa e descobre que a maioria
+
+110
+00:03:24,879 --> 00:03:27,000
+dessas requisições é relacionada à área
+
+111
+00:03:27,000 --> 00:03:28,720
+de pagamentos do nosso sistema
+
+112
+00:03:28,720 --> 00:03:30,599
+infelizmente por ser um monolito a gente
+
+113
+00:03:30,599 --> 00:03:32,239
+não consegue escalar só essa área a
+
+114
+00:03:32,239 --> 00:03:33,480
+gente vai ter que escalar o monolito
+
+115
+00:03:33,480 --> 00:03:35,360
+como um todo e isso pode ser bastante
+
+116
+00:03:35,360 --> 00:03:37,040
+ineficiente além de ser um baita
+
+117
+00:03:37,040 --> 00:03:38,799
+desperdício de recurso Além disso
+
+118
+00:03:38,799 --> 00:03:40,560
+geralmente o monolito tradicional ele
+
+119
+00:03:40,560 --> 00:03:42,519
+tem um acoplamento muito forte a nível
+
+120
+00:03:42,519 --> 00:03:44,480
+de código e isso aí pode acabar trazendo
+
+121
+00:03:44,480 --> 00:03:46,200
+problema porque imagina tu mexe numa
+
+122
+00:03:46,200 --> 00:03:48,200
+parte do sistema tu pode acabar afetando
+
+123
+00:03:48,200 --> 00:03:50,239
+outras partes e isso torna o sistema
+
+124
+00:03:50,239 --> 00:03:52,079
+muito mais frágil e difícil de manter a
+
+125
+00:03:52,079 --> 00:03:53,959
+longo prazo e uma outra desvantagem dos
+
+126
+00:03:53,959 --> 00:03:55,560
+monolitos é que a gente também tem a
+
+127
+00:03:55,560 --> 00:03:57,439
+dificuldade do trabalho em equipe Então
+
+128
+00:03:57,439 --> 00:03:59,079
+imagina uma equipe monstruosa
+
+129
+00:03:59,079 --> 00:04:01,280
+trabalhando numa única base de código no
+
+130
+00:04:01,280 --> 00:04:04,000
+repositório lá no github Imagina 300 PR
+
+131
+00:04:04,000 --> 00:04:05,920
+subindo um por cima do outro isso pode
+
+132
+00:04:05,920 --> 00:04:08,200
+ser extremamente bagunçado e tornar a
+
+133
+00:04:08,200 --> 00:04:10,000
+coisa um verdadeiro caus já numa
+
+134
+00:04:10,000 --> 00:04:12,640
+arquitetura baseada em microsserviços
+
+135
+00:04:12,640 --> 00:04:14,840
+que é o sonho de todo Júnior implementar
+
+136
+00:04:14,840 --> 00:04:17,199
+tem uma abordagem um pouco diferente o
+
+137
+00:04:17,199 --> 00:04:18,840
+sistema ele é dividido em pequenos
+
+138
+00:04:18,840 --> 00:04:20,759
+serviços independentes e que se
+
+139
+00:04:20,759 --> 00:04:22,639
+comunicam entre si via rede ou via
+
+140
+00:04:22,639 --> 00:04:25,639
+mensageria Além disso cada microsserviço
+
+141
+00:04:25,639 --> 00:04:27,680
+ele vai ter o seu próprio banco de dados
+
+142
+00:04:27,680 --> 00:04:29,440
+seu próprio ciclo de vida e ainda pode
+
+143
+00:04:29,440 --> 00:04:30,880
+ser de desenvolvido em diversas
+
+144
+00:04:30,880 --> 00:04:33,039
+tecnologias diferentes isso aí de cara
+
+145
+00:04:33,039 --> 00:04:35,000
+já traz pra gente a possibilidade de
+
+146
+00:04:35,000 --> 00:04:36,880
+escalar cada microsserviço de forma
+
+147
+00:04:36,880 --> 00:04:38,560
+independente então por exemplo imagina
+
+148
+00:04:38,560 --> 00:04:40,360
+que a gente tem o nosso microsserviço de
+
+149
+00:04:40,360 --> 00:04:41,880
+pagamentos Aquele que tava dando
+
+150
+00:04:41,880 --> 00:04:43,720
+problema lá no monolito e a gente sabe
+
+151
+00:04:43,720 --> 00:04:45,160
+que a maioria das requisições tá
+
+152
+00:04:45,160 --> 00:04:46,919
+chegando é para ele então se a gente já
+
+153
+00:04:46,919 --> 00:04:49,000
+tem um microsserviço de pagamentos a
+
+154
+00:04:49,000 --> 00:04:50,840
+gente vai escalar só esse cara seja
+
+155
+00:04:50,840 --> 00:04:52,560
+verticalmente adicionando mais poder
+
+156
+00:04:52,560 --> 00:04:54,560
+computacional ou seja criando novas
+
+157
+00:04:54,560 --> 00:04:56,440
+réplicas dele então a gente consegue
+
+158
+00:04:56,440 --> 00:04:58,919
+tratar cada um de forma independente
+
+159
+00:04:58,919 --> 00:05:01,280
+isso é extremamente poderoso outras
+
+160
+00:05:01,280 --> 00:05:02,639
+vantagens que a gente pode ter na
+
+161
+00:05:02,639 --> 00:05:04,400
+arquitetura baseada em microsserviços é
+
+162
+00:05:04,400 --> 00:05:06,320
+que a gente pode ter times separados
+
+163
+00:05:06,320 --> 00:05:08,199
+para cuidar de cada microsserviços o que
+
+164
+00:05:08,199 --> 00:05:10,520
+facilita e muito a especialização de
+
+165
+00:05:10,520 --> 00:05:12,400
+cada time de acordo com o contexto que
+
+166
+00:05:12,400 --> 00:05:13,800
+eles trabalham E além disso a gente
+
+167
+00:05:13,800 --> 00:05:15,720
+ainda pode construir cada microsserviço
+
+168
+00:05:15,720 --> 00:05:17,560
+com linguagens de programação diferente
+
+169
+00:05:17,560 --> 00:05:19,240
+então se o nosso microsserviço lá de
+
+170
+00:05:19,240 --> 00:05:21,120
+pagamentos é um serviço crítico e que
+
+171
+00:05:21,120 --> 00:05:23,120
+precisa de extrema velocidade e poder de
+
+172
+00:05:23,120 --> 00:05:24,840
+processamento a gente pode usar um Rush
+
+173
+00:05:24,840 --> 00:05:26,840
+ou um golang da vida já nos serviços
+
+174
+00:05:26,840 --> 00:05:28,600
+menores ou que não tem tanta demanda a
+
+175
+00:05:28,600 --> 00:05:30,720
+gente pode usar Frame e linguagens mais
+
+176
+00:05:30,720 --> 00:05:32,680
+focados em produtividad como java com
+
+177
+00:05:32,680 --> 00:05:35,240
+Spring PHP com larv o JavaScript com nes
+
+178
+00:05:35,240 --> 00:05:37,400
+tem o csharp também e por aí vai e tudo
+
+179
+00:05:37,400 --> 00:05:39,759
+isso parece muito bonito e realmente
+
+180
+00:05:39,759 --> 00:05:41,479
+gera aquela sensação de que todo o
+
+181
+00:05:41,479 --> 00:05:43,479
+sistema tinha que nascer assim só que é
+
+182
+00:05:43,479 --> 00:05:45,440
+aí que entram as desvantagens dos
+
+183
+00:05:45,440 --> 00:05:47,759
+microsserviços e o lado sombrio deles
+
+184
+00:05:47,759 --> 00:05:49,880
+que ninguém te conta e aqui vai alguns
+
+185
+00:05:49,880 --> 00:05:52,479
+motivos para você nunca começar o teu
+
+186
+00:05:52,479 --> 00:05:54,319
+projeto com microsserviços o primeiro
+
+187
+00:05:54,319 --> 00:05:56,280
+motivo é que os microsserviços aumentam
+
+188
+00:05:56,280 --> 00:05:58,360
+a complexidade sistêmica
+
+189
+00:05:58,360 --> 00:05:59,919
+exponencialmente
+
+190
+00:05:59,919 --> 00:06:01,639
+quando você tá começando um projeto teu
+
+191
+00:06:01,639 --> 00:06:03,240
+foco principal tem que ser na entrega de
+
+192
+00:06:03,240 --> 00:06:05,080
+valor e no desenvolvimento rápido de
+
+193
+00:06:05,080 --> 00:06:06,440
+novas funcionalidades com o
+
+194
+00:06:06,440 --> 00:06:08,360
+microsserviço você adiciona uma camada
+
+195
+00:06:08,360 --> 00:06:10,479
+Extra de complexidade desde o primeiro
+
+196
+00:06:10,479 --> 00:06:12,639
+dia de projeto só para você ter noção
+
+197
+00:06:12,639 --> 00:06:14,160
+Você vai precisar de um sistema de
+
+198
+00:06:14,160 --> 00:06:16,120
+comunicação pros teus microsserviços
+
+199
+00:06:16,120 --> 00:06:17,479
+Você vai precisar de ferramentas para
+
+200
+00:06:17,479 --> 00:06:20,240
+montar tuas pipelines de CCD Deploy
+
+201
+00:06:20,240 --> 00:06:22,080
+versionamento Independente de cada
+
+202
+00:06:22,080 --> 00:06:24,440
+microsserviço monitoramento tracing
+
+203
+00:06:24,440 --> 00:06:27,199
+observabilidade log e além de tudo isso
+
+204
+00:06:27,199 --> 00:06:29,039
+cada microsserviço tem o seu próprio
+
+205
+00:06:29,039 --> 00:06:31,240
+banco de dados o que aumenta muito a
+
+206
+00:06:31,240 --> 00:06:33,520
+complexidade e se tu pensa que acabou tá
+
+207
+00:06:33,520 --> 00:06:35,080
+muito enganado você também vai ter que
+
+208
+00:06:35,080 --> 00:06:37,039
+implementar mecanismos de mensageria com
+
+209
+00:06:37,039 --> 00:06:40,000
+rapit MQ o SQS a pas Cica você vai ter
+
+210
+00:06:40,000 --> 00:06:41,800
+que ter um bom time de devops para
+
+211
+00:06:41,800 --> 00:06:44,160
+gerenciar toda essa infraestrutura Além
+
+212
+00:06:44,160 --> 00:06:46,960
+disso você vai precisar Obrigatoriamente
+
+213
+00:06:46,960 --> 00:06:48,960
+que o teu time domine alguns padrões
+
+214
+00:06:48,960 --> 00:06:51,759
+como cqrs event driven architecture
+
+215
+00:06:51,759 --> 00:06:54,440
+event source event Storm domain driven
+
+216
+00:06:54,440 --> 00:06:56,879
+design e isso tudo é só a ponta do
+
+217
+00:06:56,879 --> 00:06:59,720
+iceberg e é aí que entra o clássico o
+
+218
+00:06:59,720 --> 00:07:02,759
+princípio yne ou seja you a gonna need
+
+219
+00:07:02,759 --> 00:07:05,000
+it que traduzindo seria você não vai
+
+220
+00:07:05,000 --> 00:07:06,599
+precisar disso já tem vídeo aqui no
+
+221
+00:07:06,599 --> 00:07:08,400
+canal falando sobre isso quando você
+
+222
+00:07:08,400 --> 00:07:10,759
+começa um projeto quando você começa um
+
+223
+00:07:10,759 --> 00:07:13,160
+novo sistema quanta certeza você tem de
+
+224
+00:07:13,160 --> 00:07:14,800
+que esse projeto vai ser útil pro
+
+225
+00:07:14,800 --> 00:07:17,000
+usuário final muita das vezes a melhor
+
+226
+00:07:17,000 --> 00:07:18,759
+maneira de descobrir se uma ideia de
+
+227
+00:07:18,759 --> 00:07:21,280
+software é útil se ela é boa é construir
+
+228
+00:07:21,280 --> 00:07:23,800
+uma versão simplista dela ou seja um MVP
+
+229
+00:07:23,800 --> 00:07:26,199
+o mínimo projeto viável e ver o quão bem
+
+230
+00:07:26,199 --> 00:07:27,960
+ela funciona e durante essa primeira
+
+231
+00:07:27,960 --> 00:07:29,520
+fase de desenvolvimento você precisa
+
+232
+00:07:29,520 --> 00:07:31,240
+precisa dar prioridade total na
+
+233
+00:07:31,240 --> 00:07:33,280
+velocidade para poder começar a receber
+
+234
+00:07:33,280 --> 00:07:35,599
+logo os feedbacks do teu sistema então o
+
+235
+00:07:35,599 --> 00:07:37,479
+tempo que você tinha que est gastando
+
+236
+00:07:37,479 --> 00:07:39,520
+construindo funcionalidades essenciais
+
+237
+00:07:39,520 --> 00:07:41,360
+do domínio da aplicação você acaba
+
+238
+00:07:41,360 --> 00:07:43,000
+desperdiçando com infraestrutura e com
+
+239
+00:07:43,000 --> 00:07:45,039
+um monte de complexidade desnecessária
+
+240
+00:07:45,039 --> 00:07:47,000
+isso sem contar que em equipes menores
+
+241
+00:07:47,000 --> 00:07:48,919
+geralmente não tem especialistas em
+
+242
+00:07:48,919 --> 00:07:50,840
+arquiteturas distribuídas para lidar com
+
+243
+00:07:50,840 --> 00:07:52,879
+todos esses desafios E aí o que acontece
+
+244
+00:07:52,879 --> 00:07:54,919
+é que muita das vezes o time acaba se
+
+245
+00:07:54,919 --> 00:07:56,639
+perdendo na configuração da
+
+246
+00:07:56,639 --> 00:07:58,800
+infraestrutura antes mesmo de validar o
+
+247
+00:07:58,800 --> 00:08:00,840
+produto n mercado e esse foi só o
+
+248
+00:08:00,840 --> 00:08:03,319
+primeiro motivo o segundo motivo é que
+
+249
+00:08:03,319 --> 00:08:05,599
+microsserviços não é para qualquer
+
+250
+00:08:05,599 --> 00:08:07,800
+software arquitetura de microsserviços é
+
+251
+00:08:07,800 --> 00:08:09,639
+uma arquitetura extremamente poderosa
+
+252
+00:08:09,639 --> 00:08:11,720
+Porém isso não é para software de
+
+253
+00:08:11,720 --> 00:08:13,599
+padaria nem para software de mercadinho
+
+254
+00:08:13,599 --> 00:08:15,199
+e nem para software de m porte essa
+
+255
+00:08:15,199 --> 00:08:16,639
+arquitetura ela foi criada pra gente
+
+256
+00:08:16,639 --> 00:08:19,159
+escalar não só o sistema mas também os
+
+257
+00:08:19,159 --> 00:08:21,159
+times pensa comigo se você tem um
+
+258
+00:08:21,159 --> 00:08:23,240
+monolito hoje e tem 10 programadores
+
+259
+00:08:23,240 --> 00:08:25,360
+trabalhando nele Qual é a lógica de
+
+260
+00:08:25,360 --> 00:08:27,680
+migrar isso para microsserviços cada
+
+261
+00:08:27,680 --> 00:08:29,840
+microsserviço ele precisa ter um time
+
+262
+00:08:29,840 --> 00:08:32,360
+dedicado para focar nele não é saudável
+
+263
+00:08:32,360 --> 00:08:34,279
+que todos os programadores deem
+
+264
+00:08:34,279 --> 00:08:36,440
+manutenção em todos os microsserviços
+
+265
+00:08:36,440 --> 00:08:38,399
+isso não faz nenhum sentido até porque o
+
+266
+00:08:38,399 --> 00:08:40,159
+programador vai ficar igual o Pato ele
+
+267
+00:08:40,159 --> 00:08:42,399
+nada anda e voa mas não faz nada direito
+
+268
+00:08:42,399 --> 00:08:44,760
+os times eles precisam ser especialistas
+
+269
+00:08:44,760 --> 00:08:46,959
+naquele serviço ou naquele domínio
+
+270
+00:08:46,959 --> 00:08:48,560
+específico que eles estão trabalhando e
+
+271
+00:08:48,560 --> 00:08:50,720
+é por isso que os microsserviços ajudam
+
+272
+00:08:50,720 --> 00:08:53,160
+a escalar os times também não é só o
+
+273
+00:08:53,160 --> 00:08:55,880
+sistema então A ideia é que quando a tua
+
+274
+00:08:55,880 --> 00:08:58,560
+equipe chegar a dezenas e mais dezenas e
+
+275
+00:08:58,560 --> 00:09:00,800
+até centenas penas de programadores e
+
+276
+00:09:00,800 --> 00:09:02,720
+começar a ter problemas com todo mundo
+
+277
+00:09:02,720 --> 00:09:05,399
+mexendo na mesma base de código Aí sim
+
+278
+00:09:05,399 --> 00:09:07,760
+você começa a pensar em quebrar a tua
+
+279
+00:09:07,760 --> 00:09:09,519
+aplicação em microsserviços porque aí
+
+280
+00:09:09,519 --> 00:09:11,600
+você vai est com o cenário ideal na mão
+
+281
+00:09:11,600 --> 00:09:14,600
+e com a necessidade então entenda
+
+282
+00:09:14,600 --> 00:09:16,839
+necessidade grave essa palavra
+
+283
+00:09:16,839 --> 00:09:19,839
+necessidade e o terceiro e o principal
+
+284
+00:09:19,839 --> 00:09:22,760
+motivo é a falta de conhecimento de
+
+285
+00:09:22,760 --> 00:09:24,519
+domínio da aplicação quando a gente
+
+286
+00:09:24,519 --> 00:09:26,760
+escolhe direto para microsserviços a
+
+287
+00:09:26,760 --> 00:09:29,720
+chance de dar tudo errado é extremamente
+
+288
+00:09:29,720 --> 00:09:31,880
+alta justamente porque a gente ainda não
+
+289
+00:09:31,880 --> 00:09:34,600
+tem conhecimento do domínio suficiente
+
+290
+00:09:34,600 --> 00:09:36,600
+no começo do projeto o domínio ainda tá
+
+291
+00:09:36,600 --> 00:09:39,000
+sendo descoberto as regras de negócio os
+
+292
+00:09:39,000 --> 00:09:41,440
+processos as entidades tudo isso tá em
+
+293
+00:09:41,440 --> 00:09:43,600
+constante evolução é como construir uma
+
+294
+00:09:43,600 --> 00:09:45,760
+casa sem ter uma planta completa Você
+
+295
+00:09:45,760 --> 00:09:47,560
+pode até começar a levantar as paredes
+
+296
+00:09:47,560 --> 00:09:49,000
+mas a chance de você ter que derrubar
+
+297
+00:09:49,000 --> 00:09:51,120
+uma parte e refazer de novo é enorme
+
+298
+00:09:51,120 --> 00:09:53,480
+você inevitavelmente vai acabar criando
+
+299
+00:09:53,480 --> 00:09:55,560
+microsserviços que não representam
+
+300
+00:09:55,560 --> 00:09:57,760
+corretamente as responsabilidades do teu
+
+301
+00:09:57,760 --> 00:09:59,480
+sistema para isso ficar um pouco mais
+
+302
+00:09:59,480 --> 00:10:01,040
+fácil Vamos imaginar o seguinte vamos
+
+303
+00:10:01,040 --> 00:10:02,720
+imaginar que você começou a construir um
+
+304
+00:10:02,720 --> 00:10:04,880
+e-commerce no início você imagina que
+
+305
+00:10:04,880 --> 00:10:06,320
+precisa de um microsserviço para
+
+306
+00:10:06,320 --> 00:10:08,279
+produtos Um microsserviço para pedido um
+
+307
+00:10:08,279 --> 00:10:10,079
+microsserviço para cliente mas conforme
+
+308
+00:10:10,079 --> 00:10:12,120
+o negócio vai evoluindo você percebe que
+
+309
+00:10:12,120 --> 00:10:14,519
+a gestão de estoque é crucial e tá
+
+310
+00:10:14,519 --> 00:10:16,480
+completamente ligada aos produtos ou
+
+311
+00:10:16,480 --> 00:10:19,240
+então que promoções afetam tanto
+
+312
+00:10:19,240 --> 00:10:21,519
+produtos quanto pedidos aí você se vê
+
+313
+00:10:21,519 --> 00:10:23,160
+Obrigado a refaturar todos os
+
+314
+00:10:23,160 --> 00:10:25,079
+microsserviços e mudar a comunicação
+
+315
+00:10:25,079 --> 00:10:26,880
+entre eles Além disso Você ainda vai ter
+
+316
+00:10:26,880 --> 00:10:28,519
+que ajustar os bancos de dados porque
+
+317
+00:10:28,519 --> 00:10:30,040
+cada um tem o seu seu próprio banco de
+
+318
+00:10:30,040 --> 00:10:33,000
+dados e isso vai ser tortuoso pro time é
+
+319
+00:10:33,000 --> 00:10:35,279
+um retrabalho constante poderia ter sido
+
+320
+00:10:35,279 --> 00:10:37,040
+evitado se você tivesse esperado para
+
+321
+00:10:37,040 --> 00:10:39,120
+entender um pouco melhor o domínio da
+
+322
+00:10:39,120 --> 00:10:41,440
+tua aplicação e é exatamente aqui que
+
+323
+00:10:41,440 --> 00:10:43,880
+brilha o domain driven design ou seja
+
+324
+00:10:43,880 --> 00:10:46,279
+desenvolvimento orientado a domínio
+
+325
+00:10:46,279 --> 00:10:47,959
+domain driven design não é uma
+
+326
+00:10:47,959 --> 00:10:49,720
+arquitetura não é uma forma de você
+
+327
+00:10:49,720 --> 00:10:51,720
+colocar as pastinhas ali do teu projeto
+
+328
+00:10:51,720 --> 00:10:53,360
+em ordem ele é uma abordagem de
+
+329
+00:10:53,360 --> 00:10:55,279
+desenvolvimento de software que coloca o
+
+330
+00:10:55,279 --> 00:10:57,839
+domínio do negócio no centro de tudo ele
+
+331
+00:10:57,839 --> 00:10:59,959
+te ajuda a entender a complexidade do
+
+332
+00:10:59,959 --> 00:11:01,959
+negócio a modelar as entidades as regras
+
+333
+00:11:01,959 --> 00:11:04,000
+de negócio e criar um modelo de domínio
+
+334
+00:11:04,000 --> 00:11:06,880
+rico e expressivo E que esteja alinhado
+
+335
+00:11:06,880 --> 00:11:09,040
+perfeitamente ao negócio com o domain
+
+336
+00:11:09,040 --> 00:11:10,720
+driven design você vai aprender a
+
+337
+00:11:10,720 --> 00:11:13,000
+identificar os bound context que são os
+
+338
+00:11:13,000 --> 00:11:15,320
+contextos delimitados da tua aplicação
+
+339
+00:11:15,320 --> 00:11:17,200
+que basicamente são as áreas do teu
+
+340
+00:11:17,200 --> 00:11:19,560
+negócio com responsabilidades muito bem
+
+341
+00:11:19,560 --> 00:11:21,680
+definidas por exemplo no e-commerce a
+
+342
+00:11:21,680 --> 00:11:23,560
+gente poderia ter um contexto delimitado
+
+343
+00:11:23,560 --> 00:11:25,279
+para catálogo de produtos outro para
+
+344
+00:11:25,279 --> 00:11:27,120
+processamento de pedidos outro para
+
+345
+00:11:27,120 --> 00:11:29,440
+gestão de clientes e assim por diante C
+
+346
+00:11:29,440 --> 00:11:31,040
+com texto delimitado vai ter o seu
+
+347
+00:11:31,040 --> 00:11:33,120
+próprio modelo de domínio suas próprias
+
+348
+00:11:33,120 --> 00:11:34,800
+regras de negócio e a sua própria
+
+349
+00:11:34,800 --> 00:11:36,600
+linguagem que no DDD a gente chama de
+
+350
+00:11:36,600 --> 00:11:39,040
+linguagem ubico e só depois que a
+
+351
+00:11:39,040 --> 00:11:41,560
+aplicação tiver madura o suficiente
+
+352
+00:11:41,560 --> 00:11:43,320
+chegar num nível que você conseguir
+
+353
+00:11:43,320 --> 00:11:45,000
+bater o olho no código e conseguir
+
+354
+00:11:45,000 --> 00:11:47,880
+identificar cada módulo ou cada bounded
+
+355
+00:11:47,880 --> 00:11:50,800
+context muito bem definido Aí sim você
+
+356
+00:11:50,800 --> 00:11:53,399
+começa a pensar em microsserviços E é
+
+357
+00:11:53,399 --> 00:11:55,120
+exatamente aqui que entra a solução
+
+358
+00:11:55,120 --> 00:11:57,040
+proposta por Martin Fer chamada de
+
+359
+00:11:57,040 --> 00:11:59,639
+monolit first ou seja monol Lito
+
+360
+00:11:59,639 --> 00:12:01,720
+primeiro a criação desse princípio se
+
+361
+00:12:01,720 --> 00:12:03,560
+deu após duas percepções feitas por
+
+362
+00:12:03,560 --> 00:12:05,880
+Martin Fer que é um dos maiores nomes no
+
+363
+00:12:05,880 --> 00:12:07,680
+mundo da engenharia de softw onde ele
+
+364
+00:12:07,680 --> 00:12:09,880
+diz o seguinte primeiro quase todas as
+
+365
+00:12:09,880 --> 00:12:11,360
+histórias de microsserviços
+
+366
+00:12:11,360 --> 00:12:13,720
+bem-sucedidas começaram com um monolito
+
+367
+00:12:13,720 --> 00:12:15,440
+que ficou muito grande e depois foi
+
+368
+00:12:15,440 --> 00:12:17,240
+quebrado e dividido em microsserviço
+
+369
+00:12:17,240 --> 00:12:19,639
+segundo quase todos os casos em que ouvi
+
+370
+00:12:19,639 --> 00:12:21,320
+falar de um sistema que foi criado do
+
+371
+00:12:21,320 --> 00:12:23,519
+zero como um sistema de microsserviços
+
+372
+00:12:23,519 --> 00:12:25,800
+acabaram tendo sérios problemas e ele
+
+373
+00:12:25,800 --> 00:12:27,440
+ainda complementa dizendo que foi ao
+
+374
+00:12:27,440 --> 00:12:29,399
+perceber esse padrão que vários os
+
+375
+00:12:29,399 --> 00:12:31,320
+outros arquitetos de software começaram
+
+376
+00:12:31,320 --> 00:12:33,560
+a argumentar que você não deve começar
+
+377
+00:12:33,560 --> 00:12:35,720
+um projeto com microsserviço mesmo se
+
+378
+00:12:35,720 --> 00:12:38,279
+você tiver certeza absoluta de que teu
+
+379
+00:12:38,279 --> 00:12:39,959
+sistema vai ficar grande o suficiente
+
+380
+00:12:39,959 --> 00:12:41,639
+para valer a pena e para ilustrar isso
+
+381
+00:12:41,639 --> 00:12:43,399
+no blog do Martin Fer que eu vou deixar
+
+382
+00:12:43,399 --> 00:12:44,639
+o link na descrição a gente vai
+
+383
+00:12:44,639 --> 00:12:46,440
+encontrar essa imagem que ilustra a
+
+384
+00:12:46,440 --> 00:12:48,320
+seguinte situação quando a gente começa
+
+385
+00:12:48,320 --> 00:12:50,079
+a desenvolver um sistema a gente tem
+
+386
+00:12:50,079 --> 00:12:52,040
+dois caminhos O primeiro é o de cima que
+
+387
+00:12:52,040 --> 00:12:54,000
+se a gente decidir ir direto pros
+
+388
+00:12:54,000 --> 00:12:55,880
+microsserviços a gente vai encontrar um
+
+389
+00:12:55,880 --> 00:12:58,120
+monte de dragão tacando fogo na gente e
+
+390
+00:12:58,120 --> 00:13:00,120
+isso obviamente ilustra a Extrema
+
+391
+00:13:00,120 --> 00:13:02,240
+complexidade e a dificuldade que a gente
+
+392
+00:13:02,240 --> 00:13:04,360
+vai ter se a gente decidir ir por aqui e
+
+393
+00:13:04,360 --> 00:13:06,279
+essa dificuldade é justamente porque a
+
+394
+00:13:06,279 --> 00:13:08,720
+gente ainda não entende bem os limites
+
+395
+00:13:08,720 --> 00:13:10,399
+do nosso domínio falta ainda
+
+396
+00:13:10,399 --> 00:13:12,680
+conhecimento profundo do negócio E além
+
+397
+00:13:12,680 --> 00:13:14,199
+disso a gente ainda tem toda aquela
+
+398
+00:13:14,199 --> 00:13:16,000
+complexidade a nível de infraestrutura
+
+399
+00:13:16,000 --> 00:13:17,480
+que eu já te mostrei antes sobre os
+
+400
+00:13:17,480 --> 00:13:19,639
+microsserviços então aqui é sem sombra
+
+401
+00:13:19,639 --> 00:13:21,639
+de dúvidas o caminho mais arriscado e
+
+402
+00:13:21,639 --> 00:13:23,560
+mais tortuoso pra gente seguir já no
+
+403
+00:13:23,560 --> 00:13:25,399
+segundo caminho que é o de baixo a gente
+
+404
+00:13:25,399 --> 00:13:27,160
+escolhe por iniciar o nosso sistema com
+
+405
+00:13:27,160 --> 00:13:29,279
+uma arquitetura monolítica e aqui eu não
+
+406
+00:13:29,279 --> 00:13:31,160
+tô falando de monolito bagunçado aqui eu
+
+407
+00:13:31,160 --> 00:13:32,600
+tô falando da gente desenvolver um
+
+408
+00:13:32,600 --> 00:13:34,800
+monolito modular ou seja um sistema que
+
+409
+00:13:34,800 --> 00:13:37,079
+apesar de ser um bloco único de código é
+
+410
+00:13:37,079 --> 00:13:38,920
+organizado internamente em módulos bem
+
+411
+00:13:38,920 --> 00:13:40,399
+definidos cada um com sua
+
+412
+00:13:40,399 --> 00:13:42,839
+responsabilidade clara e objetiva então
+
+413
+00:13:42,839 --> 00:13:44,480
+o retângulo Preto nessa imagem
+
+414
+00:13:44,480 --> 00:13:46,399
+representa o monolito modular que
+
+415
+00:13:46,399 --> 00:13:48,519
+basicamente é o nosso sistema e Cada
+
+416
+00:13:48,519 --> 00:13:50,440
+pecinha colorida dentro dele representa
+
+417
+00:13:50,440 --> 00:13:52,560
+os módulos desse monolito muito bem
+
+418
+00:13:52,560 --> 00:13:55,040
+definidos ou melhor os bounded context
+
+419
+00:13:55,040 --> 00:13:56,560
+que traduzindo seriam os contextos
+
+420
+00:13:56,560 --> 00:13:58,160
+delimitados lá do dd dele então por
+
+421
+00:13:58,160 --> 00:14:00,199
+exemplo num com a gente poderia ter um
+
+422
+00:14:00,199 --> 00:14:01,880
+módulo pro catálogo de produtos um
+
+423
+00:14:01,880 --> 00:14:03,399
+módulo para pedidos um módulo para
+
+424
+00:14:03,399 --> 00:14:05,000
+gerenciar o carrinho de compras um
+
+425
+00:14:05,000 --> 00:14:06,600
+módulo para clientes um módulo para
+
+426
+00:14:06,600 --> 00:14:08,680
+pagamentos e por aí vai cada módulo
+
+427
+00:14:08,680 --> 00:14:10,880
+desses teria suas próprias entidades
+
+428
+00:14:10,880 --> 00:14:12,680
+suas próprias regras de negócio seus
+
+429
+00:14:12,680 --> 00:14:14,199
+próprios testes unitários e de
+
+430
+00:14:14,199 --> 00:14:16,120
+integração e poderiam ter até o seu
+
+431
+00:14:16,120 --> 00:14:18,199
+próprio esquema no banco de dados mesmo
+
+432
+00:14:18,199 --> 00:14:19,880
+que eles estivessem compartilhando a
+
+433
+00:14:19,880 --> 00:14:21,920
+mesma conexão para isso tudo ficar um
+
+434
+00:14:21,920 --> 00:14:23,720
+pouco mais simples dá uma olhada nesse
+
+435
+00:14:23,720 --> 00:14:25,120
+repositório aqui que foi um projeto
+
+436
+00:14:25,120 --> 00:14:26,880
+feito na gringa em csharp para
+
+437
+00:14:26,880 --> 00:14:28,880
+exemplificar um monolito modular repara
+
+438
+00:14:28,880 --> 00:14:30,320
+que quando a gente entra no diretório
+
+439
+00:14:30,320 --> 00:14:32,480
+moduls dentro de src a gente encontra
+
+440
+00:14:32,480 --> 00:14:34,720
+diversos módulos como administration
+
+441
+00:14:34,720 --> 00:14:36,639
+meetings payment que seria o módulo de
+
+442
+00:14:36,639 --> 00:14:37,800
+pagamentos a gente encontra o
+
+443
+00:14:37,800 --> 00:14:40,120
+registration user access agora quando a
+
+444
+00:14:40,120 --> 00:14:42,160
+gente abre cada um deles a gente vê que
+
+445
+00:14:42,160 --> 00:14:44,279
+todos eles TM a mesma estrutura de
+
+446
+00:14:44,279 --> 00:14:46,360
+diretórios com as camadas muito bem
+
+447
+00:14:46,360 --> 00:14:48,320
+definidas como a camada de aplicação
+
+448
+00:14:48,320 --> 00:14:49,440
+então aqui dentro a gente teria os
+
+449
+00:14:49,440 --> 00:14:51,279
+nossos use cases a gente tem também a
+
+450
+00:14:51,279 --> 00:14:53,079
+camada de domínio e aqui dentro estariam
+
+451
+00:14:53,079 --> 00:14:55,279
+todas as nossas entidades desse módulo
+
+452
+00:14:55,279 --> 00:14:57,040
+aqui em específico a gente tem também a
+
+453
+00:14:57,040 --> 00:14:58,720
+nossa camada de testes então aqui dentro
+
+454
+00:14:58,720 --> 00:15:00,639
+tá os nossos testes de integração nossos
+
+455
+00:15:00,639 --> 00:15:02,519
+testes de unidade isso aqui para você
+
+456
+00:15:02,519 --> 00:15:04,279
+que é curioso é uma mistura de Clean
+
+457
+00:15:04,279 --> 00:15:06,320
+architecture com domain driven design
+
+458
+00:15:06,320 --> 00:15:08,120
+então o DDD ele ajuda a gente a
+
+459
+00:15:08,120 --> 00:15:10,519
+delimitar os nossos contextos a entender
+
+460
+00:15:10,519 --> 00:15:12,399
+né os boundary contact e a Clean
+
+461
+00:15:12,399 --> 00:15:14,079
+architecture ajuda a gente a separar a
+
+462
+00:15:14,079 --> 00:15:16,160
+nossa aplicação em várias camadas como a
+
+463
+00:15:16,160 --> 00:15:18,199
+camada de aplicação camada de domínio
+
+464
+00:15:18,199 --> 00:15:20,160
+camada de infraestrutura E por aí vai
+
+465
+00:15:20,160 --> 00:15:22,160
+então aqui é que tá o grande segredo da
+
+466
+00:15:22,160 --> 00:15:24,440
+coisa toda quando teu código ou teu
+
+467
+00:15:24,440 --> 00:15:26,680
+monolito chegar nesse nível de
+
+468
+00:15:26,680 --> 00:15:28,560
+maturidade que você consegue bater o
+
+469
+00:15:28,560 --> 00:15:30,600
+olho já conseguir perceber um contexto
+
+470
+00:15:30,600 --> 00:15:33,279
+delimitado um Bound context E por aí vai
+
+471
+00:15:33,279 --> 00:15:36,319
+e tudo muito bem definido aí sim faz
+
+472
+00:15:36,319 --> 00:15:38,519
+sentido você pensar em estrangular o
+
+473
+00:15:38,519 --> 00:15:41,279
+monolito e extrair os módulos para
+
+474
+00:15:41,279 --> 00:15:43,759
+microsserviços e isso levando em conta
+
+475
+00:15:43,759 --> 00:15:46,160
+se realmente tu tiver a necessidade
+
+476
+00:15:46,160 --> 00:15:48,519
+porque na maioria esmagadora dos casos
+
+477
+00:15:48,519 --> 00:15:51,000
+um monolito modular muito bem feito é
+
+478
+00:15:51,000 --> 00:15:53,120
+uma boa alternativa aos microsserviços e
+
+479
+00:15:53,120 --> 00:15:55,000
+é mais do que suficiente na maioria dos
+
+480
+00:15:55,000 --> 00:15:57,480
+cenários assim a gente corre menos risco
+
+481
+00:15:57,480 --> 00:15:59,600
+aprende mais sobre o negócio e deixa a
+
+482
+00:15:59,600 --> 00:16:01,720
+arquitetura evoluir junto com o nosso
+
+483
+00:16:01,720 --> 00:16:04,079
+conhecimento é muito mais inteligente do
+
+484
+00:16:04,079 --> 00:16:05,880
+que tentar adivinhar tudo de cara e já
+
+485
+00:16:05,880 --> 00:16:07,079
+sair construindo um monte de
+
+486
+00:16:07,079 --> 00:16:09,040
+microsserviços você precisa entender que
+
+487
+00:16:09,040 --> 00:16:11,519
+o monolito é que tem que ser o ponto de
+
+488
+00:16:11,519 --> 00:16:13,639
+partida para depois que você tiver todo
+
+489
+00:16:13,639 --> 00:16:15,720
+um conhecimento de domínio depois que
+
+490
+00:16:15,720 --> 00:16:17,399
+você conseguir bater o olho e conseguir
+
+491
+00:16:17,399 --> 00:16:19,880
+enxergar a forma como você consegue
+
+492
+00:16:19,880 --> 00:16:23,160
+separar a tua aplicação Aí sim você
+
+493
+00:16:23,160 --> 00:16:25,680
+começa a tua Jornada Para microsserviço
+
+494
+00:16:25,680 --> 00:16:27,519
+e para te ajudar nessa jornada que eu
+
+495
+00:16:27,519 --> 00:16:29,519
+sei que deve ter dado um nó no teu
+
+496
+00:16:29,519 --> 00:16:30,959
+cérebro eu vou deixar o link na
+
+497
+00:16:30,959 --> 00:16:33,199
+descrição dos principais livros sobre o
+
+498
+00:16:33,199 --> 00:16:34,800
+assunto que a gente abordou aqui o
+
+499
+00:16:34,800 --> 00:16:36,920
+primeiro livro é migrando sistemas
+
+500
+00:16:36,920 --> 00:16:39,199
+monolíticos para microsserviços do san
+
+501
+00:16:39,199 --> 00:16:41,759
+Nilma que é assim O livro é um absurdo
+
+502
+00:16:41,759 --> 00:16:43,680
+vai na minha que eu só te boto na boa tu
+
+503
+00:16:43,680 --> 00:16:45,160
+sabe disso o outro livro que eu vou
+
+504
+00:16:45,160 --> 00:16:47,199
+deixar também como recomendação também é
+
+505
+00:16:47,199 --> 00:16:49,199
+do sanila que é mestre jedai em
+
+506
+00:16:49,199 --> 00:16:51,240
+arquitetura é o criando microsserviços
+
+507
+00:16:51,240 --> 00:16:53,319
+segunda edição tem que ser o segunda
+
+508
+00:16:53,319 --> 00:16:55,399
+edição que também é outro livro absurdo
+
+509
+00:16:55,399 --> 00:16:57,800
+e o principal livro sobre domain driven
+
+510
+00:16:57,800 --> 00:16:59,680
+design que não podde poderia faltar é o
+
+511
+00:16:59,680 --> 00:17:01,720
+domain driven design do Eric Evans que
+
+512
+00:17:01,720 --> 00:17:03,680
+foi aí o precursor do domain driven
+
+513
+00:17:03,680 --> 00:17:05,240
+design a gente até tem outras
+
+514
+00:17:05,240 --> 00:17:07,720
+literaturas sobre DDD mas esse aí o
+
+515
+00:17:07,720 --> 00:17:09,839
+livro azul que a galera fala é a Bíblia
+
+516
+00:17:09,839 --> 00:17:11,919
+do domeno do EV design então não deixa
+
+517
+00:17:11,919 --> 00:17:13,600
+de garantir Teu livro não hein com esses
+
+518
+00:17:13,600 --> 00:17:15,760
+três Aí tu já pode passar os próximos se
+
+519
+00:17:15,760 --> 00:17:17,799
+meses aprendendo sobre DDD e
+
+520
+00:17:17,799 --> 00:17:20,400
+microsserviços do jeito certo hein do
+
+521
+00:17:20,400 --> 00:17:22,400
+jeito certo bom e depois desse quase
+
+522
+00:17:22,400 --> 00:17:24,839
+documentário sobre microsserviços
+
+523
+00:17:24,839 --> 00:17:27,000
+monolito monolito modular eu acho que
+
+524
+00:17:27,000 --> 00:17:28,960
+esse vídeo já merece teu like né então
+
+525
+00:17:28,960 --> 00:17:30,520
+deixa teu like aí se inscreve no canal
+
+526
+00:17:30,520 --> 00:17:32,400
+se tu não for inscrito e eu te convido a
+
+527
+00:17:32,400 --> 00:17:34,240
+fazer parte do clube de membros aqui do
+
+528
+00:17:34,240 --> 00:17:36,960
+canal com apenas cinco cruzeiros brother
+
+529
+00:17:36,960 --> 00:17:39,360
+cinco cruzeiros tu consegue contribuir e
+
+530
+00:17:39,360 --> 00:17:40,840
+fortalecer o canal para eu continuar
+
+531
+00:17:40,840 --> 00:17:42,640
+trazendo esses conteúdos insanos aqui
+
+532
+00:17:42,640 --> 00:17:44,919
+para você se ficou qualquer dúvida deixa
+
+533
+00:17:44,919 --> 00:17:46,960
+nos comentários abaixo que eu faço maior
+
+534
+00:17:46,960 --> 00:17:48,919
+questão de responder por fim eu vou
+
+535
+00:17:48,919 --> 00:17:50,960
+ficando por aqui um forte abraço para
+
+536
+00:17:50,960 --> 00:17:54,919
+você e nos vemos em breve

@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>System Design · Sessão 2 de 2</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="shared.css" />
+    <style>
+      /* ── Sessão 2 additions ── */
+      .session-badge {
+        display: inline-flex; align-items: center; gap: 8px;
+        padding: 5px 14px; border-radius: 999px;
+        background: rgba(124,58,237,0.15);
+        border: 1px solid rgba(124,58,237,0.3);
+        font-size: 0.72rem; color: var(--violet2);
+        font-family: 'Space Mono', monospace; letter-spacing: 0.05em;
+        margin-bottom: 16px;
+      }
+      .session-badge::before {
+        content: ''; width: 6px; height: 6px;
+        border-radius: 50%; background: var(--violet2);
+      }
+      /* Recap */
+      .recap-grid {
+        display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+        margin-top: 8px;
+      }
+      .recap-col h4 {
+        font-family: 'Space Mono', monospace; font-size: 10px;
+        letter-spacing: 0.12em; color: var(--muted);
+        text-transform: uppercase; margin-bottom: 10px;
+      }
+      .recap-item {
+        display: flex; align-items: center; gap: 10px;
+        padding: 8px 12px; border-radius: 8px;
+        background: var(--bg3); border: 1px solid var(--border);
+        font-size: 0.82rem; color: var(--muted); margin-bottom: 6px;
+      }
+      .recap-dot {
+        width: 6px; height: 6px; border-radius: 50%;
+        background: var(--cyan); flex-shrink: 0;
+      }
+      .recap-item.disc .recap-dot { background: var(--violet2); }
+      /* DB cards */
+      .db-cards { display: flex; flex-direction: column; gap: 8px; }
+      .db-card {
+        padding: 10px 14px; border-radius: 10px;
+        background: var(--bg3); border: 1px solid var(--border);
+      }
+      .db-card h5 {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 0.85rem; font-weight: 600; margin-bottom: 3px;
+      }
+      .db-card p { font-size: 0.75rem; color: var(--muted); line-height: 1.4; }
+      .db-card.cp { border-left: 3px solid var(--cyan); }
+      .db-card.ap { border-left: 3px solid var(--violet2); }
+      /* References */
+      .ref-cards { display: flex; gap: 16px; margin-bottom: 20px; }
+      .ref-card {
+        flex: 1; padding: 16px; border-radius: 12px;
+        background: var(--bg3); border: 1px solid var(--border);
+      }
+      .ref-card .book-icon { font-size: 1.8rem; margin-bottom: 8px; }
+      .ref-card h4 {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 0.88rem; font-weight: 600;
+        color: var(--text); margin-bottom: 2px;
+      }
+      .ref-card .ref-author { font-size: 0.72rem; color: var(--cyan); margin-bottom: 4px; }
+      .ref-card p { font-size: 0.73rem; color: var(--muted); line-height: 1.4; }
+      /* Microservices evolution */
+      .evo-stage { display: flex; flex-direction: column; gap: 7px; margin-top: 10px; }
+      .evo-row {
+        display: flex; align-items: center; gap: 12px;
+        padding: 10px 14px; border-radius: 8px;
+        background: var(--bg3); border: 1px solid var(--border);
+      }
+      .evo-label {
+        font-family: 'Space Mono', monospace; font-size: 10px;
+        color: var(--cyan); min-width: 70px;
+      }
+      .evo-text { font-size: 0.8rem; color: var(--muted); line-height: 1.3; }
+      .evo-text strong { color: var(--text); }
+    </style>
+  </head>
+  <body>
+    <div class="deck">
+      <div class="grid-bg"></div>
+
+      <!-- ═══════════ SLIDE 0 — COVER ═══════════ -->
+      <div class="slide active" id="slide-0">
+        <div class="slide-header">
+          <div class="slide-tag">Sistema · Sessão 2 de 2</div>
+          <div class="slide-counter">01 / 10</div>
+        </div>
+        <div class="slide-body">
+          <div class="content" style="flex: 0 0 48%">
+            <div class="session-badge" data-reveal="0">Sessão 2 de 2 · Finale</div>
+            <h1 class="display" data-reveal="0">
+              System<br /><span class="accent">Design</span>
+            </h1>
+            <p class="cover-sub" data-reveal="1">
+              Aprofundamento: do auto scaling ao banco de dados distribuído.
+              Teorema CAP, microsserviços, sharding e um case real.
+            </p>
+            <div class="cover-meta" data-reveal="2">
+              <div class="meta-item">
+                <span class="meta-label">Sessão</span>
+                <span class="meta-value">2 de 2</span>
+              </div>
+              <div class="meta-item">
+                <span class="meta-label">Duração</span>
+                <span class="meta-value">~40 min</span>
+              </div>
+              <div class="meta-item">
+                <span class="meta-label">Tópicos</span>
+                <span class="meta-value">8 temas</span>
+              </div>
+            </div>
+          </div>
+          <div class="diagram-area">
+            <svg viewBox="0 0 380 225" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <marker id="arrVennC" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto">
+                  <path d="M0,0 L0,5 L5,2.5 z" fill="#00D4FF"/>
+                </marker>
+                <marker id="arrVennV" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto">
+                  <path d="M0,0 L0,5 L5,2.5 z" fill="#A855F7"/>
+                </marker>
+                <marker id="arrVennR" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto">
+                  <path d="M0,0 L0,5 L5,2.5 z" fill="#EF4444"/>
+                </marker>
+              </defs>
+
+              <!-- 3 overlapping circles -->
+              <g data-reveal="0">
+                <circle cx="190" cy="78" r="68" fill="rgba(0,212,255,0.07)" stroke="#00D4FF" stroke-width="2"/>
+                <circle cx="148" cy="150" r="68" fill="rgba(16,185,129,0.07)" stroke="#10B981" stroke-width="2"/>
+                <circle cx="232" cy="150" r="68" fill="rgba(168,85,247,0.07)" stroke="#A855F7" stroke-width="2"/>
+
+                <!-- Circle labels -->
+                <text x="190" y="32" text-anchor="middle" fill="#00D4FF" font-size="11" font-weight="700">Consistency</text>
+                <text x="100" y="193" text-anchor="middle" fill="#10B981" font-size="10" font-weight="700">Availability</text>
+                <text x="280" y="186" text-anchor="middle" fill="#A855F7" font-size="10" font-weight="700">Partition</text>
+                <text x="280" y="198" text-anchor="middle" fill="#A855F7" font-size="10" font-weight="700">Tolerance</text>
+              </g>
+
+              <!-- CP: sigla inside intersection + arrow from external example -->
+              <g data-reveal="1">
+                <text x="212" y="116" text-anchor="middle" fill="#00D4FF" font-size="10" font-weight="800">CP</text>
+                <line x1="302" y1="56" x2="219" y2="108" stroke="#00D4FF" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#arrVennC)"/>
+                <text x="316" y="50" text-anchor="middle" fill="#6B7A99" font-size="8.5">PostgreSQL · Redis</text>
+              </g>
+
+              <!-- AP: sigla inside intersection + arrow from external example -->
+              <g data-reveal="2">
+                <text x="190" y="162" text-anchor="middle" fill="#A855F7" font-size="10" font-weight="800">AP</text>
+                <line x1="190" y1="207" x2="190" y2="168" stroke="#A855F7" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#arrVennV)"/>
+                <text x="190" y="215" text-anchor="middle" fill="#6B7A99" font-size="8.5">Cassandra · Dynamo</text>
+              </g>
+
+              <!-- CA: sigla inside intersection + arrow from external example -->
+              <g data-reveal="3">
+                <text x="168" y="116" text-anchor="middle" fill="#EF4444" font-size="10" font-weight="800">CA</text>
+                <line x1="78" y1="56" x2="161" y2="108" stroke="#EF4444" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#arrVennR)"/>
+                <text x="64" y="50" text-anchor="middle" fill="#EF4444" font-size="8.5">impossível</text>
+              </g>
+            </svg>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <div class="progress-bar"><div class="progress-fill" style="width: 10%"></div></div>
+          <div class="nav-hint"><span class="key">→</span></div>
+        </div>
+      </div>
+
+      <!-- ═══════════ SLIDE 1 — RECAP ═══════════ -->
+      <div class="slide" id="slide-1">
+        <div class="slide-header">
+          <div class="slide-tag">Recap</div>
+          <div class="slide-counter">02 / 10</div>
+        </div>
+        <div class="slide-body">
+          <div class="content full">
+            <h2 class="slide-title" style="margin-bottom: 8px" data-reveal="0">
+              Na <span class="accent">sessão 1</span> vimos…
+            </h2>
+            <p class="lead" style="margin-bottom: 14px" data-reveal="0">
+              Um panorama completo de escalabilidade, cache e banco de dados — e hoje fechamos o ciclo.
+            </p>
+            <div class="recap-grid" data-reveal="1">
+              <div class="recap-col">
+                <h4>Conteúdo</h4>
+                <div class="recap-item"><span class="recap-dot"></span>O que é System Design?</div>
+                <div class="recap-item"><span class="recap-dot"></span>RF vs RNF</div>
+                <div class="recap-item"><span class="recap-dot"></span>Escalabilidade Vertical vs Horizontal</div>
+                <div class="recap-item"><span class="recap-dot"></span>Load Balancer · Health Check</div>
+                <div class="recap-item"><span class="recap-dot"></span>Replicação Master/Slave</div>
+                <div class="recap-item"><span class="recap-dot"></span>Cache-Aside · Redis · TTL</div>
+                <div class="recap-item"><span class="recap-dot"></span>Case: DocGen (JSON &gt; Banco)</div>
+              </div>
+              <div class="recap-col" data-reveal="2">
+                <h4>O que surgiu na discussão?</h4>
+                <div class="recap-item disc"><span class="recap-dot"></span>Como o banco está configurado nos sistemas dos clientes?</div>
+                <div class="recap-item disc"><span class="recap-dot"></span>Existe replicação hoje?</div>
+                <div class="recap-item disc"><span class="recap-dot"></span>Onde tem consistência eventual?</div>
+                <div class="recap-item disc"><span class="recap-dot"></span>Qual sistema explodiria se usuários triplicassem?</div>
+              </div>
+            </div>
+            <div class="callout" style="margin-top: 16px" data-reveal="3">
+              <strong>Hoje:</strong> Auto Scaling · Multi Data Center · Mensageria Assíncrona · CAP/PACELC · Microsserviços · Sharding · Case MoneyTalks
+            </div>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <div class="progress-bar"><div class="progress-fill" style="width: 20%"></div></div>
+          <div class="nav-hint"><span class="key">←</span><span class="key">→</span></div>
+        </div>
+      </div>
+
+      <!-- ═══════════ SLIDE 2 — AUTO SCALING ═══════════ -->
+      <div class="slide" id="slide-2">
+        <div class="slide-header">
+          <div class="slide-tag">Elasticidade</div>
+          <div class="slide-counter">03 / 10</div>
+        </div>
+        <div class="slide-body">
+          <div class="content" style="flex: 0 0 46%">
+            <h2 class="slide-title" data-reveal="0">
+              Auto Scaling &amp; <span class="accent">Elasticidade</span>
+            </h2>
+            <p class="lead" data-reveal="0">
+              Scale out com Load Balancer resolve o dia a dia. Mas quem decide
+              quando subir ou descer instâncias?
+            </p>
+            <div class="concept-grid">
+              <div class="concept-item" data-reveal="1">
+                <div class="concept-icon">📈</div>
+                <div class="concept-text">
+                  <h4>Trigger de scale-out</h4>
+                  <p>Métricas: CPU &gt; 70% por 2 min, latência &gt; 500ms, fila &gt; 1000 mensagens. O Auto Scaling Group sobe novas instâncias automaticamente.</p>
+                </div>
+              </div>
+              <div class="concept-item" data-reveal="2">
+                <div class="concept-icon">⚙️</div>
+                <div class="concept-text">
+                  <h4>Min / Max / Desired</h4>
+                  <p>Configuração: mínimo 2 instâncias (redundância), máximo 10 (custo), desejado parte de 2. A Black Friday pode atingir o máximo em minutos.</p>
+                </div>
+              </div>
+              <div class="concept-item" data-reveal="3">
+                <div class="concept-icon">📉</div>
+                <div class="concept-text">
+                  <h4>Scale-in (cooldown)</h4>
+                  <p>Quando o tráfego cai, instâncias sobressalentes são terminadas. Cooldown evita oscilação: aguarda X segundos antes de decidir.</p>
+                </div>
+              </div>
+            </div>
+            <div class="callout callout-v" data-reveal="4">
+              <strong>Stateless é requisito:</strong> se a instância guarda sessão de usuário em memória, scale-out quebra. Estado deve estar no banco ou no Redis.
+            </div>
+          </div>
+          <div class="diagram-area">
+            <svg viewBox="0 0 320 320" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <marker id="arrAS" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                  <path d="M0,0 L0,6 L6,3 z" fill="#00D4FF" opacity="0.8"/>
+                </marker>
+              </defs>
+
+              <!-- Axes -->
+              <g data-reveal="0" data-undim-after="0">
+                <line x1="40" y1="20" x2="40" y2="240" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+                <line x1="40" y1="240" x2="300" y2="240" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+                <text x="28" y="244" fill="#6B7A99" font-size="8" text-anchor="middle">0</text>
+                <text x="28" y="196" fill="#6B7A99" font-size="8" text-anchor="middle">2</text>
+                <text x="28" y="152" fill="#6B7A99" font-size="8" text-anchor="middle">4</text>
+                <text x="28" y="108" fill="#6B7A99" font-size="8" text-anchor="middle">6</text>
+                <text x="28" y="64"  fill="#6B7A99" font-size="8" text-anchor="middle">8</text>
+                <!-- Y-axis label -->
+                <text x="10" y="140" fill="#6B7A99" font-size="8" transform="rotate(-90 10 140)" text-anchor="middle">instâncias</text>
+                <!-- Grid lines -->
+                <line x1="40" y1="196" x2="300" y2="196" stroke="rgba(255,255,255,0.04)" stroke-width="1" stroke-dasharray="4,4"/>
+                <line x1="40" y1="152" x2="300" y2="152" stroke="rgba(255,255,255,0.04)" stroke-width="1" stroke-dasharray="4,4"/>
+                <line x1="40" y1="108" x2="300" y2="108" stroke="rgba(255,255,255,0.04)" stroke-width="1" stroke-dasharray="4,4"/>
+                <line x1="40" y1="64"  x2="300" y2="64"  stroke="rgba(255,255,255,0.04)" stroke-width="1" stroke-dasharray="4,4"/>
+              </g>
+
+              <!-- Normal traffic bars (2 instances) -->
+              <g data-reveal="0">
+                <rect x="50"  y="196" width="22" height="44" rx="3" fill="rgba(0,212,255,0.4)" stroke="rgba(0,212,255,0.6)" stroke-width="1"/>
+                <rect x="78"  y="196" width="22" height="44" rx="3" fill="rgba(0,212,255,0.4)" stroke="rgba(0,212,255,0.6)" stroke-width="1"/>
+                <rect x="106" y="196" width="22" height="44" rx="3" fill="rgba(0,212,255,0.4)" stroke="rgba(0,212,255,0.6)" stroke-width="1"/>
+                <text x="96" y="258" text-anchor="middle" fill="#6B7A99" font-size="7.5">tráfego normal</text>
+              </g>
+
+              <!-- CPU 70% threshold line (trigger) -->
+              <g data-reveal="1">
+                <line x1="40" y1="130" x2="300" y2="130" stroke="rgba(245,158,11,0.4)" stroke-width="1" stroke-dasharray="5,4"/>
+                <text x="298" y="133" fill="#F59E0B" font-size="7.5" text-anchor="end">CPU 70%</text>
+              </g>
+
+              <!-- Scale-out spike (Black Friday) -->
+              <g data-reveal="2">
+                <rect x="140" y="64"  width="22" height="176" rx="3" fill="rgba(239,68,68,0.35)" stroke="rgba(239,68,68,0.7)" stroke-width="1"/>
+                <rect x="168" y="64"  width="22" height="176" rx="3" fill="rgba(239,68,68,0.35)" stroke="rgba(239,68,68,0.7)" stroke-width="1"/>
+                <rect x="196" y="64"  width="22" height="176" rx="3" fill="rgba(239,68,68,0.35)" stroke="rgba(239,68,68,0.7)" stroke-width="1"/>
+                <text x="178" y="258" text-anchor="middle" fill="#EF4444" font-size="7.5">Black Friday</text>
+                <text x="178" y="50"  text-anchor="middle" fill="#EF4444" font-size="8" font-weight="600">8 instâncias</text>
+                <!-- Arrow up -->
+                <line x1="178" y1="56" x2="178" y2="66" stroke="#EF4444" stroke-width="1.5" marker-end="url(#arrAS)"/>
+              </g>
+
+              <!-- Scale-in after spike -->
+              <g data-reveal="3">
+                <rect x="232" y="152" width="22" height="88" rx="3" fill="rgba(16,185,129,0.35)" stroke="rgba(16,185,129,0.6)" stroke-width="1"/>
+                <rect x="260" y="152" width="22" height="88" rx="3" fill="rgba(16,185,129,0.35)" stroke="rgba(16,185,129,0.6)" stroke-width="1"/>
+                <text x="258" y="258" text-anchor="middle" fill="#10B981" font-size="7.5">scale-in</text>
+                <text x="258" y="144" text-anchor="middle" fill="#10B981" font-size="8" font-weight="600">→ 3 instâncias</text>
+                <!-- Cooldown note -->
+                <rect x="44" y="270" width="252" height="20" rx="5" fill="rgba(168,85,247,0.07)" stroke="rgba(168,85,247,0.2)" stroke-width="1"/>
+                <text x="170" y="283" text-anchor="middle" fill="#A855F7" font-size="8">⏱ Cooldown: aguarda estabilização antes de terminar instâncias</text>
+              </g>
+
+              <!-- Stateless reminder -->
+              <g data-reveal="4">
+                <rect x="44" y="296" width="252" height="18" rx="5" fill="rgba(0,212,255,0.05)" stroke="rgba(0,212,255,0.15)" stroke-width="1"/>
+                <text x="170" y="308" text-anchor="middle" fill="#6B7A99" font-size="7.5">Instâncias devem ser stateless — sessão no Redis ou no DB</text>
+              </g>
+            </svg>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <div class="progress-bar"><div class="progress-fill" style="width: 30%"></div></div>
+          <div class="nav-hint"><span class="key">←</span><span class="key">→</span></div>
+        </div>
+      </div>
+
+      <!-- ═══════════ SLIDE 3 — MULTI DATA CENTER ═══════════ -->
+      <div class="slide" id="slide-3">
+        <div class="slide-header">
+          <div class="slide-tag">Alta Disponibilidade</div>
+          <div class="slide-counter">04 / 10</div>
+        </div>
+        <div class="slide-body">
+          <div class="content" style="flex: 0 0 44%">
+            <h2 class="slide-title" data-reveal="0">
+              Multi <span class="accent">Data Center</span>
+            </h2>
+            <p class="lead" data-reveal="0">
+              Um único data center — mesmo com auto scaling — ainda é um ponto único de falha geográfico.
+            </p>
+            <div class="concept-grid">
+              <div class="concept-item" data-reveal="1">
+                <div class="concept-icon">🔵</div>
+                <div class="concept-text">
+                  <h4>Active / Active</h4>
+                  <p>Ambos os DCs atendem tráfego simultaneamente. O Load Balancer global (GeoDNS) roteia para o mais próximo. Se um cai, o outro absorve tudo.</p>
+                </div>
+              </div>
+              <div class="concept-item" data-reveal="2">
+                <div class="concept-icon">🟡</div>
+                <div class="concept-text">
+                  <h4>Active / Passive (DR)</h4>
+                  <p>O DC secundário (standby) só assume em caso de falha do primário. Mais simples, mas há latência no failover manual ou automatizado.</p>
+                </div>
+              </div>
+              <div class="concept-item" data-reveal="3">
+                <div class="concept-icon">⚡</div>
+                <div class="concept-text">
+                  <h4>Replicação de dados</h4>
+                  <p>Banco precisa replicar entre regiões. Consistência eventual é o trade-off aceitável — eventual consistency cross-region é a norma.</p>
+                </div>
+              </div>
+            </div>
+            <div class="callout" data-reveal="4">
+              <strong>RTO vs RPO:</strong> Recovery Time Objective (tempo até voltar) e Recovery Point Objective (quanto dado posso perder). Multi DC reduz ambos drasticamente.
+            </div>
+          </div>
+          <div class="diagram-area">
+            <svg viewBox="0 0 310 370" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <marker id="arrDCc" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                  <path d="M0,0 L0,6 L6,3 z" fill="#00D4FF" opacity="0.8"/>
+                </marker>
+                <marker id="arrDCv" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                  <path d="M0,0 L0,6 L6,3 z" fill="#A855F7" opacity="0.8"/>
+                </marker>
+                <marker id="arrDCr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                  <path d="M0,0 L0,6 L6,3 z" fill="#10B981" opacity="0.8"/>
+                </marker>
+              </defs>
+
+              <!-- Users -->
+              <g data-reveal="0">
+                <rect x="110" y="14" width="90" height="34" rx="7" fill="#1E2433" stroke="#6B7A99" stroke-width="1"/>
+                <text x="155" y="28" text-anchor="middle" fill="#A0AECF" font-size="9" font-weight="600">Usuários</text>
+                <text x="155" y="41" text-anchor="middle" fill="#6B7A99" font-size="8">req. de qualquer região</text>
+
+                <!-- GeoDNS / Global LB -->
+                <line x1="155" y1="48" x2="155" y2="74" stroke="rgba(0,212,255,0.5)" stroke-width="1.5" marker-end="url(#arrDCc)" stroke-dasharray="4,3" class="flow-line"/>
+                <rect x="80" y="78" width="150" height="38" rx="9" fill="rgba(0,212,255,0.08)" stroke="#00D4FF" stroke-width="1.5"/>
+                <text x="155" y="94" text-anchor="middle" fill="#00D4FF" font-size="10" font-weight="700">GeoDNS / Global LB</text>
+                <text x="155" y="108" text-anchor="middle" fill="#6B7A99" font-size="8">roteia para o DC mais próximo</text>
+              </g>
+
+              <!-- DC São Paulo -->
+              <g data-reveal="1">
+                <line x1="120" y1="116" x2="76" y2="152" stroke="rgba(0,212,255,0.4)" stroke-width="1.3" marker-end="url(#arrDCc)"/>
+                <rect x="14" y="156" width="118" height="80" rx="10" fill="rgba(0,212,255,0.06)" stroke="#00D4FF" stroke-width="1.5"/>
+                <text x="73" y="175" text-anchor="middle" fill="#00D4FF" font-size="9" font-weight="700">DC São Paulo</text>
+                <text x="73" y="188" text-anchor="middle" fill="#6B7A99" font-size="8">App + DB Master</text>
+                <!-- Pulse -->
+                <circle cx="73" cy="220" r="5" fill="#00D4FF" class="pulse"/>
+                <text x="85" y="223" fill="#10B981" font-size="7.5">● online</text>
+              </g>
+
+              <!-- DC Rio de Janeiro -->
+              <g data-reveal="2">
+                <line x1="190" y1="116" x2="234" y2="152" stroke="rgba(168,85,247,0.4)" stroke-width="1.3" marker-end="url(#arrDCv)"/>
+                <rect x="178" y="156" width="118" height="80" rx="10" fill="rgba(168,85,247,0.06)" stroke="#A855F7" stroke-width="1.5"/>
+                <text x="237" y="175" text-anchor="middle" fill="#A855F7" font-size="9" font-weight="700">DC Rio de Janeiro</text>
+                <text x="237" y="188" text-anchor="middle" fill="#6B7A99" font-size="8">App + DB Replica</text>
+                <circle cx="237" cy="220" r="5" fill="#A855F7" class="pulse"/>
+                <text x="249" y="223" fill="#10B981" font-size="7.5">● online</text>
+              </g>
+
+              <!-- Replication arrow between DCs -->
+              <g data-reveal="3">
+                <path d="M 132,196 Q 155,210 178,196" fill="none" stroke="#A855F7" stroke-width="1.3" marker-end="url(#arrDCv)" stroke-dasharray="4,3" class="flow-line"/>
+                <text x="155" y="218" text-anchor="middle" fill="#A855F7" font-size="7.5">replicação assíncrona</text>
+
+                <!-- Failover scenario -->
+                <rect x="14" y="252" width="282" height="52" rx="8" fill="rgba(239,68,68,0.06)" stroke="rgba(239,68,68,0.2)" stroke-width="1"/>
+                <text x="155" y="270" text-anchor="middle" fill="#EF4444" font-size="8.5" font-weight="600">⚡ Cenário: DC SP cai</text>
+                <text x="155" y="285" text-anchor="middle" fill="#6B7A99" font-size="8">GeoDNS detecta · redireciona 100% do tráfego para DC RJ</text>
+                <text x="155" y="297" text-anchor="middle" fill="#10B981" font-size="8">RTO: segundos · serviço continua disponível</text>
+              </g>
+
+              <!-- Cost note -->
+              <g data-reveal="4">
+                <rect x="14" y="314" width="282" height="46" rx="8" fill="rgba(245,158,11,0.05)" stroke="rgba(245,158,11,0.2)" stroke-width="1"/>
+                <text x="155" y="330" text-anchor="middle" fill="#F59E0B" font-size="8.5" font-weight="600">⚠ Trade-off de custo</text>
+                <text x="155" y="345" text-anchor="middle" fill="#6B7A99" font-size="8">Dois DCs = ~2× infraestrutura · justificado apenas</text>
+                <text x="155" y="357" text-anchor="middle" fill="#6B7A99" font-size="8">para sistemas críticos (banco, saúde, energia)</text>
+              </g>
+            </svg>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <div class="progress-bar"><div class="progress-fill" style="width: 40%"></div></div>
+          <div class="nav-hint"><span class="key">←</span><span class="key">→</span></div>
+        </div>
+      </div>
+
+      <!-- ═══════════ SLIDE 4 — MENSAGERIA ASSÍNCRONA ═══════════ -->
+      <div class="slide" id="slide-4">
+        <div class="slide-header">
+          <div class="slide-tag">Mensageria</div>
+          <div class="slide-counter">05 / 10</div>
+        </div>
+        <div class="slide-body">
+          <div class="content" style="flex: 0 0 44%">
+            <h2 class="slide-title" data-reveal="0">
+              Mensageria <span class="accent">Assíncrona</span>
+            </h2>
+            <p class="lead" data-reveal="0">
+              Quando um serviço chama outro diretamente (síncrono), uma falha
+              propaga para toda a cadeia. A fila desacopla isso.
+            </p>
+            <div class="concept-grid">
+              <div class="concept-item" data-reveal="1">
+                <div class="concept-icon">🔴</div>
+                <div class="concept-text">
+                  <h4>Síncrono (REST/gRPC)</h4>
+                  <p>API chama outro serviço e aguarda resposta. Se o downstream estiver lento ou fora, o upstream trava. Acoplamento forte.</p>
+                </div>
+              </div>
+              <div class="concept-item" data-reveal="2">
+                <div class="concept-icon">🟢</div>
+                <div class="concept-text">
+                  <h4>Assíncrono (Fila/Tópico)</h4>
+                  <p>Produtor publica na fila e segue. Consumer processa no próprio ritmo. Falha no consumer não derruba o produtor.</p>
+                </div>
+              </div>
+              <div class="concept-item" data-reveal="3">
+                <div class="concept-icon">🛠️</div>
+                <div class="concept-text">
+                  <h4>Ferramentas</h4>
+                  <p><strong style="color:var(--text)">RabbitMQ:</strong> filas simples, roteamento flexível. <strong style="color:var(--text)">Kafka:</strong> alto volume, replay de eventos, log imutável. <strong style="color:var(--text)">SQS:</strong> managed na AWS.</p>
+                </div>
+              </div>
+            </div>
+            <div class="callout" data-reveal="4">
+              <strong>Kafka &gt; fila simples?</strong> Só quando você precisa de replay, múltiplos consumers independentes, ou volume &gt; 1M mensagens/s. Do contrário, RabbitMQ/SQS é mais simples e suficiente.
+            </div>
+          </div>
+          <div class="diagram-area">
+            <svg viewBox="0 0 310 380" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <marker id="arrMr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                  <path d="M0,0 L0,6 L6,3 z" fill="#EF4444"/>
+                </marker>
+                <marker id="arrMg" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                  <path d="M0,0 L0,6 L6,3 z" fill="#10B981"/>
+                </marker>
+                <marker id="arrMc" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                  <path d="M0,0 L0,6 L6,3 z" fill="#00D4FF"/>
+                </marker>
+              </defs>
+
+              <!-- SYNC side -->
+              <g data-reveal="0">
+                <text x="80" y="18" text-anchor="middle" fill="#EF4444" font-size="10" font-weight="700">SÍNCRONO</text>
+
+                <!-- Client -->
+                <rect x="14" y="28" width="60" height="30" rx="6" fill="#1E2433" stroke="#6B7A99" stroke-width="1"/>
+                <text x="44" y="47" text-anchor="middle" fill="#A0AECF" font-size="8.5" font-weight="600">Cliente</text>
+
+                <!-- Arrow Client → API -->
+                <line x1="74" y1="43" x2="100" y2="43" stroke="#EF4444" stroke-width="1.3" marker-end="url(#arrMr)"/>
+                <text x="87" y="38" text-anchor="middle" fill="#6B7A99" font-size="7">req</text>
+
+                <!-- API -->
+                <rect x="104" y="28" width="60" height="30" rx="6" fill="#1E2433" stroke="#A855F7" stroke-width="1"/>
+                <text x="134" y="47" text-anchor="middle" fill="#A855F7" font-size="8.5" font-weight="600">API</text>
+
+                <!-- Arrow API → Downstream -->
+                <line x1="164" y1="43" x2="190" y2="43" stroke="#EF4444" stroke-width="1.3" marker-end="url(#arrMr)"/>
+                <text x="177" y="38" text-anchor="middle" fill="#6B7A99" font-size="7">chama</text>
+
+                <!-- Downstream -->
+                <rect x="194" y="28" width="80" height="30" rx="6" fill="rgba(239,68,68,0.08)" stroke="#EF4444" stroke-width="1.5"/>
+                <text x="234" y="43" text-anchor="middle" fill="#EF4444" font-size="8.5" font-weight="600">Downstream</text>
+                <text x="234" y="53" text-anchor="middle" fill="#EF4444" font-size="7">aguarda resposta…</text>
+
+                <!-- Problem box -->
+                <rect x="14" y="68" width="268" height="50" rx="7" fill="rgba(239,68,68,0.05)" stroke="rgba(239,68,68,0.2)" stroke-width="1"/>
+                <text x="148" y="83" text-anchor="middle" fill="#EF4444" font-size="8.5" font-weight="600">Problema: acoplamento forte</text>
+                <text x="148" y="97" text-anchor="middle" fill="#6B7A99" font-size="8">Downstream lento → API trava → Cliente espera</text>
+                <text x="148" y="109" text-anchor="middle" fill="#6B7A99" font-size="8">→ timeout → falha em cascata</text>
+              </g>
+
+              <!-- ASYNC side -->
+              <g data-reveal="1">
+                <text x="80" y="132" text-anchor="middle" fill="#10B981" font-size="10" font-weight="700">ASSÍNCRONO</text>
+
+                <!-- Producer -->
+                <rect x="14" y="142" width="70" height="32" rx="6" fill="#1E2433" stroke="#00D4FF" stroke-width="1.2"/>
+                <text x="49" y="155" text-anchor="middle" fill="#E8EDF5" font-size="9" font-weight="600">Produtor</text>
+                <text x="49" y="167" text-anchor="middle" fill="#6B7A99" font-size="7.5">API / App</text>
+
+                <!-- Arrow to Queue -->
+                <line x1="84" y1="158" x2="110" y2="158" stroke="#00D4FF" stroke-width="1.3" marker-end="url(#arrMc)" stroke-dasharray="4,3" class="flow-line"/>
+                <text x="97" y="152" text-anchor="middle" fill="#6B7A99" font-size="7">publica</text>
+
+                <!-- Queue/Topic -->
+                <rect x="114" y="136" width="82" height="44" rx="8" fill="rgba(245,158,11,0.08)" stroke="#F59E0B" stroke-width="1.5"/>
+                <text x="155" y="154" text-anchor="middle" fill="#F59E0B" font-size="10" font-weight="700">Fila / Topic</text>
+                <text x="155" y="166" text-anchor="middle" fill="#6B7A99" font-size="8">Kafka · RabbitMQ</text>
+                <text x="155" y="176" text-anchor="middle" fill="#6B7A99" font-size="7.5">SQS · etc.</text>
+
+                <!-- Arrow Queue → Consumers (spread from queue right edge) -->
+                <line x1="196" y1="148" x2="218" y2="140" stroke="#10B981" stroke-width="1.3" marker-end="url(#arrMg)" stroke-dasharray="4,3" class="flow-line"/>
+                <line x1="196" y1="158" x2="218" y2="168" stroke="#10B981" stroke-width="1.3" marker-end="url(#arrMg)" stroke-dasharray="4,3" class="flow-line"/>
+                <line x1="196" y1="168" x2="218" y2="196" stroke="#10B981" stroke-width="1.3" marker-end="url(#arrMg)" stroke-dasharray="4,3" class="flow-line"/>
+
+                <!-- Consumers — properly spaced, no overlap -->
+                <rect x="222" y="128" width="74" height="24" rx="6" fill="#1E2433" stroke="#10B981" stroke-width="1"/>
+                <text x="259" y="143" text-anchor="middle" fill="#10B981" font-size="8.5" font-weight="600">Consumer 1</text>
+                <rect x="222" y="156" width="74" height="24" rx="6" fill="#1E2433" stroke="#10B981" stroke-width="1"/>
+                <text x="259" y="171" text-anchor="middle" fill="#10B981" font-size="8.5" font-weight="600">Consumer 2</text>
+                <rect x="222" y="184" width="74" height="24" rx="6" fill="#1E2433" stroke="#10B981" stroke-width="1"/>
+                <text x="259" y="199" text-anchor="middle" fill="#10B981" font-size="8.5" font-weight="600">Consumer 3</text>
+              </g>
+
+              <!-- Benefits -->
+              <g data-reveal="2">
+                <rect x="14" y="218" width="282" height="64" rx="8" fill="rgba(16,185,129,0.05)" stroke="rgba(16,185,129,0.2)" stroke-width="1"/>
+                <text x="155" y="235" text-anchor="middle" fill="#10B981" font-size="9" font-weight="600">Benefícios da mensageria assíncrona</text>
+                <text x="155" y="250" text-anchor="middle" fill="#6B7A99" font-size="8">✓ Producer não precisa esperar o consumer processar</text>
+                <text x="155" y="264" text-anchor="middle" fill="#6B7A99" font-size="8">✓ Consumer falha? Mensagem fica na fila, não se perde</text>
+                <text x="155" y="278" text-anchor="middle" fill="#6B7A99" font-size="8">✓ Escala consumers independentemente do producer</text>
+              </g>
+
+              <!-- When NOT to use -->
+              <g data-reveal="3">
+                <rect x="14" y="292" width="282" height="42" rx="8" fill="rgba(245,158,11,0.05)" stroke="rgba(245,158,11,0.2)" stroke-width="1"/>
+                <text x="155" y="308" text-anchor="middle" fill="#F59E0B" font-size="8.5" font-weight="600">⚠ Quando NÃO usar</text>
+                <text x="155" y="322" text-anchor="middle" fill="#6B7A99" font-size="8">Quando precisa de resposta imediata (checkout, auth, consulta de saldo)</text>
+                <text x="155" y="334" text-anchor="middle" fill="#6B7A99" font-size="8">Mensageria é para processamento em background</text>
+              </g>
+
+              <!-- Kafka vs RabbitMQ -->
+              <g data-reveal="4">
+                <rect x="14" y="344" width="136" height="30" rx="7" fill="rgba(0,212,255,0.05)" stroke="rgba(0,212,255,0.15)" stroke-width="1"/>
+                <text x="82" y="357" text-anchor="middle" fill="#00D4FF" font-size="8" font-weight="600">RabbitMQ / SQS</text>
+                <text x="82" y="369" text-anchor="middle" fill="#6B7A99" font-size="7.5">filas simples, fácil de operar</text>
+                <rect x="160" y="344" width="136" height="30" rx="7" fill="rgba(168,85,247,0.05)" stroke="rgba(168,85,247,0.15)" stroke-width="1"/>
+                <text x="228" y="357" text-anchor="middle" fill="#A855F7" font-size="8" font-weight="600">Kafka</text>
+                <text x="228" y="369" text-anchor="middle" fill="#6B7A99" font-size="7.5">volume massivo, replay de eventos</text>
+              </g>
+            </svg>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <div class="progress-bar"><div class="progress-fill" style="width: 50%"></div></div>
+          <div class="nav-hint"><span class="key">←</span><span class="key">→</span></div>
+        </div>
+      </div>
+
+      <!-- ═══════════ SLIDE 5 — CAP + PACELC ═══════════ -->
+      <div class="slide" id="slide-5">
+        <div class="slide-header">
+          <div class="slide-tag">Teorema CAP</div>
+          <div class="slide-counter">06 / 10</div>
+        </div>
+        <div class="slide-body">
+          <div class="content" style="flex: 0 0 46%">
+            <h2 class="slide-title" data-reveal="0">
+              CAP &amp; <span class="accent">PACELC</span>
+            </h2>
+            <p class="lead" data-reveal="0">
+              Em sistemas distribuídos, você só consegue garantir 2 das 3 propriedades do Teorema CAP.
+            </p>
+            <div class="db-cards">
+              <div class="db-card cp" data-reveal="1">
+                <h5 style="color:var(--cyan)">CP — Consistency + Partition Tolerance</h5>
+                <p>Prioriza dados corretos. Em partição, sistema pode recusar leituras/escritas para não servir dado desatualizado. <strong style="color:var(--text)">PostgreSQL, Redis, HBase.</strong></p>
+              </div>
+              <div class="db-card ap" data-reveal="2">
+                <h5 style="color:var(--violet2)">AP — Availability + Partition Tolerance</h5>
+                <p>Prioriza estar disponível. Em partição, continua respondendo mesmo com dado potencialmente desatualizado. <strong style="color:var(--text)">Cassandra, DynamoDB, CouchDB.</strong></p>
+              </div>
+            </div>
+            <div class="callout callout-v" style="margin-top: 12px" data-reveal="3">
+              <strong>PACELC</strong> — extensão do CAP: quando não há partição (Else), o trade-off passa a ser entre <strong>Latência</strong> e <strong>Consistência</strong>. Cassandra: configura nível de consistência por query.
+            </div>
+            <div class="callout" style="margin-top: 8px" data-reveal="4">
+              <strong>Na prática:</strong> Dados financeiros → CP (PostgreSQL). Feed de atividades → AP (Cassandra). Cache → CP (Redis). Configurações globais → AP com TTL curto.
+            </div>
+          </div>
+          <div class="diagram-area">
+            <svg viewBox="0 -5 300 385" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <marker id="arrCAP" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                  <path d="M0,0 L0,6 L6,3 z" fill="#00D4FF"/>
+                </marker>
+              </defs>
+
+              <!-- 3 overlapping circles (Venn) -->
+              <g data-reveal="0">
+                <circle cx="150" cy="85" r="65" fill="rgba(0,212,255,0.06)" stroke="#00D4FF" stroke-width="1.5"/>
+                <circle cx="95" cy="165" r="65" fill="rgba(16,185,129,0.06)" stroke="#10B981" stroke-width="1.5"/>
+                <circle cx="205" cy="165" r="65" fill="rgba(168,85,247,0.06)" stroke="#A855F7" stroke-width="1.5"/>
+
+                <!-- Circle labels (outer, non-overlapping lobes) -->
+                <text x="150" y="40" text-anchor="middle" fill="#00D4FF" font-size="11" font-weight="700">Consistency</text>
+                <text x="52" y="200" text-anchor="middle" fill="#10B981" font-size="10" font-weight="700">Availability</text>
+                <text x="248" y="194" text-anchor="middle" fill="#A855F7" font-size="10" font-weight="700">Partition</text>
+                <text x="248" y="206" text-anchor="middle" fill="#A855F7" font-size="10" font-weight="700">Tolerance</text>
+              </g>
+
+              <!-- CP lens (C ∩ P, sem A) -->
+              <g data-reveal="1">
+                <text x="184" y="122" text-anchor="middle" fill="rgba(0,212,255,0.6)" font-size="16" font-weight="700">CP</text>
+                <rect x="172" y="130" width="106" height="18" rx="4" fill="rgba(0,212,255,0.1)" stroke="rgba(0,212,255,0.3)" stroke-width="1"/>
+                <text x="225" y="142" text-anchor="middle" fill="#00D4FF" font-size="8" font-weight="600">PostgreSQL · Redis</text>
+              </g>
+
+              <!-- AP lens (A ∩ P, sem C) -->
+              <g data-reveal="2">
+                <text x="150" y="182" text-anchor="middle" fill="rgba(168,85,247,0.6)" font-size="16" font-weight="700">AP</text>
+                <rect x="97" y="190" width="106" height="18" rx="4" fill="rgba(168,85,247,0.1)" stroke="rgba(168,85,247,0.3)" stroke-width="1"/>
+                <text x="150" y="202" text-anchor="middle" fill="#A855F7" font-size="8" font-weight="600">Cassandra · Dynamo</text>
+              </g>
+
+              <!-- CA lens (C ∩ A, sem P) — impossível em sist. distribuídos -->
+              <g data-reveal="3">
+                <text x="116" y="122" text-anchor="middle" fill="rgba(239,68,68,0.6)" font-size="16" font-weight="700">CA</text>
+                <rect x="50" y="244" width="200" height="20" rx="5" fill="rgba(239,68,68,0.07)" stroke="rgba(239,68,68,0.2)" stroke-width="1"/>
+                <text x="150" y="257" text-anchor="middle" fill="#EF4444" font-size="8" font-weight="600">CA — impossível em sist. distribuídos</text>
+              </g>
+
+              <!-- PACELC box -->
+              <g data-reveal="4">
+                <rect x="14" y="274" width="272" height="96" rx="10" fill="rgba(124,58,237,0.05)" stroke="rgba(124,58,237,0.25)" stroke-width="1.5"/>
+                <text x="150" y="292" text-anchor="middle" fill="#A855F7" font-size="10" font-weight="700">PACELC</text>
+                <text x="150" y="308" text-anchor="middle" fill="#6B7A99" font-size="8">Se Partição → escolhe C ou A</text>
+                <text x="150" y="322" text-anchor="middle" fill="#6B7A99" font-size="8">Else (sem partição) → escolhe Latência ou Consistência</text>
+                <!-- P → C or A -->
+                <rect x="24" y="332" width="112" height="30" rx="6" fill="rgba(0,212,255,0.07)" stroke="rgba(0,212,255,0.2)" stroke-width="1"/>
+                <text x="80" y="346" text-anchor="middle" fill="#00D4FF" font-size="8">Cassandra: configura</text>
+                <text x="80" y="357" text-anchor="middle" fill="#6B7A99" font-size="7.5">ONE / QUORUM / ALL</text>
+                <rect x="164" y="332" width="112" height="30" rx="6" fill="rgba(168,85,247,0.07)" stroke="rgba(168,85,247,0.2)" stroke-width="1"/>
+                <text x="220" y="346" text-anchor="middle" fill="#A855F7" font-size="8">PostgreSQL: sempre</text>
+                <text x="220" y="357" text-anchor="middle" fill="#6B7A99" font-size="7.5">consistência forte (ACID)</text>
+              </g>
+            </svg>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <div class="progress-bar"><div class="progress-fill" style="width: 60%"></div></div>
+          <div class="nav-hint"><span class="key">←</span><span class="key">→</span></div>
+        </div>
+      </div>
+
+      <!-- ═══════════ SLIDE 6 — MICROSSERVIÇOS ═══════════ -->
+      <div class="slide" id="slide-6">
+        <div class="slide-header">
+          <div class="slide-tag">Microsserviços</div>
+          <div class="slide-counter">07 / 10</div>
+        </div>
+        <div class="slide-body">
+          <div class="content" style="flex: 0 0 46%">
+            <h2 class="slide-title" data-reveal="0">
+              Microsserviços — <span class="accent">a armadilha</span>
+            </h2>
+            <p class="lead" data-reveal="0">
+              Microservices viraram sinônimo de "arquitetura moderna". Mas a Amazon Prime voltou para monolito e ficou 90% mais barato.
+            </p>
+            <div class="evo-stage">
+              <div class="evo-row" data-reveal="1">
+                <span class="evo-label">MONOLITO</span>
+                <span class="evo-text"><strong>Tudo num processo só.</strong> Deploy único. Mais simples de debugar, testar, versionar. Funciona muito bem até escala alta.</span>
+              </div>
+              <div class="evo-row" data-reveal="2">
+                <span class="evo-label">MODULAR</span>
+                <span class="evo-text"><strong>Monolito com módulos bem definidos.</strong> Separação lógica, deploy ainda unificado. Sweet spot para a maioria dos casos.</span>
+              </div>
+              <div class="evo-row" data-reveal="3">
+                <span class="evo-label">MICROSERV.</span>
+                <span class="evo-text"><strong>Cada serviço independente.</strong> Deploy separado. Escala independente. Mas: rede entre serviços, rastreamento distribuído, complexidade operacional alta.</span>
+              </div>
+            </div>
+            <div class="callout" style="margin-top: 12px" data-reveal="4">
+              <strong>Amazon Prime Video (2023):</strong> migrou de microsserviços para monolito modular. Custo operacional caiu 90%. Throughput aumentou. Complexidade de rede era o gargalo.
+            </div>
+            <div class="callout callout-v" style="margin-top: 8px" data-reveal="5">
+              <strong>Quando microsserviços fazem sentido:</strong> times grandes e autônomos (Netflix, Uber), serviços com requisitos radicalmente diferentes de escala, linguagens distintas por domínio.
+            </div>
+          </div>
+          <div class="diagram-area">
+            <svg viewBox="0 0 310 360" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <marker id="arrMSc" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                  <path d="M0,0 L0,6 L6,3 z" fill="#00D4FF"/>
+                </marker>
+                <marker id="arrMSr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                  <path d="M0,0 L0,6 L6,3 z" fill="#EF4444"/>
+                </marker>
+                <marker id="arrMSg" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                  <path d="M0,0 L0,6 L6,3 z" fill="#10B981"/>
+                </marker>
+              </defs>
+
+              <!-- Monolith -->
+              <g data-reveal="0">
+                <text x="70" y="16" text-anchor="middle" fill="#6B7A99" font-size="9" font-weight="600">MONOLITO</text>
+                <rect x="14" y="24" width="112" height="90" rx="10" fill="rgba(0,212,255,0.06)" stroke="#00D4FF" stroke-width="1.5"/>
+                <rect x="24" y="34" width="92" height="18" rx="4" fill="rgba(0,212,255,0.1)"/>
+                <text x="70" y="47" text-anchor="middle" fill="#00D4FF" font-size="8" font-weight="600">Auth Module</text>
+                <rect x="24" y="58" width="92" height="18" rx="4" fill="rgba(0,212,255,0.1)"/>
+                <text x="70" y="71" text-anchor="middle" fill="#00D4FF" font-size="8" font-weight="600">Orders Module</text>
+                <rect x="24" y="82" width="92" height="18" rx="4" fill="rgba(0,212,255,0.1)"/>
+                <text x="70" y="95" text-anchor="middle" fill="#00D4FF" font-size="8" font-weight="600">Payments Module</text>
+                <text x="70" y="122" text-anchor="middle" fill="#10B981" font-size="7.5">✓ 1 processo · 1 deploy · simples</text>
+              </g>
+
+              <!-- Microservices -->
+              <g data-reveal="1">
+                <text x="235" y="16" text-anchor="middle" fill="#6B7A99" font-size="9" font-weight="600">MICROSSERVIÇOS</text>
+
+                <!-- Service boxes with connections -->
+                <rect x="178" y="24" width="80" height="30" rx="7" fill="rgba(168,85,247,0.08)" stroke="#A855F7" stroke-width="1.2"/>
+                <text x="218" y="43" text-anchor="middle" fill="#A855F7" font-size="8.5" font-weight="600">Auth Svc</text>
+
+                <rect x="178" y="64" width="80" height="30" rx="7" fill="rgba(168,85,247,0.08)" stroke="#A855F7" stroke-width="1.2"/>
+                <text x="218" y="83" text-anchor="middle" fill="#A855F7" font-size="8.5" font-weight="600">Orders Svc</text>
+
+                <rect x="178" y="104" width="80" height="30" rx="7" fill="rgba(168,85,247,0.08)" stroke="#A855F7" stroke-width="1.2"/>
+                <text x="218" y="123" text-anchor="middle" fill="#A855F7" font-size="8.5" font-weight="600">Payment Svc</text>
+
+                <!-- Network arrows between services -->
+                <line x1="258" y1="39" x2="270" y2="39" stroke="#EF4444" stroke-width="1" stroke-dasharray="3,2"/>
+                <line x1="270" y1="39" x2="270" y2="79" stroke="#EF4444" stroke-width="1" stroke-dasharray="3,2"/>
+                <line x1="270" y1="79" x2="258" y2="79" stroke="#EF4444" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#arrMSr)"/>
+                <line x1="258" y1="79" x2="270" y2="79" stroke="#EF4444" stroke-width="1" stroke-dasharray="3,2"/>
+                <line x1="270" y1="79" x2="270" y2="119" stroke="#EF4444" stroke-width="1" stroke-dasharray="3,2"/>
+                <line x1="270" y1="119" x2="258" y2="119" stroke="#EF4444" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#arrMSr)"/>
+
+                <text x="218" y="140" text-anchor="middle" fill="#EF4444" font-size="7.5">⚠ rede · latência · circuit breaker</text>
+              </g>
+
+              <!-- Complexity cost -->
+              <g data-reveal="2">
+                <rect x="14" y="152" width="282" height="50" rx="8" fill="rgba(239,68,68,0.05)" stroke="rgba(239,68,68,0.2)" stroke-width="1"/>
+                <text x="155" y="170" text-anchor="middle" fill="#EF4444" font-size="9" font-weight="600">Custo oculto dos microsserviços</text>
+                <text x="155" y="184" text-anchor="middle" fill="#6B7A99" font-size="8">Rastreamento distribuído · Service mesh · Deploy CI/CD por serviço</text>
+                <text x="155" y="196" text-anchor="middle" fill="#6B7A99" font-size="8">Versionamento de API · Consistência eventual entre serviços</text>
+              </g>
+
+              <!-- Amazon Prime case -->
+              <g data-reveal="3">
+                <rect x="14" y="212" width="282" height="52" rx="8" fill="rgba(245,158,11,0.06)" stroke="rgba(245,158,11,0.25)" stroke-width="1.5"/>
+                <text x="155" y="229" text-anchor="middle" fill="#F59E0B" font-size="9" font-weight="700">Amazon Prime Video — 2023</text>
+                <text x="155" y="243" text-anchor="middle" fill="#6B7A99" font-size="8">Microsserviços → Monolito modular</text>
+                <text x="155" y="257" text-anchor="middle" fill="#10B981" font-size="8" font-weight="600">Custo operacional ↓ 90% · Throughput aumentou</text>
+              </g>
+
+              <!-- Decision guide -->
+              <g data-reveal="4">
+                <rect x="14" y="274" width="136" height="76" rx="8" fill="rgba(16,185,129,0.06)" stroke="rgba(16,185,129,0.2)" stroke-width="1"/>
+                <text x="82" y="290" text-anchor="middle" fill="#10B981" font-size="8.5" font-weight="600">✓ Use microserviços</text>
+                <text x="82" y="305" text-anchor="middle" fill="#6B7A99" font-size="7.5">Times &gt; 50 devs por domínio</text>
+                <text x="82" y="318" text-anchor="middle" fill="#6B7A99" font-size="7.5">Escala muito diferente por svc</text>
+                <text x="82" y="331" text-anchor="middle" fill="#6B7A99" font-size="7.5">Deploys independentes críticos</text>
+                <text x="82" y="344" text-anchor="middle" fill="#6B7A99" font-size="7.5">Linguagens distintas por domínio</text>
+
+                <rect x="160" y="274" width="136" height="76" rx="8" fill="rgba(239,68,68,0.06)" stroke="rgba(239,68,68,0.2)" stroke-width="1"/>
+                <text x="228" y="290" text-anchor="middle" fill="#EF4444" font-size="8.5" font-weight="600">✗ Evite se:</text>
+                <text x="228" y="305" text-anchor="middle" fill="#6B7A99" font-size="7.5">Time pequeno (&lt; 10 devs)</text>
+                <text x="228" y="318" text-anchor="middle" fill="#6B7A99" font-size="7.5">Startup em product-market fit</text>
+                <text x="228" y="331" text-anchor="middle" fill="#6B7A99" font-size="7.5">Fronteiras de domínio incertas</text>
+                <text x="228" y="344" text-anchor="middle" fill="#6B7A99" font-size="7.5">Sem infra de observabilidade</text>
+              </g>
+            </svg>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <div class="progress-bar"><div class="progress-fill" style="width: 70%"></div></div>
+          <div class="nav-hint"><span class="key">←</span><span class="key">→</span></div>
+        </div>
+      </div>
+
+      <!-- ═══════════ SLIDE 7 — SHARDING ═══════════ -->
+      <div class="slide" id="slide-7">
+        <div class="slide-header">
+          <div class="slide-tag">Banco de Dados</div>
+          <div class="slide-counter">08 / 10</div>
+        </div>
+        <div class="slide-body">
+          <div class="content" style="flex: 0 0 46%">
+            <h2 class="slide-title" data-reveal="0">
+              <span class="accent">Sharding</span>
+            </h2>
+            <p class="lead" data-reveal="0">
+              Read replicas resolvem gargalo de leitura. Mas e quando a tabela
+              tem 1 bilhão de registros? Sharding particiona os dados.
+            </p>
+            <div class="concept-grid">
+              <div class="concept-item" data-reveal="1">
+                <div class="concept-icon">🔪</div>
+                <div class="concept-text">
+                  <h4>O que é sharding?</h4>
+                  <p>Dividir os dados horizontalmente entre múltiplos bancos (shards). Cada shard tem um subconjunto das linhas. Escrita e leitura distribuídas.</p>
+                </div>
+              </div>
+              <div class="concept-item" data-reveal="2">
+                <div class="concept-icon">🔑</div>
+                <div class="concept-text">
+                  <h4>Shard key — decisão crítica</h4>
+                  <p>Define como distribuir dados. Ruim: campo de baixa cardinalidade (país) → hotspot. Bom: user_id (hash) → distribuição uniforme.</p>
+                </div>
+              </div>
+              <div class="concept-item" data-reveal="3">
+                <div class="concept-icon">🌡️</div>
+                <div class="concept-text">
+                  <h4>Problema do hotspot</h4>
+                  <p>Se 80% das requisições vão para o shard A, perdemos os benefícios. Range sharding (A-M / N-Z) é vulnerável a hotspot. Hash sharding distribui melhor.</p>
+                </div>
+              </div>
+            </div>
+            <div class="callout" data-reveal="4">
+              <strong>Sharding é complexo:</strong> joins cross-shard viram chamadas de rede, transações distribuídas são difíceis, rebalanceamento é custoso. Esgote outras opções antes: índices, cache, read replicas, particionamento de tabela.
+            </div>
+          </div>
+          <div class="diagram-area">
+            <svg viewBox="0 0 310 360" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <marker id="arrSHc" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                  <path d="M0,0 L0,6 L6,3 z" fill="#00D4FF"/>
+                </marker>
+                <marker id="arrSHv" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                  <path d="M0,0 L0,6 L6,3 z" fill="#A855F7"/>
+                </marker>
+                <marker id="arrSHg" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                  <path d="M0,0 L0,6 L6,3 z" fill="#10B981"/>
+                </marker>
+              </defs>
+
+              <!-- LEFT: Read Replicas -->
+              <g data-reveal="0">
+                <text x="72" y="16" text-anchor="middle" fill="#6B7A99" font-size="9" font-weight="600">READ REPLICAS</text>
+                <text x="72" y="27" text-anchor="middle" fill="#6B7A99" font-size="7.5">(os dados crescem no master)</text>
+
+                <!-- Master DB -->
+                <rect x="26" y="34" width="92" height="40" rx="8" fill="rgba(245,158,11,0.08)" stroke="#F59E0B" stroke-width="1.5"/>
+                <text x="72" y="51" text-anchor="middle" fill="#F59E0B" font-size="9" font-weight="700">MASTER</text>
+                <text x="72" y="65" text-anchor="middle" fill="#6B7A99" font-size="8">1B rows · users</text>
+
+                <!-- Replication arrows — spread from master bottom -->
+                <line x1="46" y1="74" x2="28" y2="106" stroke="#A855F7" stroke-width="1.2" stroke-dasharray="3,2" marker-end="url(#arrSHv)"/>
+                <line x1="72" y1="74" x2="72" y2="106" stroke="#A855F7" stroke-width="1.2" stroke-dasharray="3,2" marker-end="url(#arrSHv)"/>
+                <line x1="98" y1="74" x2="116" y2="106" stroke="#A855F7" stroke-width="1.2" stroke-dasharray="3,2" marker-end="url(#arrSHv)"/>
+
+                <!-- Slave 1 — non-overlapping -->
+                <rect x="10" y="110" width="38" height="32" rx="6" fill="#1E2433" stroke="#10B981" stroke-width="1"/>
+                <text x="29" y="124" text-anchor="middle" fill="#10B981" font-size="8" font-weight="600">Slave 1</text>
+                <text x="29" y="135" text-anchor="middle" fill="#6B7A99" font-size="7">leitura</text>
+
+                <!-- Slave 2 -->
+                <rect x="52" y="110" width="38" height="32" rx="6" fill="#1E2433" stroke="#10B981" stroke-width="1"/>
+                <text x="71" y="124" text-anchor="middle" fill="#10B981" font-size="8" font-weight="600">Slave 2</text>
+                <text x="71" y="135" text-anchor="middle" fill="#6B7A99" font-size="7">leitura</text>
+
+                <!-- Slave 3 -->
+                <rect x="94" y="110" width="38" height="32" rx="6" fill="#1E2433" stroke="#10B981" stroke-width="1"/>
+                <text x="113" y="124" text-anchor="middle" fill="#10B981" font-size="8" font-weight="600">Slave 3</text>
+                <text x="113" y="135" text-anchor="middle" fill="#6B7A99" font-size="7">leitura</text>
+
+                <!-- Problem: master still has 1B rows -->
+                <rect x="10" y="154" width="134" height="28" rx="6" fill="rgba(239,68,68,0.06)" stroke="rgba(239,68,68,0.2)" stroke-width="1"/>
+                <text x="77" y="165" text-anchor="middle" fill="#EF4444" font-size="7.5" font-weight="600">⚠ Master: 1B rows = lento</text>
+                <text x="77" y="176" text-anchor="middle" fill="#6B7A99" font-size="7">escritas e índices continuam no master</text>
+              </g>
+
+              <!-- RIGHT: Sharding -->
+              <g data-reveal="1">
+                <text x="234" y="16" text-anchor="middle" fill="#6B7A99" font-size="9" font-weight="600">SHARDING</text>
+                <text x="234" y="27" text-anchor="middle" fill="#6B7A99" font-size="7.5">(dados particionados por shard_key)</text>
+
+                <!-- Shard Router -->
+                <rect x="180" y="34" width="108" height="34" rx="8" fill="rgba(0,212,255,0.08)" stroke="#00D4FF" stroke-width="1.5"/>
+                <text x="234" y="49" text-anchor="middle" fill="#00D4FF" font-size="9" font-weight="700">Shard Router</text>
+                <text x="234" y="62" text-anchor="middle" fill="#6B7A99" font-size="7.5">hash(user_id) % N</text>
+
+                <!-- Arrows to shards — centered on each shard -->
+                <line x1="200" y1="68" x2="189" y2="98" stroke="#00D4FF" stroke-width="1.2" marker-end="url(#arrSHc)"/>
+                <line x1="234" y1="68" x2="234" y2="98" stroke="#00D4FF" stroke-width="1.2" marker-end="url(#arrSHc)"/>
+                <line x1="268" y1="68" x2="279" y2="98" stroke="#00D4FF" stroke-width="1.2" marker-end="url(#arrSHc)"/>
+
+                <!-- Shard A — non-overlapping: 162-208 -->
+                <rect x="162" y="102" width="46" height="48" rx="7" fill="rgba(0,212,255,0.07)" stroke="#00D4FF" stroke-width="1.2"/>
+                <text x="185" y="118" text-anchor="middle" fill="#00D4FF" font-size="8" font-weight="700">Shard A</text>
+                <text x="185" y="131" text-anchor="middle" fill="#6B7A99" font-size="7">id 0–33M</text>
+                <text x="185" y="143" text-anchor="middle" fill="#6B7A99" font-size="7">~333M rows</text>
+
+                <!-- Shard B — non-overlapping: 212-258 -->
+                <rect x="212" y="102" width="46" height="48" rx="7" fill="rgba(0,212,255,0.07)" stroke="#00D4FF" stroke-width="1.2"/>
+                <text x="235" y="118" text-anchor="middle" fill="#00D4FF" font-size="8" font-weight="700">Shard B</text>
+                <text x="235" y="131" text-anchor="middle" fill="#6B7A99" font-size="7">id 33–66M</text>
+                <text x="235" y="143" text-anchor="middle" fill="#6B7A99" font-size="7">~333M rows</text>
+
+                <!-- Shard C — non-overlapping: 262-308 -->
+                <rect x="262" y="102" width="46" height="48" rx="7" fill="rgba(0,212,255,0.07)" stroke="#00D4FF" stroke-width="1.2"/>
+                <text x="285" y="118" text-anchor="middle" fill="#00D4FF" font-size="8" font-weight="700">Shard C</text>
+                <text x="285" y="131" text-anchor="middle" fill="#6B7A99" font-size="7">id 66–1B</text>
+                <text x="285" y="143" text-anchor="middle" fill="#6B7A99" font-size="7">~333M rows</text>
+
+                <!-- Benefit -->
+                <rect x="162" y="160" width="146" height="20" rx="5" fill="rgba(16,185,129,0.07)" stroke="rgba(16,185,129,0.2)" stroke-width="1"/>
+                <text x="235" y="173" text-anchor="middle" fill="#10B981" font-size="7.5">✓ escrita e leitura distribuídas</text>
+              </g>
+
+              <!-- Hotspot warning -->
+              <g data-reveal="2">
+                <rect x="14" y="194" width="282" height="52" rx="8" fill="rgba(239,68,68,0.05)" stroke="rgba(239,68,68,0.2)" stroke-width="1"/>
+                <text x="155" y="212" text-anchor="middle" fill="#EF4444" font-size="9" font-weight="600">Problema do Hotspot</text>
+                <text x="155" y="226" text-anchor="middle" fill="#6B7A99" font-size="8">Shard key ruim: campo de baixa cardinalidade (ex: país)</text>
+                <text x="155" y="239" text-anchor="middle" fill="#6B7A99" font-size="8">→ 80% das req vão pro mesmo shard → perde os benefícios</text>
+              </g>
+
+              <!-- Best practices -->
+              <g data-reveal="3">
+                <rect x="14" y="256" width="136" height="50" rx="7" fill="rgba(16,185,129,0.06)" stroke="rgba(16,185,129,0.2)" stroke-width="1"/>
+                <text x="82" y="272" text-anchor="middle" fill="#10B981" font-size="8" font-weight="600">✓ Boas shard keys</text>
+                <text x="82" y="286" text-anchor="middle" fill="#6B7A99" font-size="7.5">user_id (alta cardinalidade)</text>
+                <text x="82" y="298" text-anchor="middle" fill="#6B7A99" font-size="7.5">UUID hash → distribuição uniforme</text>
+
+                <rect x="160" y="256" width="136" height="50" rx="7" fill="rgba(239,68,68,0.06)" stroke="rgba(239,68,68,0.2)" stroke-width="1"/>
+                <text x="228" y="272" text-anchor="middle" fill="#EF4444" font-size="8" font-weight="600">✗ Evitar como shard key</text>
+                <text x="228" y="286" text-anchor="middle" fill="#6B7A99" font-size="7.5">campo de status (ativo/inativo)</text>
+                <text x="228" y="298" text-anchor="middle" fill="#6B7A99" font-size="7.5">país/região (hotspot geográfico)</text>
+              </g>
+
+              <!-- Escalate before sharding -->
+              <g data-reveal="4">
+                <rect x="14" y="308" width="282" height="48" rx="7" fill="rgba(0,212,255,0.04)" stroke="rgba(0,212,255,0.15)" stroke-width="1"/>
+                <text x="155" y="322" text-anchor="middle" fill="#00D4FF" font-size="8" font-weight="600">Antes de shardar: índice certo → cache</text>
+                <text x="155" y="334" text-anchor="middle" fill="#00D4FF" font-size="8" font-weight="600">→ particionamento de tabela → read replicas</text>
+                <text x="155" y="348" text-anchor="middle" fill="#6B7A99" font-size="7.5">Sharding é a última fronteira — muito custoso de reverter</text>
+              </g>
+            </svg>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <div class="progress-bar"><div class="progress-fill" style="width: 80%"></div></div>
+          <div class="nav-hint"><span class="key">←</span><span class="key">→</span></div>
+        </div>
+      </div>
+
+      <!-- ═══════════ SLIDE 8 — CASE MONEYTALKS ═══════════ -->
+      <div class="slide" id="slide-8">
+        <div class="slide-header">
+          <div class="slide-tag">Case Real</div>
+          <div class="slide-counter">09 / 10</div>
+        </div>
+        <div class="slide-body">
+          <div class="content" style="flex: 0 0 48%">
+            <div class="cover-eyebrow" style="margin-bottom: 10px" data-reveal="0">Projeto pessoal · em desenvolvimento</div>
+            <h2 class="slide-title" data-reveal="0">
+              <span class="accent">MoneyTalks</span>
+            </h2>
+            <p class="lead" data-reveal="0">
+              App de finanças pessoais. React 19 · TypeScript · Supabase · PostgreSQL com 14 tabelas.
+              Onde cada decisão de system design foi consciente.
+            </p>
+            <div class="concept-grid">
+              <div class="concept-item" data-reveal="1">
+                <div class="concept-icon">🎯</div>
+                <div class="concept-text">
+                  <h4>PostgreSQL (CP) — por quê?</h4>
+                  <p>Dados financeiros exigem consistência forte. Saldo não pode ser lido desatualizado. ACID é requisito, não opcional. Cassandra seria a escolha errada.</p>
+                </div>
+              </div>
+              <div class="concept-item" data-reveal="2">
+                <div class="concept-icon">⚡</div>
+                <div class="concept-text">
+                  <h4>Supabase Edge Functions</h4>
+                  <p>Processamento de regras de negócio próximo ao banco. Reduz round-trips entre cliente e DB. RLS (Row Level Security) garante que usuário só acessa seus dados.</p>
+                </div>
+              </div>
+              <div class="concept-item" data-reveal="3">
+                <div class="concept-icon">🧩</div>
+                <div class="concept-text">
+                  <h4>14 tabelas — decisões conscientes</h4>
+                  <p>Sem JSONB para campos semi-estruturados (auditoria usaria), normalização completa para evitar inconsistência, índices nos campos de filtro mais comuns.</p>
+                </div>
+              </div>
+            </div>
+            <div class="callout" data-reveal="4">
+              <strong>O que não foi feito (ainda):</strong> sharding (volume não justifica), cache (Supabase serve via edge), mensageria (ainda síncrono). System design é sobre <em>quando</em> adicionar complexidade, não <em>poder</em> adicionar.
+            </div>
+          </div>
+          <div class="diagram-area">
+            <svg viewBox="0 0 300 350" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <marker id="arrMTc" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                  <path d="M0,0 L0,6 L6,3 z" fill="#00D4FF"/>
+                </marker>
+                <marker id="arrMTg" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                  <path d="M0,0 L0,6 L6,3 z" fill="#10B981"/>
+                </marker>
+                <marker id="arrMTv" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                  <path d="M0,0 L0,6 L6,3 z" fill="#A855F7"/>
+                </marker>
+              </defs>
+
+              <!-- Title badge -->
+              <g data-reveal="0">
+                <rect x="75" y="10" width="150" height="24" rx="12" fill="rgba(0,212,255,0.1)" stroke="rgba(0,212,255,0.3)" stroke-width="1"/>
+                <text x="150" y="26" text-anchor="middle" fill="#00D4FF" font-size="9" font-weight="700">Arquitetura MoneyTalks</text>
+              </g>
+
+              <!-- React 19 Frontend -->
+              <g data-reveal="1">
+                <rect x="70" y="44" width="160" height="44" rx="9" fill="rgba(0,212,255,0.07)" stroke="#00D4FF" stroke-width="1.5"/>
+                <text x="150" y="63" text-anchor="middle" fill="#00D4FF" font-size="10" font-weight="700">React 19 + TypeScript</text>
+                <text x="150" y="78" text-anchor="middle" fill="#6B7A99" font-size="8">SPA · Vite · TanStack Query</text>
+
+                <!-- Arrow: React → Supabase, with CDN label on the side -->
+                <line x1="150" y1="88" x2="150" y2="118" stroke="rgba(0,212,255,0.4)" stroke-width="1.5" marker-end="url(#arrMTc)" stroke-dasharray="4,3" class="flow-line"/>
+                <rect x="160" y="96" width="110" height="16" rx="4" fill="rgba(0,212,255,0.05)" stroke="rgba(0,212,255,0.12)" stroke-width="1"/>
+                <text x="215" y="107" text-anchor="middle" fill="#6B7A99" font-size="7">CDN global · HTTPS · JWT</text>
+              </g>
+
+              <!-- Supabase layer -->
+              <g data-reveal="2">
+                <rect x="28" y="122" width="244" height="56" rx="10" fill="rgba(16,185,129,0.06)" stroke="#10B981" stroke-width="1.5"/>
+                <text x="150" y="140" text-anchor="middle" fill="#10B981" font-size="10" font-weight="700">Supabase</text>
+                <text x="150" y="154" text-anchor="middle" fill="#6B7A99" font-size="7.5">Auth · Edge Functions (Deno) · Realtime · Storage</text>
+                <text x="150" y="168" text-anchor="middle" fill="#6B7A99" font-size="7">RLS: usuário acessa somente seus próprios dados</text>
+
+                <!-- Arrow down -->
+                <line x1="150" y1="178" x2="150" y2="200" stroke="rgba(16,185,129,0.4)" stroke-width="1.5" marker-end="url(#arrMTg)" stroke-dasharray="4,3" class="flow-line"/>
+              </g>
+
+              <!-- PostgreSQL -->
+              <g data-reveal="3">
+                <rect x="48" y="204" width="204" height="56" rx="10" fill="rgba(168,85,247,0.07)" stroke="#A855F7" stroke-width="1.5"/>
+                <text x="150" y="223" text-anchor="middle" fill="#A855F7" font-size="10" font-weight="700">PostgreSQL</text>
+                <text x="150" y="237" text-anchor="middle" fill="#6B7A99" font-size="7.5">14 tabelas · ACID · índices nos filtros</text>
+                <text x="150" y="250" text-anchor="middle" fill="#6B7A99" font-size="7">users · accounts · transactions · categories…</text>
+
+                <!-- CP badge -->
+                <rect x="55" y="266" width="190" height="16" rx="4" fill="rgba(0,212,255,0.08)" stroke="rgba(0,212,255,0.2)" stroke-width="1"/>
+                <text x="150" y="277" text-anchor="middle" fill="#00D4FF" font-size="7">CP — consistência forte (dados financeiros)</text>
+              </g>
+
+              <!-- Key decisions -->
+              <g data-reveal="4">
+                <rect x="10" y="292" width="132" height="48" rx="7" fill="rgba(0,212,255,0.05)" stroke="rgba(0,212,255,0.15)" stroke-width="1"/>
+                <text x="76" y="307" text-anchor="middle" fill="#00D4FF" font-size="7.5" font-weight="600">Sem cache agora</text>
+                <text x="76" y="320" text-anchor="middle" fill="#6B7A99" font-size="7">Edge CDN já resolve</text>
+                <text x="76" y="332" text-anchor="middle" fill="#6B7A99" font-size="7">volume não justifica Redis</text>
+
+                <rect x="158" y="292" width="132" height="48" rx="7" fill="rgba(168,85,247,0.05)" stroke="rgba(168,85,247,0.15)" stroke-width="1"/>
+                <text x="224" y="307" text-anchor="middle" fill="#A855F7" font-size="7.5" font-weight="600">Sem sharding agora</text>
+                <text x="224" y="320" text-anchor="middle" fill="#6B7A99" font-size="7">adicione quando o volume</text>
+                <text x="224" y="332" text-anchor="middle" fill="#6B7A99" font-size="7">realmente exigir</text>
+              </g>
+            </svg>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <div class="progress-bar"><div class="progress-fill" style="width: 90%"></div></div>
+          <div class="nav-hint"><span class="key">←</span><span class="key">→</span></div>
+        </div>
+      </div>
+
+      <!-- ═══════════ SLIDE 9 — ENCERRAMENTO ═══════════ -->
+      <div class="slide" id="slide-9">
+        <div class="slide-header">
+          <div class="slide-tag">Encerramento</div>
+          <div class="slide-counter">10 / 10</div>
+        </div>
+        <div class="slide-body">
+          <div class="content full">
+            <h2
+              class="slide-title"
+              style="text-align: center; margin-bottom: 8px"
+              data-reveal="0"
+            >
+              Referências &amp; <span class="accent">Discussão</span>
+            </h2>
+            <p
+              class="lead"
+              style="text-align: center; max-width: 600px; margin: 0 auto 20px"
+              data-reveal="0"
+            >
+              Os melhores livros da área — e perguntas sobre os sistemas que vocês conhecem de perto.
+            </p>
+
+            <!-- References -->
+            <div class="ref-cards" data-reveal="1">
+              <div class="ref-card">
+                <div class="book-icon">📗</div>
+                <h4>Designing Data-Intensive Applications</h4>
+                <div class="ref-author">Martin Kleppmann · 2017</div>
+                <p>A bíblia de sistemas distribuídos. CAP, replicação, sharding, consistência, Kafka — tudo com profundidade real. Essencial para qualquer engenheiro sênior.</p>
+              </div>
+              <div class="ref-card">
+                <div class="book-icon">📘</div>
+                <h4>System Design Interview</h4>
+                <div class="ref-author">Alex Xu · Volume I &amp; II</div>
+                <p>Abordagem prática de entrevistas de system design. Cada capítulo resolve um problema real (URL shortener, YouTube, WhatsApp). Ótimo para solidificar o raciocínio.</p>
+              </div>
+              <div class="ref-card">
+                <div class="book-icon">📙</div>
+                <h4>Clean Architecture</h4>
+                <div class="ref-author">Robert C. Martin · 2017</div>
+                <p>Separação de responsabilidades, inversão de dependência, monolito modular bem estruturado. Fundação antes de partir para microserviços.</p>
+              </div>
+            </div>
+
+            <!-- Discussion questions -->
+            <div class="disc-questions" style="max-width: 860px; margin: 0 auto">
+              <div class="disc-q" data-reveal="2">
+                <span>⚡</span>
+                <span>
+                  <strong style="color: var(--text)">CHESF / Furnas / Eletrobras:</strong>
+                  sistemas críticos de energia elétrica — como vocês imaginam que tratam consistência vs disponibilidade?
+                  Em uma falha de rede, o sistema de medição prioriza dado correto ou continua operando com dado desatualizado?
+                </span>
+              </div>
+              <div class="disc-q" data-reveal="3">
+                <span>🗄️</span>
+                <span>
+                  Nos sistemas de vocês (SCADA, medição, gestão de ativos), existe sharding ou particionamento de tabelas?
+                  Como vocês resolvem consultas históricas com anos de dados de telemetria?
+                </span>
+              </div>
+              <div class="disc-q" data-reveal="4">
+                <span>🔄</span>
+                <span>
+                  Mensageria assíncrona faz sentido em leituras de medidores inteligentes? Um medidor que não consegue enviar leitura — a mensagem precisa persistir na fila ou perder é aceitável?
+                  Isso muda a escolha entre RabbitMQ e Kafka?
+                </span>
+              </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 20px" data-reveal="5">
+              <div class="pill pill-v" style="display: inline-block; font-size: 0.8rem; padding: 8px 20px">
+                Fim do ciclo System Design · Sessão 2 de 2
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <div class="progress-bar"><div class="progress-fill" style="width: 100%"></div></div>
+          <div class="nav-hint"><span class="key">←</span> voltar</div>
+        </div>
+      </div>
+
+    </div>
+    <!-- /deck -->
+
+    <script src="nav.js"></script>
+    <script>
+      initNav({ agendaSlide: 1 });
+    </script>
+  </body>
+</html>
